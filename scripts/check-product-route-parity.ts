@@ -59,7 +59,17 @@ function parseWorkerRouteManifest(value: unknown): WorkerRouteManifestEntry[] {
 }
 
 const runtimeOnly = {
-  go: new Set(["GET /api/cron/notifications"]),
+  // Docker finance routes are gated by /api/app/finance/capabilities until P5.
+  // Stale checks reject exceptions removed or implemented on both runtimes.
+  go: new Set([
+    "GET /api/cron/notifications",
+    "GET /api/app/finance/ledger", "PATCH /api/app/finance/ledger",
+    "GET /api/app/finance/accounts", "POST /api/app/finance/accounts", "PATCH /api/app/finance/accounts/{id}",
+    "GET /api/app/finance/transactions", "POST /api/app/finance/transactions",
+    "GET /api/app/finance/transactions/{id}", "PATCH /api/app/finance/transactions/{id}", "POST /api/app/finance/transactions/{id}/void",
+    "GET /api/app/finance/reports/summary", "GET /api/app/finance/budgets", "PUT /api/app/finance/budgets",
+    "GET /api/app/finance/audit", "GET /api/app/finance/export", "POST /api/app/finance/restore",
+  ]),
   worker: new Set<string>(),
 };
 
@@ -73,6 +83,7 @@ try {
     encoding: "utf8",
     env: { ...process.env, RENEWLET_ROUTE_MANIFEST_OUTPUT: goManifestPath },
   });
+  if (goTest.error) throw new Error(`Go route manifest process failed: ${goTest.error.message}`);
   if (goTest.status !== 0) {
     process.stderr.write(goTest.stdout);
     process.stderr.write(goTest.stderr);
@@ -86,8 +97,12 @@ try {
       cwd: repoRoot,
       encoding: "utf8",
       env: { ...process.env, RENEWLET_WORKER_ROUTE_MANIFEST_OUTPUT: workerManifestPath },
+      // Windows Corepack exposes pnpm.cmd, which requires a command shell.
+      // This invocation uses only the fixed arguments above.
+      shell: process.platform === "win32",
     },
   );
+  if (workerTest.error) throw new Error(`Worker route manifest process failed: ${workerTest.error.message}`);
   if (workerTest.status !== 0) {
     process.stderr.write(workerTest.stdout);
     process.stderr.write(workerTest.stderr);

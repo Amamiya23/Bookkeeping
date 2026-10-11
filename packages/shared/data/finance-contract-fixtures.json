@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "accounts": [
+    { "ref": "cash", "name": "Cash", "currency": "CNY", "openingBalance": "100", "openingDate": "2026-01-01" },
+    { "ref": "bank", "name": "Bank", "currency": "CNY", "openingBalance": "-10", "openingDate": "2026-01-01" }
+  ],
+  "transactions": [
+    { "ref": "salary", "kind": "income", "account": "cash", "amount": "5000", "currency": "CNY", "occurredOn": "2026-10-11" },
+    { "ref": "lunch", "kind": "expense", "account": "cash", "amount": "32", "currency": "CNY", "occurredOn": "2026-10-11", "category": "Food" },
+    { "ref": "transfer", "kind": "transfer", "account": "cash", "counterAccount": "bank", "amount": "1000", "currency": "CNY", "occurredOn": "2026-10-11" },
+    { "ref": "purchase", "kind": "expense", "account": "cash", "amount": "86", "currency": "CNY", "occurredOn": "2026-10-11", "category": "Food" },
+    { "ref": "refund", "kind": "refund", "account": "bank", "refundOf": "purchase", "amount": "20", "currency": "CNY", "occurredOn": "2026-10-11" }
+  ],
+  "expectedBalances": { "cash": "3982", "bank": "1010" },
+  "expectedSummary": { "income": "5000", "grossExpense": "118", "refunds": "20", "netExpense": "98", "netIncome": "4902" },
+  "invalidUnsignedAmounts": ["-1", "1e3", "01", "1.0000001", "1000000000.000001", "9223372036854775807", "1.", "+1", " 1"]
+}

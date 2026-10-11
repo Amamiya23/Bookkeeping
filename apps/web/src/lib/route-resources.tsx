@@ -85,6 +85,12 @@ function LightweightRouteFallback() {
 }
 
 export const routeResources = {
+  finance: {
+    path: "/transactions",
+    load: () => import("@/pages/finance"),
+    fallback: LightweightRouteFallback,
+    usesPrivateShell: true,
+  },
   dashboard: {
     path: "/",
     load: loadDashboard,

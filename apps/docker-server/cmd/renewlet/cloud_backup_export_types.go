@@ -9,6 +9,7 @@ type cloudBackupExportPayload struct {
 }
 
 type cloudBackupExportData struct {
+	Finance               *financeSnapshot                 `json:"finance,omitempty"`
 	Subscriptions         []subscriptionDetailResponse     `json:"subscriptions"`
 	Settings              *cloudBackupExportSettingsDTO    `json:"settings,omitempty"`
 	CustomConfig          *customConfigPayload             `json:"customConfig,omitempty"`

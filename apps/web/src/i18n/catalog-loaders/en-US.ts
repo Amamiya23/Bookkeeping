@@ -1,4 +1,5 @@
 import type { Messages } from "@lingui/core";
+import { messages as finance } from "../catalogs/en-US/finance.po";
 import { messages as admin } from "../catalogs/en-US/admin.po";
 import { messages as auth } from "../catalogs/en-US/auth.po";
 import { messages as common } from "../catalogs/en-US/common.po";
@@ -13,6 +14,7 @@ import { messages as settings } from "../catalogs/en-US/settings.po";
 import { messages as subscription } from "../catalogs/en-US/subscription.po";
 
 export const messages = {
+  ...finance,
   ...admin,
   ...auth,
   ...common,

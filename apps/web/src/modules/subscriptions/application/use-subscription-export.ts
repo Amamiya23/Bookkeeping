@@ -8,6 +8,7 @@ import { todayDateOnlyInTimeZone, type DateOnly } from "@/lib/time/date-only";
 import { downloadFile } from "@/shared/browser/download-file";
 import { exchangeRateSnapshotService } from "@/services/exchange-rate-snapshot-service";
 import { subscriptionService } from "@/services/subscription-service";
+import { financeService } from "@/services/finance-service";
 import type { CustomConfig } from "@/types/config";
 import type { AppSettings, Subscription } from "@/types/subscription";
 
@@ -68,10 +69,11 @@ export function useSubscriptionExport(
   const exportBackup = useCallback((includeSecrets: boolean) => {
     void runExport(async (signal) => {
       // 序列化模块和两个读取互不依赖；显式导出时并行启动，避免代码拆分产生新的请求瀑布。
-      const [exportModule, subscriptions, exchangeRateSnapshots] = await Promise.all([
+      const [exportModule, subscriptions, exchangeRateSnapshots, finance] = await Promise.all([
         import("@/modules/import-export/domain/renewlet-export"),
         subscriptionService.exportAll(signal),
         loadExchangeRateSnapshotsForExport(signal),
+        financeService.exportIfSupported(signal),
       ]);
       await exportModule.exportRenewletBackup({
         subscriptions,
@@ -79,6 +81,7 @@ export function useSubscriptionExport(
         customConfig: config,
         includeSecrets,
         exchangeRateSnapshots,
+        finance,
       }, { signal });
     });
   }, [config, runExport, settings]);

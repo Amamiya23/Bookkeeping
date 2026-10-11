@@ -11,8 +11,10 @@
 
 import Link, { NavLink } from '@/components/router-link';
 import { useRouter } from '@/lib/router';
-import { LayoutDashboard, List, CalendarDays, BarChart3, Settings, Sun, Moon, LogOut } from 'lucide-react';
+import { LayoutDashboard, List, CalendarDays, BarChart3, Settings, Sun, Moon, LogOut, Wallet } from 'lucide-react';
+import { useFinanceCapabilities } from '@/hooks/use-finance';
 import { useState } from 'react';
+import { useLocation } from 'react-router';
 import type { ReactNode } from 'react';
 import type { SubscriptionFormSubmission } from '@/types/subscription';
 import { Button } from '@/components/ui/button';
@@ -37,7 +39,7 @@ interface HeaderProps {
   subscriptionActions?: ReactNode;
 }
 
-type NavIconKey = "dashboard" | "subscriptions" | "calendar" | "statistics" | "settings";
+type NavIconKey = "dashboard" | "subscriptions" | "calendar" | "statistics" | "settings" | "finance";
 
 /** 导航项配置：路径 / 文案 / 图标 key。 */
 const navItems: Array<{ path: string; labelKey: MessageKey; icon: NavIconKey }> = [
@@ -60,6 +62,8 @@ function renderNavIcon(icon: NavIconKey, className: string) {
       return <BarChart3 className={className} />;
     case "settings":
       return <Settings className={className} />;
+    case "finance":
+      return <Wallet className={className} />;
   }
 }
 
@@ -71,6 +75,9 @@ export function Header({ onAddSubscription, availableTags, subscriptionActions }
   const { data: sessionData } = authClient.useSession();
   const [systemDialogOpen, setSystemDialogOpen] = useState(false);
   const isAuthenticated = Boolean(sessionData?.user);
+  const finance = useFinanceCapabilities();
+  const financeActive = ['/transactions', '/accounts', '/finance/statistics'].includes(useLocation().pathname);
+  const visibleNavItems = finance.data?.ledger ? [...navItems.slice(0, 2), { path: '/transactions', labelKey: 'finance.transactions' as const, icon: 'finance' as const }, ...navItems.slice(2)] : navItems;
 
   /**
    * Header 是全局快捷开关，只写本机偏好；账户级外观草稿必须从 Settings 页外观控件产生。
@@ -119,13 +126,13 @@ export function Header({ onAddSubscription, availableTags, subscriptionActions }
           </div>
 
           <nav className={headerLayout.desktopNav} data-testid="app-header-desktop-nav">
-            {navItems.map((item) => (
+            {visibleNavItems.map((item) => (
               <NavLink
                 key={item.path}
                 href={item.path}
                 end={item.path === "/"}
                 title={t(item.labelKey)}
-                className={({ isActive }) => getHeaderDesktopNavLinkClass(isActive)}
+                className={({ isActive }) => getHeaderDesktopNavLinkClass(isActive || (item.icon === 'finance' && financeActive))}
               >
                 {renderNavIcon(item.icon, headerLayout.desktopNavIcon)}
                 <span className={headerLayout.desktopNavLabel}>{t(item.labelKey)}</span>
@@ -168,12 +175,12 @@ export function Header({ onAddSubscription, availableTags, subscriptionActions }
 
       {/* 移动端导航 */}
       <nav className={headerLayout.mobileNav} data-testid="app-header-mobile-nav">
-        {navItems.map((item) => (
+          {visibleNavItems.map((item) => (
           <NavLink
             key={item.path}
             href={item.path}
             end={item.path === "/"}
-            className={({ isActive }) => getHeaderMobileNavLinkClass(isActive)}
+              className={({ isActive }) => getHeaderMobileNavLinkClass(isActive || (item.icon === 'finance' && financeActive))}
           >
             {renderNavIcon(item.icon, headerLayout.mobileNavIcon)}
             {t(item.labelKey)}

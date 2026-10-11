@@ -24,6 +24,7 @@ const PERSISTED_LABEL_LOCALES = ["zh-CN", "en-US"];
 const sourceLocale = i18nConfig.sourceLocale;
 const domains = [
   "common",
+  "finance",
   "legal",
   "custom-config",
   "subscription",

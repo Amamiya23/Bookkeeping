@@ -167,6 +167,11 @@ func (p renewletDemoPolicy) ResetUserData(app core.App, user *core.Record, now t
 	return app.RunInTransaction(func(txApp core.App) error {
 		// 删除和 seed 放在一个事务里，避免访客在 reset 窗口读到半套 settings/subscriptions 状态。
 		for _, collection := range []string{
+			"finance_audit",
+			"finance_budgets",
+			"transactions",
+			"accounts",
+			"ledgers",
 			"notification_jobs",
 			"calendar_feeds",
 			"public_status_pages",
@@ -181,6 +186,9 @@ func (p renewletDemoPolicy) ResetUserData(app core.App, user *core.Record, now t
 			}
 		}
 		if err := seedDemoSettings(txApp, user.Id); err != nil {
+			return err
+		}
+		if _, err := ensureDefaultLedger(txApp, user.Id); err != nil {
 			return err
 		}
 		if err := seedDemoSubscriptions(txApp, user.Id, now); err != nil {

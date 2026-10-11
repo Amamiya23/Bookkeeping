@@ -69,6 +69,7 @@ func runSchemaDataMigrations(app core.App) error {
 		{Name: "subscription_cycle_fields_v1", Run: migrateSubscriptionCycleFields},
 		{Name: "invalid_subscription_logos_v1", Run: cleanupInvalidSubscriptionLogos},
 		{Name: "orphan_subscription_calendar_feeds_v1", Run: deleteOrphanSubscriptionCalendarFeeds},
+		{Name: "default_finance_ledgers_v1", Run: migrateDefaultFinanceLedgers},
 		{
 			Name: notificationMessageMigration, Run: migrateNotificationJobMessages,
 			Exclusive: &exclusiveSchemaDataMigration{

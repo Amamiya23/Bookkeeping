@@ -139,6 +139,7 @@ export default defineConfig({
       testMatch: previousDist ? ["**/version-upgrade.spec.ts"] : performanceMode ? ["**/performance.spec.ts", ...(profilingMode ? [] : ["**/performance-vitals.spec.ts"])] : [
         "**/calendar-feed-management.spec.ts",
         "**/subscriptions.spec.ts",
+        "**/finance.spec.ts",
         "**/settings.spec.ts",
         "**/lunar-calendar.spec.ts",
         "**/statistics.spec.ts",
@@ -155,7 +156,7 @@ export default defineConfig({
       name: performanceMode ? "performance-mobile" : "mobile",
       dependencies: [performanceMode ? "performance-seed" : "setup"],
       repeatEach: performanceMode && !profilingMode ? performanceSampleCount : 1,
-      testMatch: previousDist ? ["**/version-upgrade.spec.ts"] : performanceMode ? ["**/performance.spec.ts", ...(profilingMode ? [] : ["**/performance-vitals.spec.ts"])] : ["**/mobile-*.spec.ts", "**/lunar-calendar.spec.ts", "**/route-progress.spec.ts", "**/report-exchange-rates.spec.ts"],
+      testMatch: previousDist ? ["**/version-upgrade.spec.ts"] : performanceMode ? ["**/performance.spec.ts", ...(profilingMode ? [] : ["**/performance-vitals.spec.ts"])] : ["**/mobile-*.spec.ts", "**/finance.spec.ts", "**/lunar-calendar.spec.ts", "**/route-progress.spec.ts", "**/report-exchange-rates.spec.ts"],
       use: {
         ...devices["Pixel 5"],
         storageState: adminStorageState,

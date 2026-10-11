@@ -1,0 +1,625 @@
+msgid ""
+msgstr ""
+"Language: zh-CN\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. js-lingui-explicit-id
+msgid "finance.ledgerName"
+msgstr "账本名称"
+
+#. js-lingui-explicit-id
+msgid "finance.timeZone"
+msgstr "账本时区"
+
+#. js-lingui-explicit-id
+msgid "finance.kind"
+msgstr "收支类型"
+
+#. js-lingui-explicit-id
+msgid "finance.refundLimit"
+msgstr "退款总额不能超过原消费金额。"
+
+#. js-lingui-explicit-id
+msgid "finance.refundsExist"
+msgstr "请先处理关联退款，再作废或更正原消费。"
+
+#. js-lingui-explicit-id
+msgid "finance.beforeOpening"
+msgstr "发生日期不能早于账户期初日期。"
+
+#. js-lingui-explicit-id
+msgid "finance.archivedAccount"
+msgstr "请选择未归档的资金账户。"
+
+#. js-lingui-explicit-id
+msgid "finance.currencyLocked"
+msgstr "已有流水的账户不能更改币种。"
+
+#. js-lingui-explicit-id
+msgid "finance.invalidTransfer"
+msgstr "转账需要两个不同的同币种账户。"
+
+#. js-lingui-explicit-id
+msgid "finance.externalLocked"
+msgstr "外部来源标识必须保留，不能用于更正流水。"
+
+#. js-lingui-explicit-id
+msgid "finance.title"
+msgstr "日常账本"
+
+#. js-lingui-explicit-id
+msgid "finance.transactions"
+msgstr "流水"
+
+#. js-lingui-explicit-id
+msgid "finance.accounts"
+msgstr "账户"
+
+#. js-lingui-explicit-id
+msgid "finance.reports"
+msgstr "实际收支"
+
+#. js-lingui-explicit-id
+msgid "finance.add"
+msgstr "记一笔"
+
+#. js-lingui-explicit-id
+msgid "finance.addAccount"
+msgstr "添加账户"
+
+#. js-lingui-explicit-id
+msgid "finance.expense"
+msgstr "支出"
+
+#. js-lingui-explicit-id
+msgid "finance.income"
+msgstr "收入"
+
+#. js-lingui-explicit-id
+msgid "finance.transfer"
+msgstr "转账"
+
+#. js-lingui-explicit-id
+msgid "finance.refund"
+msgstr "退款"
+
+#. js-lingui-explicit-id
+msgid "finance.amount"
+msgstr "金额"
+
+#. js-lingui-explicit-id
+msgid "finance.currency"
+msgstr "币种"
+
+#. js-lingui-explicit-id
+msgid "finance.account"
+msgstr "资金账户"
+
+#. js-lingui-explicit-id
+msgid "finance.counterAccount"
+msgstr "转入账户"
+
+#. js-lingui-explicit-id
+msgid "finance.occurredOn"
+msgstr "发生日期"
+
+#. js-lingui-explicit-id
+msgid "finance.category"
+msgstr "分类"
+
+#. js-lingui-explicit-id
+msgid "finance.merchant"
+msgstr "商家"
+
+#. js-lingui-explicit-id
+msgid "finance.tags"
+msgstr "标签（逗号分隔）"
+
+#. js-lingui-explicit-id
+msgid "finance.notes"
+msgstr "备注"
+
+#. js-lingui-explicit-id
+msgid "finance.refundOf"
+msgstr "原消费流水 ID"
+
+#. js-lingui-explicit-id
+msgid "finance.name"
+msgstr "账户名称"
+
+#. js-lingui-explicit-id
+msgid "finance.openingBalance"
+msgstr "期初余额"
+
+#. js-lingui-explicit-id
+msgid "finance.openingDate"
+msgstr "期初日期"
+
+#. js-lingui-explicit-id
+msgid "finance.balance"
+msgstr "当前余额"
+
+#. js-lingui-explicit-id
+msgid "finance.archive"
+msgstr "归档账户"
+
+#. js-lingui-explicit-id
+msgid "finance.archived"
+msgstr "已归档"
+
+#. js-lingui-explicit-id
+msgid "finance.restoreAccount"
+msgstr "取消归档"
+
+#. js-lingui-explicit-id
+msgid "finance.void"
+msgstr "作废"
+
+#. js-lingui-explicit-id
+msgid "finance.voidReason"
+msgstr "作废原因"
+
+#. js-lingui-explicit-id
+msgid "finance.voided"
+msgstr "已作废"
+
+#. js-lingui-explicit-id
+msgid "finance.posted"
+msgstr "已入账"
+
+#. js-lingui-explicit-id
+msgid "finance.saved"
+msgstr "已保存"
+
+#. js-lingui-explicit-id
+msgid "finance.emptyAccounts"
+msgstr "先添加资金账户，再记录收支。"
+
+#. js-lingui-explicit-id
+msgid "finance.unsupported"
+msgstr "当前部署尚未启用日常账本。"
+
+#. js-lingui-explicit-id
+msgid "finance.from"
+msgstr "开始日期"
+
+#. js-lingui-explicit-id
+msgid "finance.to"
+msgstr "结束日期"
+
+#. js-lingui-explicit-id
+msgid "finance.loadMore"
+msgstr "加载更多"
+
+#. js-lingui-explicit-id
+msgid "finance.netExpense"
+msgstr "净支出（已扣除退款）"
+
+#. js-lingui-explicit-id
+msgid "finance.netIncome"
+msgstr "结余"
+
+#. js-lingui-explicit-id
+msgid "finance.basis"
+msgstr "按已入账流水统计；转账和期初余额不计入收支。"
+
+#. js-lingui-explicit-id
+msgid "finance.unconverted"
+msgstr "不同币种分别统计，未使用汇率折算。"
+
+#. js-lingui-explicit-id
+msgid "finance.budget"
+msgstr "月度实际支出预算"
+
+#. js-lingui-explicit-id
+msgid "finance.remaining"
+msgstr "预算剩余"
+
+#. js-lingui-explicit-id
+msgid "finance.month"
+msgstr "月份"
+
+#. js-lingui-explicit-id
+msgid "finance.audit"
+msgstr "更正记录"
+
+#. js-lingui-explicit-id
+msgid "finance.retry"
+msgstr "重新加载"
+
+#. js-lingui-explicit-id
+msgid "finance.versionConflict"
+msgstr "记录已被更新，请刷新后重新更正。"
+
+#. js-lingui-explicit-id
+msgid "finance.invalid"
+msgstr "请检查金额、日期及账户信息。"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionBasis"
+msgstr "订阅统计 · 周期折算与预计支出"
+
+#. js-lingui-explicit-id
+msgid "finance.export"
+msgstr "导出账本"
+
+#. js-lingui-explicit-id
+msgid "finance.restore"
+msgstr "恢复账本"
+
+#. js-lingui-explicit-id
+msgid "finance.restoreEmpty"
+msgstr "恢复仅允许写入空账本；现有流水不会被覆盖。"
+
+#. js-lingui-explicit-id
+msgid "finance.restored"
+msgstr "账本已恢复"
+
+
+#. js-lingui-explicit-id
+msgid "finance.addCategory"
+msgstr "添加分类"
+
+#. js-lingui-explicit-id
+msgid "finance.categoryName"
+msgstr "分类名称"
+
+#. js-lingui-explicit-id
+msgid "finance.categoryIcon"
+msgstr "分类图标"
+
+#. js-lingui-explicit-id
+msgid "finance.searchCategories"
+msgstr "搜索分类"
+
+#. js-lingui-explicit-id
+msgid "finance.categoryDuplicate"
+msgstr "此收支类型已存在同名分类，请直接选择。"
+
+#. js-lingui-explicit-id
+msgid "finance.categoryInvalid"
+msgstr "分类名称需为 1–80 个字符，最多添加 100 个自定义分类。"
+
+#. js-lingui-explicit-id
+msgid "finance.moreDetails"
+msgstr "更多信息"
+
+#. js-lingui-explicit-id
+msgid "finance.refundCategory"
+msgstr "退款沿用原消费分类。"
+
+#. js-lingui-explicit-id
+msgid "finance.noCategories"
+msgstr "没有找到分类。"
+
+#. js-lingui-explicit-id
+msgid "finance.categoryLimit"
+msgstr "自定义分类已达上限。"
+
+#. js-lingui-explicit-id
+msgid "finance.category.meals"
+msgstr "三餐"
+
+#. js-lingui-explicit-id
+msgid "finance.category.snacks"
+msgstr "零食"
+
+#. js-lingui-explicit-id
+msgid "finance.category.clothes"
+msgstr "衣服"
+
+#. js-lingui-explicit-id
+msgid "finance.category.transport"
+msgstr "交通"
+
+#. js-lingui-explicit-id
+msgid "finance.category.travel"
+msgstr "旅行"
+
+#. js-lingui-explicit-id
+msgid "finance.category.children"
+msgstr "孩子"
+
+#. js-lingui-explicit-id
+msgid "finance.category.pets"
+msgstr "宠物"
+
+#. js-lingui-explicit-id
+msgid "finance.category.telecom"
+msgstr "话费网费"
+
+#. js-lingui-explicit-id
+msgid "finance.category.tobacco"
+msgstr "烟酒"
+
+#. js-lingui-explicit-id
+msgid "finance.category.learning"
+msgstr "学习"
+
+#. js-lingui-explicit-id
+msgid "finance.category.daily"
+msgstr "日用品"
+
+#. js-lingui-explicit-id
+msgid "finance.category.housing"
+msgstr "住房"
+
+#. js-lingui-explicit-id
+msgid "finance.category.beauty"
+msgstr "美妆"
+
+#. js-lingui-explicit-id
+msgid "finance.category.medical"
+msgstr "医疗"
+
+#. js-lingui-explicit-id
+msgid "finance.category.red-packet"
+msgstr "发红包"
+
+#. js-lingui-explicit-id
+msgid "finance.category.car"
+msgstr "汽车/加油"
+
+#. js-lingui-explicit-id
+msgid "finance.category.entertainment"
+msgstr "娱乐"
+
+#. js-lingui-explicit-id
+msgid "finance.category.hosting"
+msgstr "请客送礼"
+
+#. js-lingui-explicit-id
+msgid "finance.category.electronics"
+msgstr "电器数码"
+
+#. js-lingui-explicit-id
+msgid "finance.category.sports"
+msgstr "运动"
+
+#. js-lingui-explicit-id
+msgid "finance.category.utilities"
+msgstr "水电煤"
+
+#. js-lingui-explicit-id
+msgid "finance.category.social"
+msgstr "人情"
+
+#. js-lingui-explicit-id
+msgid "finance.category.laundry"
+msgstr "洗衣"
+
+#. js-lingui-explicit-id
+msgid "finance.category.wellness"
+msgstr "养生保健"
+
+#. js-lingui-explicit-id
+msgid "finance.category.drinks"
+msgstr "饮料"
+
+#. js-lingui-explicit-id
+msgid "finance.category.shopping"
+msgstr "购物"
+
+#. js-lingui-explicit-id
+msgid "finance.category.insurance"
+msgstr "保险"
+
+#. js-lingui-explicit-id
+msgid "finance.category.tax"
+msgstr "税费"
+
+#. js-lingui-explicit-id
+msgid "finance.category.work"
+msgstr "工作"
+
+#. js-lingui-explicit-id
+msgid "finance.category.subscriptions"
+msgstr "订阅服务"
+
+#. js-lingui-explicit-id
+msgid "finance.category.repayment"
+msgstr "还款"
+
+#. js-lingui-explicit-id
+msgid "finance.category.other-expense"
+msgstr "其它"
+
+#. js-lingui-explicit-id
+msgid "finance.category.salary"
+msgstr "工资"
+
+#. js-lingui-explicit-id
+msgid "finance.category.allowance"
+msgstr "生活费"
+
+#. js-lingui-explicit-id
+msgid "finance.category.received-gift"
+msgstr "收红包"
+
+#. js-lingui-explicit-id
+msgid "finance.category.side-income"
+msgstr "外快"
+
+#. js-lingui-explicit-id
+msgid "finance.category.investment"
+msgstr "股票基金"
+
+#. js-lingui-explicit-id
+msgid "finance.category.bonus"
+msgstr "奖金"
+
+#. js-lingui-explicit-id
+msgid "finance.category.interest"
+msgstr "利息"
+
+#. js-lingui-explicit-id
+msgid "finance.category.rent"
+msgstr "租金"
+
+#. js-lingui-explicit-id
+msgid "finance.category.reimbursement"
+msgstr "报销"
+
+#. js-lingui-explicit-id
+msgid "finance.category.other-income"
+msgstr "其它"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.utensils"
+msgstr "餐具"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.cookie"
+msgstr "饼干"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.shirt"
+msgstr "衣服"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.bus"
+msgstr "公交"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.plane"
+msgstr "飞机"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.baby"
+msgstr "孩子"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.paw-print"
+msgstr "宠物"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.phone"
+msgstr "电话"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.wine"
+msgstr "酒杯"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.book-open"
+msgstr "书本"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.shopping-basket"
+msgstr "购物篮"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.house"
+msgstr "房屋"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.sparkles"
+msgstr "美妆"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.heart-pulse"
+msgstr "医疗"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.gift"
+msgstr "礼物"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.fuel"
+msgstr "加油"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.gamepad-2"
+msgstr "游戏"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.party-popper"
+msgstr "庆祝"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.camera"
+msgstr "相机"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.dumbbell"
+msgstr "运动"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.grid-2x2"
+msgstr "其它"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.zap"
+msgstr "闪电"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.hand-heart"
+msgstr "爱心"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.washing-machine"
+msgstr "洗衣机"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.leaf"
+msgstr "叶子"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.coffee"
+msgstr "饮料"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.shopping-bag"
+msgstr "购物袋"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.shield-check"
+msgstr "保险"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.receipt"
+msgstr "票据"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.briefcase-business"
+msgstr "公文包"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.banknote"
+msgstr "钞票"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.wallet"
+msgstr "钱包"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.clock"
+msgstr "时钟"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.trending-up"
+msgstr "投资"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.award"
+msgstr "奖章"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.landmark"
+msgstr "银行"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.coins"
+msgstr "硬币"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.laptop"
+msgstr "电脑"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.music"
+msgstr "音乐"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.bike"
+msgstr "自行车"

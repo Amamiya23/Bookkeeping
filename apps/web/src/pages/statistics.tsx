@@ -197,6 +197,7 @@ const Statistics = () => {
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <h1 className="text-2xl font-bold text-foreground">{t("statistics.title")}</h1>
+            <p className="mt-1 text-sm text-muted-foreground">{t("finance.subscriptionBasis")}</p>
             {lastUpdated && !ratesLoading ? (
               <p className="mt-1 text-xs text-muted-foreground">
                 {t("statistics.ratesUpdatedAt", { date: formatDateTime(lastUpdated, { year: "numeric", month: "2-digit", day: "2-digit" }) })}

@@ -95,7 +95,16 @@ func createUser(app core.App, name string, email string, password string, role s
 	user.SetPassword(password)
 	user.Set("role", normalizeRole(role))
 	user.Set("banned", false)
-	if err := app.Save(user); err != nil {
+	if err := app.RunInTransaction(func(tx core.App) error {
+		if err := tx.Save(user); err != nil {
+			return err
+		}
+		if _, err := tx.FindCollectionByNameOrId("ledgers"); err == nil {
+			_, err = ensureDefaultLedger(tx, user.Id)
+			return err
+		}
+		return nil
+	}); err != nil {
 		return nil, err
 	}
 	return user, nil

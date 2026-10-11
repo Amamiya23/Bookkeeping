@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { financeSnapshotSchema } from "./finance";
 import { persistedSettingsBackupSchema, type PersistedSettingsBackup } from "./settings";
 import { SUPPORTED_LOCALES } from "../i18n-config";
 import { customConfigSchema } from "./custom-config";
@@ -51,6 +52,7 @@ export const importPayloadSchema = z.object({
   settings: persistedSettingsBackupSchema.optional(),
   customConfig: customConfigSchema.optional(),
   exchangeRateSnapshots: z.array(exchangeRateSnapshotV1Schema).max(240).optional(),
+  finance: financeSnapshotSchema.optional(),
 }).strict();
 export type ImportPayload = z.infer<typeof importPayloadSchema>;
 
@@ -107,6 +109,7 @@ export const importPreviewPayloadSchema = z.object({
   includesCustomConfig: z.boolean(),
   includesExchangeRateSnapshots: z.boolean(),
   exchangeRateSnapshotsCount: z.number().int().nonnegative(),
+  includesFinance: z.boolean().optional(),
 }).strict();
 export const importPreviewResponseSchema = apiSuccessResponseSchema(importPreviewPayloadSchema);
 export type ImportPreviewResponse = z.infer<typeof importPreviewPayloadSchema>;
@@ -181,6 +184,7 @@ export const renewletExportV1Schema = z.object({
     customConfig: customConfigSchema.optional(),
     // 历史汇率快照是 data.json 的恢复事实源；manifest 只做审计，不能承载报表口径。
     exchangeRateSnapshots: z.array(exchangeRateSnapshotV1Schema).max(240).optional(),
+    finance: financeSnapshotSchema.optional(),
     assets: z.array(exportAssetSchema).optional(),
   }).strict(),
 }).strict();

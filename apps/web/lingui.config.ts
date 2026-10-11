@@ -4,6 +4,7 @@ import { FALLBACK_LOCALE, SOURCE_LOCALE, SUPPORTED_LOCALES } from "@renewlet/sha
 // catalog domain 是人工维护的 i18n 边界；同一 domain 可汇总多个 descriptor，检查器和生成脚本据此校验 PO 与类型化生成物。
 const catalogDomains = [
   "common",
+  "finance",
   "legal",
   "custom-config",
   "subscription",

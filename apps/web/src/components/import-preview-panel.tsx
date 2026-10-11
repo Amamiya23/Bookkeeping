@@ -74,6 +74,11 @@ export function ImportPreviewPanel({
           ) : null}
         </div>
       </div>
+      {prepared.payload.finance && <div className="rounded-lg border p-3 text-sm">
+        <p className="font-medium">{t("finance.restore")}</p>
+        <p>{t("finance.accounts")} · {prepared.payload.finance.accounts.length} · {t("finance.transactions")} · {prepared.payload.finance.transactions.length}</p>
+        <p className="mt-1 text-muted-foreground">{t("finance.restoreEmpty")}</p>
+      </div>}
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
         <SummaryBadge label={t("import.summaryCreate")} value={preview.summary.creates} />
         <SummaryBadge label={t("import.summaryReplace")} value={preview.summary.replaces} />

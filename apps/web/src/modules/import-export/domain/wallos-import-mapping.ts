@@ -152,6 +152,7 @@ export function buildFromRenewletExport(
       settings: fromRenewletExportSettingsV1(data.data.settings),
       customConfig: prepareRenewletExportCustomConfig(data.data.customConfig, assetFiles, assets),
       exchangeRateSnapshots: data.data.exchangeRateSnapshots,
+      ...(data.data.finance ? { finance: data.data.finance } : {}),
     }),
     assets,
     warnings,

@@ -42,6 +42,7 @@ type importApplyRequest struct {
 }
 
 type importPayload struct {
+	Finance               *financeSnapshot          `json:"finance,omitempty"`
 	Source                string                    `json:"source"`
 	Subscriptions         []importSubscription      `json:"subscriptions"`
 	Settings              json.RawMessage           `json:"settings,omitempty"`
@@ -81,6 +82,7 @@ type importSubscription struct {
 }
 
 type importPreviewResponse struct {
+	IncludesFinance               bool                `json:"includesFinance,omitempty"`
 	Summary                       importSummary       `json:"summary"`
 	Items                         []importPreviewItem `json:"items"`
 	IncludesSettings              bool                `json:"includesSettings"`
@@ -211,6 +213,14 @@ func isImportTooLargeError(err error) bool {
 }
 
 func validateImportPayload(payload importPayload, conflictMode string, skipIndexes []int, maxSubscriptions int, _ appLocale) error {
+	if payload.Finance != nil {
+		if payload.Source != "renewlet" {
+			return errors.New("IMPORT_FINANCE_SOURCE_INVALID")
+		}
+		if err := validateFinanceSnapshot(payload.Finance); err != nil {
+			return err
+		}
+	}
 	if conflictMode != "replace" && conflictMode != "skip" {
 		return errors.New("IMPORT_CONFLICT_MODE_INVALID")
 	}
@@ -255,6 +265,9 @@ func validateImportPayload(payload importPayload, conflictMode string, skipIndex
 }
 
 func previewImportPayload(app core.App, user *core.Record, payload importPayload, conflictMode string, skipIndexes []int) (importPreviewResponse, error) {
+	if err := checkFinanceRestore(app, user.Id, payload.Finance); err != nil {
+		return importPreviewResponse{}, err
+	}
 	rows, err := listOwnedSubscriptionRecords(app, user.Id)
 	if err != nil {
 		return importPreviewResponse{}, err
@@ -323,6 +336,7 @@ func previewImportPayload(app core.App, user *core.Record, payload importPayload
 		items = append(items, item)
 	}
 	return importPreviewResponse{
+		IncludesFinance:               payload.Finance != nil,
 		Summary:                       summarizeImportItems(items),
 		Items:                         items,
 		IncludesSettings:              len(strings.TrimSpace(string(payload.Settings))) > 0,
@@ -335,6 +349,9 @@ func previewImportPayload(app core.App, user *core.Record, payload importPayload
 func applyImportPayload(app core.App, user *core.Record, payload importPayload, conflictMode string, skipIndexes []int) error {
 	// 导入写入包在 PocketBase 事务内完成；任意订阅、settings 或 custom config 失败都不能留下半套迁移数据。
 	return app.RunInTransaction(func(txApp core.App) error {
+		if err := restoreFinanceSnapshot(txApp, financeActor{User: user.Id, Actor: "user:" + user.Id, RequestID: "import"}, payload.Finance); err != nil {
+			return err
+		}
 		rows, err := listOwnedSubscriptionRecords(txApp, user.Id)
 		if err != nil {
 			return err

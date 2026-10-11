@@ -15,6 +15,7 @@
 import Link from '@/components/router-link';
 import type { Subscription, SubscriptionCollectionItem } from "@/types/subscription";
 import { Header } from "@/components/header";
+import { FinanceDashboard } from "@/components/finance-dashboard";
 import { dashboardStatLayout } from "@/components/dashboard-stat-layout";
 import { StatCard } from "@/components/ui/stat-card";
 import { SubscriptionCard } from "@/components/subscription-card";
@@ -135,6 +136,7 @@ export default function Index() {
 
       <main className="app-main mx-auto max-w-7xl">
         {/* 统计网格 */}
+        <FinanceDashboard />
         <div className={cn("mb-8", dashboardStatLayout.grid)} data-testid="dashboard-stat-grid">
           <StatCard
             data-testid="dashboard-stat-monthly-spend"

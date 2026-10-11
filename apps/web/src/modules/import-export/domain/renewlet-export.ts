@@ -37,6 +37,7 @@ export async function exportRenewletBackup(options: {
   customConfig: CustomConfig;
   includeSecrets: boolean;
   exchangeRateSnapshots?: readonly ExchangeRateSnapshotV1[];
+  finance?: import("@renewlet/shared/schemas/finance").FinanceSnapshot | undefined;
 }, execution: {
   signal?: AbortSignal;
   onProgress?: (progress: WorkerJobProgress) => void;
@@ -112,6 +113,7 @@ export async function exportRenewletBackup(options: {
       settings: sanitizeSettingsForExport(options.settings, options.includeSecrets),
       customConfig,
       exchangeRateSnapshots: [...(options.exchangeRateSnapshots ?? [])],
+      ...(options.finance ? { finance: options.finance } : {}),
       assets,
     },
   });

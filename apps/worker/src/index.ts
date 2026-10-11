@@ -101,6 +101,7 @@ import {
   telegramWebhook,
 } from "./telegram-bot";
 import { systemRestart, systemUpdate, systemUpdateStatus, systemVersion } from "./system";
+import { requireAuth } from "./auth";
 import { errorResponse, methodNotAllowed, requestLocale, requireSameOriginUnsafe, successJson, toResponse, type AppLocale } from "./http";
 import { serverText } from "./server-i18n";
 import type { Env } from "./types";
@@ -162,6 +163,12 @@ defineRoute(app, "/api/app/ready", {
 
 defineRoute(app, "/api/app/status", {
   GET: (context) => appStatus(context.req.raw, context.env),
+});
+defineRoute(app, "/api/app/finance/capabilities", {
+  GET: async (context) => {
+    await requireAuth(context.req.raw, context.env);
+    return successJson({ ledger: false, subscriptionPayments: false, automation: false, protocolVersion: 1 }, { headers: { "cache-control": "no-store" } });
+  },
 });
 
 defineRoute(app, "/api/app/setup", {

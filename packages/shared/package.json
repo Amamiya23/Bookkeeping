@@ -17,6 +17,7 @@
     "./schemas/custom-config": "./src/schemas/custom-config.ts",
     "./schemas/errors": "./src/schemas/errors.ts",
     "./schemas/exchange-rates": "./src/schemas/exchange-rates.ts",
+    "./schemas/finance": "./src/schemas/finance.ts",
     "./schemas/import-export": "./src/schemas/import-export.ts",
     "./schemas/media": "./src/schemas/media.ts",
     "./schemas/notifications": "./src/schemas/notifications.ts",

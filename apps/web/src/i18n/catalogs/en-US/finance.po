@@ -1,0 +1,625 @@
+msgid ""
+msgstr ""
+"Language: en-US\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. js-lingui-explicit-id
+msgid "finance.ledgerName"
+msgstr "Ledger name"
+
+#. js-lingui-explicit-id
+msgid "finance.timeZone"
+msgstr "Ledger time zone"
+
+#. js-lingui-explicit-id
+msgid "finance.kind"
+msgstr "Transaction type"
+
+#. js-lingui-explicit-id
+msgid "finance.refundLimit"
+msgstr "Total refunds cannot exceed the original expense."
+
+#. js-lingui-explicit-id
+msgid "finance.refundsExist"
+msgstr "Resolve linked refunds before voiding or changing this expense."
+
+#. js-lingui-explicit-id
+msgid "finance.beforeOpening"
+msgstr "The transaction date cannot precede the account opening date."
+
+#. js-lingui-explicit-id
+msgid "finance.archivedAccount"
+msgstr "Choose an active account."
+
+#. js-lingui-explicit-id
+msgid "finance.currencyLocked"
+msgstr "An account with transactions cannot change currency."
+
+#. js-lingui-explicit-id
+msgid "finance.invalidTransfer"
+msgstr "A transfer requires two different accounts in the same currency."
+
+#. js-lingui-explicit-id
+msgid "finance.externalLocked"
+msgstr "External source identifiers must be retained when correcting a transaction."
+
+#. js-lingui-explicit-id
+msgid "finance.title"
+msgstr "Daily ledger"
+
+#. js-lingui-explicit-id
+msgid "finance.transactions"
+msgstr "Transactions"
+
+#. js-lingui-explicit-id
+msgid "finance.accounts"
+msgstr "Accounts"
+
+#. js-lingui-explicit-id
+msgid "finance.reports"
+msgstr "Actual cash flow"
+
+#. js-lingui-explicit-id
+msgid "finance.add"
+msgstr "Add transaction"
+
+#. js-lingui-explicit-id
+msgid "finance.addAccount"
+msgstr "Add account"
+
+#. js-lingui-explicit-id
+msgid "finance.expense"
+msgstr "Expense"
+
+#. js-lingui-explicit-id
+msgid "finance.income"
+msgstr "Income"
+
+#. js-lingui-explicit-id
+msgid "finance.transfer"
+msgstr "Transfer"
+
+#. js-lingui-explicit-id
+msgid "finance.refund"
+msgstr "Refund"
+
+#. js-lingui-explicit-id
+msgid "finance.amount"
+msgstr "Amount"
+
+#. js-lingui-explicit-id
+msgid "finance.currency"
+msgstr "Currency"
+
+#. js-lingui-explicit-id
+msgid "finance.account"
+msgstr "Account"
+
+#. js-lingui-explicit-id
+msgid "finance.counterAccount"
+msgstr "Destination account"
+
+#. js-lingui-explicit-id
+msgid "finance.occurredOn"
+msgstr "Transaction date"
+
+#. js-lingui-explicit-id
+msgid "finance.category"
+msgstr "Category"
+
+#. js-lingui-explicit-id
+msgid "finance.merchant"
+msgstr "Merchant"
+
+#. js-lingui-explicit-id
+msgid "finance.tags"
+msgstr "Tags (comma separated)"
+
+#. js-lingui-explicit-id
+msgid "finance.notes"
+msgstr "Notes"
+
+#. js-lingui-explicit-id
+msgid "finance.refundOf"
+msgstr "Original expense ID"
+
+#. js-lingui-explicit-id
+msgid "finance.name"
+msgstr "Account name"
+
+#. js-lingui-explicit-id
+msgid "finance.openingBalance"
+msgstr "Opening balance"
+
+#. js-lingui-explicit-id
+msgid "finance.openingDate"
+msgstr "Opening date"
+
+#. js-lingui-explicit-id
+msgid "finance.balance"
+msgstr "Current balance"
+
+#. js-lingui-explicit-id
+msgid "finance.archive"
+msgstr "Archive account"
+
+#. js-lingui-explicit-id
+msgid "finance.archived"
+msgstr "Archived"
+
+#. js-lingui-explicit-id
+msgid "finance.restoreAccount"
+msgstr "Unarchive"
+
+#. js-lingui-explicit-id
+msgid "finance.void"
+msgstr "Void"
+
+#. js-lingui-explicit-id
+msgid "finance.voidReason"
+msgstr "Reason for voiding"
+
+#. js-lingui-explicit-id
+msgid "finance.voided"
+msgstr "Voided"
+
+#. js-lingui-explicit-id
+msgid "finance.posted"
+msgstr "Posted"
+
+#. js-lingui-explicit-id
+msgid "finance.saved"
+msgstr "Saved"
+
+#. js-lingui-explicit-id
+msgid "finance.emptyAccounts"
+msgstr "Add an account before recording transactions."
+
+#. js-lingui-explicit-id
+msgid "finance.unsupported"
+msgstr "The daily ledger is not available on this deployment yet."
+
+#. js-lingui-explicit-id
+msgid "finance.from"
+msgstr "From"
+
+#. js-lingui-explicit-id
+msgid "finance.to"
+msgstr "To"
+
+#. js-lingui-explicit-id
+msgid "finance.loadMore"
+msgstr "Load more"
+
+#. js-lingui-explicit-id
+msgid "finance.netExpense"
+msgstr "Net expense (after refunds)"
+
+#. js-lingui-explicit-id
+msgid "finance.netIncome"
+msgstr "Net cash flow"
+
+#. js-lingui-explicit-id
+msgid "finance.basis"
+msgstr "Based on posted transactions; transfers and opening balances are excluded."
+
+#. js-lingui-explicit-id
+msgid "finance.unconverted"
+msgstr "Currencies are reported separately without conversion."
+
+#. js-lingui-explicit-id
+msgid "finance.budget"
+msgstr "Monthly actual expense budget"
+
+#. js-lingui-explicit-id
+msgid "finance.remaining"
+msgstr "Budget remaining"
+
+#. js-lingui-explicit-id
+msgid "finance.month"
+msgstr "Month"
+
+#. js-lingui-explicit-id
+msgid "finance.audit"
+msgstr "Change history"
+
+#. js-lingui-explicit-id
+msgid "finance.retry"
+msgstr "Reload"
+
+#. js-lingui-explicit-id
+msgid "finance.versionConflict"
+msgstr "This record changed. Reload before editing again."
+
+#. js-lingui-explicit-id
+msgid "finance.invalid"
+msgstr "Check the amount, date and account."
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionBasis"
+msgstr "Subscription statistics · normalized and projected costs"
+
+#. js-lingui-explicit-id
+msgid "finance.export"
+msgstr "Export ledger"
+
+#. js-lingui-explicit-id
+msgid "finance.restore"
+msgstr "Restore ledger"
+
+#. js-lingui-explicit-id
+msgid "finance.restoreEmpty"
+msgstr "Restore requires an empty ledger; existing transactions are preserved."
+
+#. js-lingui-explicit-id
+msgid "finance.restored"
+msgstr "Ledger restored"
+
+
+#. js-lingui-explicit-id
+msgid "finance.addCategory"
+msgstr "Add category"
+
+#. js-lingui-explicit-id
+msgid "finance.categoryName"
+msgstr "Category name"
+
+#. js-lingui-explicit-id
+msgid "finance.categoryIcon"
+msgstr "Category icon"
+
+#. js-lingui-explicit-id
+msgid "finance.searchCategories"
+msgstr "Search categories"
+
+#. js-lingui-explicit-id
+msgid "finance.categoryDuplicate"
+msgstr "A category with this name already exists for this type. Select it instead."
+
+#. js-lingui-explicit-id
+msgid "finance.categoryInvalid"
+msgstr "Use 1–80 characters. Up to 100 custom categories are supported."
+
+#. js-lingui-explicit-id
+msgid "finance.moreDetails"
+msgstr "More details"
+
+#. js-lingui-explicit-id
+msgid "finance.refundCategory"
+msgstr "Refunds use the original expense category."
+
+#. js-lingui-explicit-id
+msgid "finance.noCategories"
+msgstr "No categories found."
+
+#. js-lingui-explicit-id
+msgid "finance.categoryLimit"
+msgstr "Custom category limit reached."
+
+#. js-lingui-explicit-id
+msgid "finance.category.meals"
+msgstr "Meals"
+
+#. js-lingui-explicit-id
+msgid "finance.category.snacks"
+msgstr "Snacks"
+
+#. js-lingui-explicit-id
+msgid "finance.category.clothes"
+msgstr "Clothing"
+
+#. js-lingui-explicit-id
+msgid "finance.category.transport"
+msgstr "Transport"
+
+#. js-lingui-explicit-id
+msgid "finance.category.travel"
+msgstr "Travel"
+
+#. js-lingui-explicit-id
+msgid "finance.category.children"
+msgstr "Children"
+
+#. js-lingui-explicit-id
+msgid "finance.category.pets"
+msgstr "Pets"
+
+#. js-lingui-explicit-id
+msgid "finance.category.telecom"
+msgstr "Phone & internet"
+
+#. js-lingui-explicit-id
+msgid "finance.category.tobacco"
+msgstr "Tobacco & alcohol"
+
+#. js-lingui-explicit-id
+msgid "finance.category.learning"
+msgstr "Education"
+
+#. js-lingui-explicit-id
+msgid "finance.category.daily"
+msgstr "Daily essentials"
+
+#. js-lingui-explicit-id
+msgid "finance.category.housing"
+msgstr "Housing"
+
+#. js-lingui-explicit-id
+msgid "finance.category.beauty"
+msgstr "Beauty"
+
+#. js-lingui-explicit-id
+msgid "finance.category.medical"
+msgstr "Healthcare"
+
+#. js-lingui-explicit-id
+msgid "finance.category.red-packet"
+msgstr "Red packets"
+
+#. js-lingui-explicit-id
+msgid "finance.category.car"
+msgstr "Car & fuel"
+
+#. js-lingui-explicit-id
+msgid "finance.category.entertainment"
+msgstr "Entertainment"
+
+#. js-lingui-explicit-id
+msgid "finance.category.hosting"
+msgstr "Hosting & gifts"
+
+#. js-lingui-explicit-id
+msgid "finance.category.electronics"
+msgstr "Electronics"
+
+#. js-lingui-explicit-id
+msgid "finance.category.sports"
+msgstr "Sports"
+
+#. js-lingui-explicit-id
+msgid "finance.category.utilities"
+msgstr "Utilities"
+
+#. js-lingui-explicit-id
+msgid "finance.category.social"
+msgstr "Social occasions"
+
+#. js-lingui-explicit-id
+msgid "finance.category.laundry"
+msgstr "Laundry"
+
+#. js-lingui-explicit-id
+msgid "finance.category.wellness"
+msgstr "Wellness"
+
+#. js-lingui-explicit-id
+msgid "finance.category.drinks"
+msgstr "Drinks"
+
+#. js-lingui-explicit-id
+msgid "finance.category.shopping"
+msgstr "Shopping"
+
+#. js-lingui-explicit-id
+msgid "finance.category.insurance"
+msgstr "Insurance"
+
+#. js-lingui-explicit-id
+msgid "finance.category.tax"
+msgstr "Taxes & fees"
+
+#. js-lingui-explicit-id
+msgid "finance.category.work"
+msgstr "Work"
+
+#. js-lingui-explicit-id
+msgid "finance.category.subscriptions"
+msgstr "Subscriptions"
+
+#. js-lingui-explicit-id
+msgid "finance.category.repayment"
+msgstr "Repayments"
+
+#. js-lingui-explicit-id
+msgid "finance.category.other-expense"
+msgstr "Other"
+
+#. js-lingui-explicit-id
+msgid "finance.category.salary"
+msgstr "Salary"
+
+#. js-lingui-explicit-id
+msgid "finance.category.allowance"
+msgstr "Allowance"
+
+#. js-lingui-explicit-id
+msgid "finance.category.received-gift"
+msgstr "Received gifts"
+
+#. js-lingui-explicit-id
+msgid "finance.category.side-income"
+msgstr "Side income"
+
+#. js-lingui-explicit-id
+msgid "finance.category.investment"
+msgstr "Stocks & funds"
+
+#. js-lingui-explicit-id
+msgid "finance.category.bonus"
+msgstr "Bonus"
+
+#. js-lingui-explicit-id
+msgid "finance.category.interest"
+msgstr "Interest"
+
+#. js-lingui-explicit-id
+msgid "finance.category.rent"
+msgstr "Rental income"
+
+#. js-lingui-explicit-id
+msgid "finance.category.reimbursement"
+msgstr "Reimbursement"
+
+#. js-lingui-explicit-id
+msgid "finance.category.other-income"
+msgstr "Other"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.utensils"
+msgstr "Cutlery"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.cookie"
+msgstr "Cookie"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.shirt"
+msgstr "Shirt"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.bus"
+msgstr "Bus"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.plane"
+msgstr "Plane"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.baby"
+msgstr "Baby"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.paw-print"
+msgstr "Pet"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.phone"
+msgstr "Phone"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.wine"
+msgstr "Wine glass"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.book-open"
+msgstr "Book"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.shopping-basket"
+msgstr "Basket"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.house"
+msgstr "House"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.sparkles"
+msgstr "Sparkles"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.heart-pulse"
+msgstr "Health"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.gift"
+msgstr "Gift"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.fuel"
+msgstr "Fuel"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.gamepad-2"
+msgstr "Gamepad"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.party-popper"
+msgstr "Celebration"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.camera"
+msgstr "Camera"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.dumbbell"
+msgstr "Dumbbell"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.grid-2x2"
+msgstr "Grid"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.zap"
+msgstr "Lightning"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.hand-heart"
+msgstr "Care"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.washing-machine"
+msgstr "Washing machine"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.leaf"
+msgstr "Leaf"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.coffee"
+msgstr "Coffee"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.shopping-bag"
+msgstr "Shopping bag"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.shield-check"
+msgstr "Shield"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.receipt"
+msgstr "Receipt"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.briefcase-business"
+msgstr "Briefcase"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.banknote"
+msgstr "Banknote"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.wallet"
+msgstr "Wallet"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.clock"
+msgstr "Clock"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.trending-up"
+msgstr "Growth"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.award"
+msgstr "Award"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.landmark"
+msgstr "Bank"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.coins"
+msgstr "Coins"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.laptop"
+msgstr "Laptop"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.music"
+msgstr "Music"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.bike"
+msgstr "Bicycle"

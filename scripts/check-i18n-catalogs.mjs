@@ -32,6 +32,7 @@ const sourceLocale = i18nConfig.sourceLocale;
 const serverSourceLocale = i18nConfig.sourceLocale;
 const domains = [
   "common",
+  "finance",
   "legal",
   "custom-config",
   "subscription",

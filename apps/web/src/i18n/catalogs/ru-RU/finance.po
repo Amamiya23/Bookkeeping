@@ -1,0 +1,625 @@
+msgid ""
+msgstr ""
+"Language: ru-RU\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. js-lingui-explicit-id
+msgid "finance.ledgerName"
+msgstr "Название учёта"
+
+#. js-lingui-explicit-id
+msgid "finance.timeZone"
+msgstr "Часовой пояс учёта"
+
+#. js-lingui-explicit-id
+msgid "finance.kind"
+msgstr "Тип операции"
+
+#. js-lingui-explicit-id
+msgid "finance.refundLimit"
+msgstr "Сумма возвратов не может превышать исходный расход."
+
+#. js-lingui-explicit-id
+msgid "finance.refundsExist"
+msgstr "Сначала обработайте связанные возвраты, затем измените или аннулируйте расход."
+
+#. js-lingui-explicit-id
+msgid "finance.beforeOpening"
+msgstr "Дата операции не может быть раньше начальной даты счёта."
+
+#. js-lingui-explicit-id
+msgid "finance.archivedAccount"
+msgstr "Выберите счёт, который не находится в архиве."
+
+#. js-lingui-explicit-id
+msgid "finance.currencyLocked"
+msgstr "Нельзя менять валюту счёта с операциями."
+
+#. js-lingui-explicit-id
+msgid "finance.invalidTransfer"
+msgstr "Для перевода нужны два разных счёта в одной валюте."
+
+#. js-lingui-explicit-id
+msgid "finance.externalLocked"
+msgstr "При исправлении операции необходимо сохранить идентификаторы внешнего источника."
+
+#. js-lingui-explicit-id
+msgid "finance.title"
+msgstr "Повседневный учёт"
+
+#. js-lingui-explicit-id
+msgid "finance.transactions"
+msgstr "Операции"
+
+#. js-lingui-explicit-id
+msgid "finance.accounts"
+msgstr "Счета"
+
+#. js-lingui-explicit-id
+msgid "finance.reports"
+msgstr "Фактические доходы и расходы"
+
+#. js-lingui-explicit-id
+msgid "finance.add"
+msgstr "Добавить операцию"
+
+#. js-lingui-explicit-id
+msgid "finance.addAccount"
+msgstr "Добавить счёт"
+
+#. js-lingui-explicit-id
+msgid "finance.expense"
+msgstr "Расход"
+
+#. js-lingui-explicit-id
+msgid "finance.income"
+msgstr "Доход"
+
+#. js-lingui-explicit-id
+msgid "finance.transfer"
+msgstr "Перевод"
+
+#. js-lingui-explicit-id
+msgid "finance.refund"
+msgstr "Возврат"
+
+#. js-lingui-explicit-id
+msgid "finance.amount"
+msgstr "Сумма"
+
+#. js-lingui-explicit-id
+msgid "finance.currency"
+msgstr "Валюта"
+
+#. js-lingui-explicit-id
+msgid "finance.account"
+msgstr "Счёт"
+
+#. js-lingui-explicit-id
+msgid "finance.counterAccount"
+msgstr "Счёт получателя"
+
+#. js-lingui-explicit-id
+msgid "finance.occurredOn"
+msgstr "Дата операции"
+
+#. js-lingui-explicit-id
+msgid "finance.category"
+msgstr "Категория"
+
+#. js-lingui-explicit-id
+msgid "finance.merchant"
+msgstr "Продавец"
+
+#. js-lingui-explicit-id
+msgid "finance.tags"
+msgstr "Метки (через запятую)"
+
+#. js-lingui-explicit-id
+msgid "finance.notes"
+msgstr "Примечание"
+
+#. js-lingui-explicit-id
+msgid "finance.refundOf"
+msgstr "ID исходного расхода"
+
+#. js-lingui-explicit-id
+msgid "finance.name"
+msgstr "Название счёта"
+
+#. js-lingui-explicit-id
+msgid "finance.openingBalance"
+msgstr "Начальный баланс"
+
+#. js-lingui-explicit-id
+msgid "finance.openingDate"
+msgstr "Начальная дата"
+
+#. js-lingui-explicit-id
+msgid "finance.balance"
+msgstr "Текущий баланс"
+
+#. js-lingui-explicit-id
+msgid "finance.archive"
+msgstr "Архивировать счёт"
+
+#. js-lingui-explicit-id
+msgid "finance.archived"
+msgstr "В архиве"
+
+#. js-lingui-explicit-id
+msgid "finance.restoreAccount"
+msgstr "Извлечь из архива"
+
+#. js-lingui-explicit-id
+msgid "finance.void"
+msgstr "Аннулировать"
+
+#. js-lingui-explicit-id
+msgid "finance.voidReason"
+msgstr "Причина аннулирования"
+
+#. js-lingui-explicit-id
+msgid "finance.voided"
+msgstr "Аннулировано"
+
+#. js-lingui-explicit-id
+msgid "finance.posted"
+msgstr "Проведено"
+
+#. js-lingui-explicit-id
+msgid "finance.saved"
+msgstr "Сохранено"
+
+#. js-lingui-explicit-id
+msgid "finance.emptyAccounts"
+msgstr "Добавьте счёт, прежде чем записывать операции."
+
+#. js-lingui-explicit-id
+msgid "finance.unsupported"
+msgstr "Повседневный учёт пока недоступен в этой среде."
+
+#. js-lingui-explicit-id
+msgid "finance.from"
+msgstr "С даты"
+
+#. js-lingui-explicit-id
+msgid "finance.to"
+msgstr "По дату"
+
+#. js-lingui-explicit-id
+msgid "finance.loadMore"
+msgstr "Загрузить ещё"
+
+#. js-lingui-explicit-id
+msgid "finance.netExpense"
+msgstr "Чистые расходы (после возвратов)"
+
+#. js-lingui-explicit-id
+msgid "finance.netIncome"
+msgstr "Остаток"
+
+#. js-lingui-explicit-id
+msgid "finance.basis"
+msgstr "По проведённым операциям; переводы и начальные балансы не учитываются."
+
+#. js-lingui-explicit-id
+msgid "finance.unconverted"
+msgstr "Валюты учитываются отдельно без конвертации."
+
+#. js-lingui-explicit-id
+msgid "finance.budget"
+msgstr "Месячный бюджет фактических расходов"
+
+#. js-lingui-explicit-id
+msgid "finance.remaining"
+msgstr "Остаток бюджета"
+
+#. js-lingui-explicit-id
+msgid "finance.month"
+msgstr "Месяц"
+
+#. js-lingui-explicit-id
+msgid "finance.audit"
+msgstr "История изменений"
+
+#. js-lingui-explicit-id
+msgid "finance.retry"
+msgstr "Перезагрузить"
+
+#. js-lingui-explicit-id
+msgid "finance.versionConflict"
+msgstr "Запись изменилась. Перезагрузите её перед редактированием."
+
+#. js-lingui-explicit-id
+msgid "finance.invalid"
+msgstr "Проверьте сумму, дату и счёт."
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionBasis"
+msgstr "Статистика подписок · расчётные и прогнозные расходы"
+
+#. js-lingui-explicit-id
+msgid "finance.export"
+msgstr "Экспортировать учёт"
+
+#. js-lingui-explicit-id
+msgid "finance.restore"
+msgstr "Восстановить учёт"
+
+#. js-lingui-explicit-id
+msgid "finance.restoreEmpty"
+msgstr "Восстановление возможно только в пустой учёт; существующие операции сохраняются."
+
+#. js-lingui-explicit-id
+msgid "finance.restored"
+msgstr "Учёт восстановлен"
+
+
+#. js-lingui-explicit-id
+msgid "finance.addCategory"
+msgstr "Добавить категорию"
+
+#. js-lingui-explicit-id
+msgid "finance.categoryName"
+msgstr "Название категории"
+
+#. js-lingui-explicit-id
+msgid "finance.categoryIcon"
+msgstr "Значок категории"
+
+#. js-lingui-explicit-id
+msgid "finance.searchCategories"
+msgstr "Поиск категорий"
+
+#. js-lingui-explicit-id
+msgid "finance.categoryDuplicate"
+msgstr "Категория с таким именем уже существует для этого типа. Выберите её."
+
+#. js-lingui-explicit-id
+msgid "finance.categoryInvalid"
+msgstr "Используйте 1–80 символов. Можно добавить до 100 категорий."
+
+#. js-lingui-explicit-id
+msgid "finance.moreDetails"
+msgstr "Дополнительные сведения"
+
+#. js-lingui-explicit-id
+msgid "finance.refundCategory"
+msgstr "Возврат использует категорию исходного расхода."
+
+#. js-lingui-explicit-id
+msgid "finance.noCategories"
+msgstr "Категории не найдены."
+
+#. js-lingui-explicit-id
+msgid "finance.categoryLimit"
+msgstr "Достигнут лимит категорий."
+
+#. js-lingui-explicit-id
+msgid "finance.category.meals"
+msgstr "Питание"
+
+#. js-lingui-explicit-id
+msgid "finance.category.snacks"
+msgstr "Перекусы"
+
+#. js-lingui-explicit-id
+msgid "finance.category.clothes"
+msgstr "Одежда"
+
+#. js-lingui-explicit-id
+msgid "finance.category.transport"
+msgstr "Транспорт"
+
+#. js-lingui-explicit-id
+msgid "finance.category.travel"
+msgstr "Путешествия"
+
+#. js-lingui-explicit-id
+msgid "finance.category.children"
+msgstr "Дети"
+
+#. js-lingui-explicit-id
+msgid "finance.category.pets"
+msgstr "Питомцы"
+
+#. js-lingui-explicit-id
+msgid "finance.category.telecom"
+msgstr "Связь и интернет"
+
+#. js-lingui-explicit-id
+msgid "finance.category.tobacco"
+msgstr "Табак и алкоголь"
+
+#. js-lingui-explicit-id
+msgid "finance.category.learning"
+msgstr "Образование"
+
+#. js-lingui-explicit-id
+msgid "finance.category.daily"
+msgstr "Бытовые товары"
+
+#. js-lingui-explicit-id
+msgid "finance.category.housing"
+msgstr "Жильё"
+
+#. js-lingui-explicit-id
+msgid "finance.category.beauty"
+msgstr "Косметика"
+
+#. js-lingui-explicit-id
+msgid "finance.category.medical"
+msgstr "Медицина"
+
+#. js-lingui-explicit-id
+msgid "finance.category.red-packet"
+msgstr "Денежные подарки"
+
+#. js-lingui-explicit-id
+msgid "finance.category.car"
+msgstr "Авто и топливо"
+
+#. js-lingui-explicit-id
+msgid "finance.category.entertainment"
+msgstr "Развлечения"
+
+#. js-lingui-explicit-id
+msgid "finance.category.hosting"
+msgstr "Угощения и подарки"
+
+#. js-lingui-explicit-id
+msgid "finance.category.electronics"
+msgstr "Электроника"
+
+#. js-lingui-explicit-id
+msgid "finance.category.sports"
+msgstr "Спорт"
+
+#. js-lingui-explicit-id
+msgid "finance.category.utilities"
+msgstr "Коммунальные услуги"
+
+#. js-lingui-explicit-id
+msgid "finance.category.social"
+msgstr "Семейные события"
+
+#. js-lingui-explicit-id
+msgid "finance.category.laundry"
+msgstr "Стирка"
+
+#. js-lingui-explicit-id
+msgid "finance.category.wellness"
+msgstr "Здоровье и уход"
+
+#. js-lingui-explicit-id
+msgid "finance.category.drinks"
+msgstr "Напитки"
+
+#. js-lingui-explicit-id
+msgid "finance.category.shopping"
+msgstr "Покупки"
+
+#. js-lingui-explicit-id
+msgid "finance.category.insurance"
+msgstr "Страхование"
+
+#. js-lingui-explicit-id
+msgid "finance.category.tax"
+msgstr "Налоги и сборы"
+
+#. js-lingui-explicit-id
+msgid "finance.category.work"
+msgstr "Работа"
+
+#. js-lingui-explicit-id
+msgid "finance.category.subscriptions"
+msgstr "Подписки"
+
+#. js-lingui-explicit-id
+msgid "finance.category.repayment"
+msgstr "Погашение долгов"
+
+#. js-lingui-explicit-id
+msgid "finance.category.other-expense"
+msgstr "Прочее"
+
+#. js-lingui-explicit-id
+msgid "finance.category.salary"
+msgstr "Зарплата"
+
+#. js-lingui-explicit-id
+msgid "finance.category.allowance"
+msgstr "Деньги на жизнь"
+
+#. js-lingui-explicit-id
+msgid "finance.category.received-gift"
+msgstr "Подарки"
+
+#. js-lingui-explicit-id
+msgid "finance.category.side-income"
+msgstr "Подработка"
+
+#. js-lingui-explicit-id
+msgid "finance.category.investment"
+msgstr "Акции и фонды"
+
+#. js-lingui-explicit-id
+msgid "finance.category.bonus"
+msgstr "Премия"
+
+#. js-lingui-explicit-id
+msgid "finance.category.interest"
+msgstr "Проценты"
+
+#. js-lingui-explicit-id
+msgid "finance.category.rent"
+msgstr "Доход от аренды"
+
+#. js-lingui-explicit-id
+msgid "finance.category.reimbursement"
+msgstr "Возмещение расходов"
+
+#. js-lingui-explicit-id
+msgid "finance.category.other-income"
+msgstr "Прочее"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.utensils"
+msgstr "Столовые приборы"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.cookie"
+msgstr "Печенье"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.shirt"
+msgstr "Рубашка"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.bus"
+msgstr "Автобус"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.plane"
+msgstr "Самолёт"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.baby"
+msgstr "Ребёнок"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.paw-print"
+msgstr "Питомец"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.phone"
+msgstr "Телефон"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.wine"
+msgstr "Бокал"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.book-open"
+msgstr "Книга"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.shopping-basket"
+msgstr "Корзина"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.house"
+msgstr "Дом"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.sparkles"
+msgstr "Блеск"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.heart-pulse"
+msgstr "Здоровье"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.gift"
+msgstr "Подарок"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.fuel"
+msgstr "Топливо"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.gamepad-2"
+msgstr "Игры"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.party-popper"
+msgstr "Праздник"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.camera"
+msgstr "Камера"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.dumbbell"
+msgstr "Гантель"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.grid-2x2"
+msgstr "Сетка"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.zap"
+msgstr "Молния"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.hand-heart"
+msgstr "Забота"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.washing-machine"
+msgstr "Стиральная машина"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.leaf"
+msgstr "Лист"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.coffee"
+msgstr "Кофе"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.shopping-bag"
+msgstr "Покупки"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.shield-check"
+msgstr "Щит"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.receipt"
+msgstr "Чек"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.briefcase-business"
+msgstr "Портфель"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.banknote"
+msgstr "Купюра"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.wallet"
+msgstr "Кошелёк"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.clock"
+msgstr "Часы"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.trending-up"
+msgstr "Рост"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.award"
+msgstr "Награда"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.landmark"
+msgstr "Банк"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.coins"
+msgstr "Монеты"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.laptop"
+msgstr "Ноутбук"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.music"
+msgstr "Музыка"
+
+#. js-lingui-explicit-id
+msgid "finance.icon.bike"
+msgstr "Велосипед"

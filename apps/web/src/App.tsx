@@ -31,6 +31,7 @@ const AdminUsers = lazy(lazyRouteLoader("adminUsers"));
 const ForgotPassword = lazy(lazyRouteLoader("forgotPassword"));
 const ResetPassword = lazy(lazyRouteLoader("resetPassword"));
 const NotFound = lazy(lazyRouteLoader("notFound"));
+const Finance = lazy(lazyRouteLoader("finance"));
 
 function RouteFallback() {
   const { pathname } = useLocation();
@@ -50,6 +51,9 @@ export default function App() {
             <Route path="subscriptions" element={<Subscriptions />} />
             <Route path="calendar" element={<Calendar />} />
             <Route path="statistics" element={<Statistics />} />
+            <Route path="transactions" element={<Finance />} />
+            <Route path="accounts" element={<Finance />} />
+            <Route path="finance/statistics" element={<Finance />} />
             <Route path="settings" element={<Settings />} />
             <Route path="admin/users" element={<ProtectedRoute adminOnly><AdminUsers /></ProtectedRoute>} />
           </Route>

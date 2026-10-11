@@ -43,6 +43,7 @@ async function previewImportRequest(request: Request, env: Env, metrics: { bodyB
   const auth = await requireAuth(request, env);
   const parsed = await readImportBody(request, importPreviewRequestSchema, locale);
   const body = parsed.data;
+  if (body.payload.finance) throw new HttpError(409, "FINANCE_NOT_SUPPORTED", "FINANCE_NOT_SUPPORTED");
   metrics.bodyBytes = parsed.bodyBytes;
   metrics.items = body.payload.subscriptions.length;
   assertPreviewPayloadSize(body.payload.subscriptions.length, locale);
@@ -64,6 +65,7 @@ async function applyImportRequest(request: Request, env: Env, metrics: { bodyByt
   // apply 必须重新解析和预览请求体，不能信任浏览器上一轮 preview 的 action 结果。
   const parsed = await readImportBody(request, importApplyRequestSchema, locale);
   const body = parsed.data;
+  if (body.payload.finance) throw new HttpError(409, "FINANCE_NOT_SUPPORTED", "FINANCE_NOT_SUPPORTED");
   metrics.bodyBytes = parsed.bodyBytes;
   metrics.items = body.payload.subscriptions.length;
   assertApplyPayloadSize(body.payload.subscriptions.length, locale);

@@ -124,6 +124,9 @@ func ensureCollectionsSchema(app core.App) error {
 	if err := ensureAuthSecuritySettingsCollection(app); err != nil {
 		return err
 	}
+	if err := ensureFinanceSchema(app, users); err != nil {
+		return err
+	}
 	return ensureMediaIconIndexesCollection(app)
 }
 
