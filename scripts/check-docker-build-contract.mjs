@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { isAbsolute, join, relative, resolve, sep } from "node:path";
 
-// Web workspace 拥有自身构建守卫，三个镜像 workflow 共用根 Dockerfile，runner 只接收运行产物。
+// Web workspace 拥有自身构建守卫，镜像 workflow 共用根 Dockerfile，runner 只接收运行产物。
 
 const CLIENT_CHECK_SCRIPTS = [
   "scripts/check-client-csp.mjs",
@@ -12,6 +12,7 @@ const BUNDLE_BUDGET_VALUES = ["400000", "344000"];
 const DISTROLESS_RUNTIME = "gcr.io/distroless/static-debian13@sha256:9197324ba51d9cd071af8505989365c006adf9d6d2067eada25aef00abbb5278";
 const GRYPE_ACTION_COMMIT = "27805bf3b4e84b4a5c980df22ed233c00390a439";
 const IMAGE_WORKFLOWS = [
+  ".github/workflows/docker-publish.yml",
   ".github/workflows/build-smoke.yml",
   ".github/workflows/security-scan.yml",
   ".github/workflows/release-publish.yml",

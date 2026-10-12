@@ -1,7 +1,7 @@
 services:
   web:
-    # GHCR 镜像入口用于无法访问 Docker Hub 的部署；运行时契约与 Docker Hub compose 保持一致。
-    image: ghcr.io/zhiyingzzhou/renewlet:latest
+    # 在 .env 中设置 RENEWLET_IMAGE 可拉取自己仓库通过 Docker Publish 发布的镜像。
+    image: ${RENEWLET_IMAGE:-ghcr.io/amamiya23/bookkeeping:latest}
     environment:
       # PB_ENCRYPTION_KEY、CRON_SECRET 等 secret 由 .env 注入，不在 compose 中写死。
       GOMEMLIMIT: ${GOMEMLIMIT:-128MiB}

@@ -70,6 +70,7 @@ function createFixture() {
   );
   writeFixtureFile(root, "apps/web/vite.config.ts", "export default { build: { manifest: true } };\n");
   writeFixtureFile(root, "apps/docker-server/cmd/container-init/main.go", "package main\n");
+  writeFixtureFile(root, ".github/workflows/docker-publish.yml", workflow);
   writeFixtureFile(
     root,
     ".github/workflows/ci.yml",

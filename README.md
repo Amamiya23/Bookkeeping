@@ -20,6 +20,8 @@ Renewlet is a self-hosted accounting platform with subscription management. Dail
 
 Run it in a single Docker container or deploy it to Cloudflare Workers.
 
+This fork follows its own release schedule, starting at **V1.0** (`1.0.0`). See [automatic builds and GHCR deployment (Chinese)](docs/docker-ghcr-deploy.zh-CN.md) for deployment and version management.
+
 ## Demo
 
 <https://demo.renewlet.cc/>
@@ -113,11 +115,13 @@ Command references: [pnpm install](https://pnpm.io/cli/install), [Vite CLI](http
 
 ## Docker Quick Start
 
+To deploy changes from this repository, see [automatic Docker builds and GHCR deployment (Chinese)](docs/docker-ghcr-deploy.zh-CN.md). Pushes to `main` publish `ghcr.io/amamiya23/bookkeeping:latest`.
+
 Requirements: Docker and Docker Compose v2.
 
 ```bash
 mkdir -p renewlet && cd renewlet
-curl -fsSL https://raw.githubusercontent.com/zhiyingzzhou/renewlet/main/deploy/docker-deploy.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Amamiya23/Bookkeeping/main/deploy/docker-deploy.sh | bash
 docker compose up -d
 ```
 
@@ -132,15 +136,15 @@ Create the first administrator. The deploy script creates `docker-compose.yml`, 
 For production, pin a stable image tag:
 
 ```bash
-sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="zhiyingzzhou/renewlet:0.3.30"#' .env
+sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="ghcr.io/amamiya23/bookkeeping:1.0.0"#' .env
 docker compose pull
 docker compose up -d
 ```
 
-If Docker Hub is unavailable, use GHCR:
+To follow the latest build from `main`, set this value in `.env`:
 
 ```env
-RENEWLET_IMAGE="ghcr.io/zhiyingzzhou/renewlet:0.3.30"
+RENEWLET_IMAGE="ghcr.io/amamiya23/bookkeeping:latest"
 ```
 
 ## Cloudflare Workers
@@ -162,13 +166,13 @@ tar -czf renewlet-backup-$(date +%F).tgz .env docker-compose.yml data
 Update the Docker image:
 
 ```bash
-sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="zhiyingzzhou/renewlet:0.3.30"#' .env
+sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="ghcr.io/amamiya23/bookkeeping:1.0.0"#' .env
 docker compose pull
 docker compose up -d
 docker compose logs -f
 ```
 
-You can also update in the app by clicking the version number at the top of Renewlet and opening System Update.
+Update this fork by pulling its Docker image as shown above. The in-app System Update still uses the upstream release source.
 
 ## Common Commands
 
@@ -183,7 +187,7 @@ Common `.env` values:
 | Variable | Purpose |
 | --- | --- |
 | `PORT` | Public port, `3000` by default. |
-| `RENEWLET_IMAGE` | Docker image, `zhiyingzzhou/renewlet:latest` by default. |
+| `RENEWLET_IMAGE` | Docker image, `ghcr.io/amamiya23/bookkeeping:latest` by default. |
 | `TZ` | Time zone for logs; reminders use each user's time zone. |
 | `PB_ENCRYPTION_KEY` | Encryption key for sensitive settings. Do not change it after deployment. |
 | `CRON_SECRET` | Bearer secret for external Cron requests. |

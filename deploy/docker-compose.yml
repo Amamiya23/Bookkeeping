@@ -1,6 +1,6 @@
 services:
   web:
-    image: ${RENEWLET_IMAGE:-zhiyingzzhou/renewlet:latest}
+    image: ${RENEWLET_IMAGE:-ghcr.io/amamiya23/bookkeeping:latest}
     environment:
       # env.example 是部署变量说明真相来源；这里仅把 Docker 环境传入 Go/PocketBase 运行面。
       GOMEMLIMIT: ${GOMEMLIMIT:-128MiB}

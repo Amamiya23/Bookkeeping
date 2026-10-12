@@ -20,6 +20,8 @@ Renewlet 是一个兼顾订阅管理的自托管记账平台。日常收支、�
 
 可以用 Docker 单容器运行，也可以部署到 Cloudflare Workers。
 
+本仓库为二开版本，当前版本 **V1.0**（项目版本号 `1.0.0`），后续按本仓库的版本进度发布。部署与版本管理见 [自动构建和 GHCR 部署](docs/docker-ghcr-deploy.zh-CN.md)。
+
 ## 在线演示
 
 <https://demo.renewlet.cc/>
@@ -113,11 +115,13 @@ macOS/Linux 使用相同版本和命令，将 PowerShell 的 `$env:NAME = "value
 
 ## 快速部署
 
+部署本仓库修改后的版本，请参阅 [推送后自动构建镜像并从 GHCR 部署](docs/docker-ghcr-deploy.zh-CN.md)。`main` 推送会发布 `ghcr.io/amamiya23/bookkeeping:latest`。
+
 需要 Docker 和 Docker Compose v2。
 
 ```bash
 mkdir -p renewlet && cd renewlet
-curl -fsSL https://raw.githubusercontent.com/zhiyingzzhou/renewlet/main/deploy/docker-deploy.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Amamiya23/Bookkeeping/main/deploy/docker-deploy.sh | bash
 docker compose up -d
 ```
 
@@ -132,15 +136,15 @@ http://localhost:3000/setup
 正式使用时建议固定版本：
 
 ```bash
-sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="zhiyingzzhou/renewlet:0.3.30"#' .env
+sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="ghcr.io/amamiya23/bookkeeping:1.0.0"#' .env
 docker compose pull
 docker compose up -d
 ```
 
-如果 Docker Hub 拉取不可用，改用 GHCR：
+需要跟随 `main` 的最新构建时，在 `.env` 中设置：
 
 ```env
-RENEWLET_IMAGE="ghcr.io/zhiyingzzhou/renewlet:0.3.30"
+RENEWLET_IMAGE="ghcr.io/amamiya23/bookkeeping:latest"
 ```
 
 ## Cloudflare Workers
@@ -162,13 +166,13 @@ tar -czf renewlet-backup-$(date +%F).tgz .env docker-compose.yml data
 更新 Docker 镜像：
 
 ```bash
-sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="zhiyingzzhou/renewlet:0.3.30"#' .env
+sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="ghcr.io/amamiya23/bookkeeping:1.0.0"#' .env
 docker compose pull
 docker compose up -d
 docker compose logs -f
 ```
 
-也可以点击页面顶部的版本号，在“系统更新”中完成更新。
+二开版本通过上述镜像拉取命令升级；页面内“系统更新”仍使用上游发布源。
 
 ## 常用命令
 
@@ -183,7 +187,7 @@ docker compose down
 | 变量 | 用途 |
 | --- | --- |
 | `PORT` | 对外端口，默认 `3000`。 |
-| `RENEWLET_IMAGE` | Docker 镜像，默认 `zhiyingzzhou/renewlet:latest`。 |
+| `RENEWLET_IMAGE` | Docker 镜像，默认 `ghcr.io/amamiya23/bookkeeping:latest`。 |
 | `TZ` | 日志时区；提醒使用每个用户设置的时区。 |
 | `PB_ENCRYPTION_KEY` | 敏感设置加密密钥，部署后不要更换。 |
 | `CRON_SECRET` | 外部 Cron 请求使用的 Bearer 密钥。 |

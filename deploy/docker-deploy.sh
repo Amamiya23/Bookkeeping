@@ -4,7 +4,7 @@
 # 可覆盖变量：RENEWLET_RAW_BASE、RENEWLET_COMPOSE_FILE、RENEWLET_ENV_FILE、RENEWLET_DATA_DIR。
 set -euo pipefail
 
-RAW_BASE="${RENEWLET_RAW_BASE:-https://raw.githubusercontent.com/zhiyingzzhou/renewlet/main/deploy}"
+RAW_BASE="${RENEWLET_RAW_BASE:-https://raw.githubusercontent.com/Amamiya23/Bookkeeping/main/deploy}"
 COMPOSE_FILE="${RENEWLET_COMPOSE_FILE:-docker-compose.yml}"
 ENV_FILE="${RENEWLET_ENV_FILE:-.env}"
 DATA_DIR="${RENEWLET_DATA_DIR:-data}"
