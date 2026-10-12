@@ -23,6 +23,7 @@ import {
   subscriptionQueryKeys,
 } from "@/hooks/subscription-query-cache";
 import { invalidateNotificationOverview } from "@/hooks/notification-query-cache";
+import { getProductCurrentUserId } from "@/services/product-session";
 
 const SUBSCRIPTIONS_STALE_TIME_MS = 60_000;
 const INITIAL_SUBSCRIPTION_CURSOR: string | null = null;
@@ -150,6 +151,7 @@ function writeSubscriptionMutationResult(queryClient: QueryClient, subscription:
 function writeNotificationAffectingSubscriptionMutationResult(queryClient: QueryClient, subscription: Subscription): void {
   writeSubscriptionMutationResult(queryClient, subscription);
   void invalidateNotificationOverview(queryClient);
+  void queryClient.invalidateQueries({ queryKey: ["finance", getProductCurrentUserId(), "plans"] });
 }
 
 export function useCreateSubscription() {
@@ -196,6 +198,7 @@ export function useDeleteSubscription() {
       queryClient.removeQueries({ queryKey: subscriptionQueryKeys.detail(id), exact: true });
       void invalidateSubscriptionCollections(queryClient);
       void invalidateNotificationOverview(queryClient);
+      void queryClient.invalidateQueries({ queryKey: ["finance", getProductCurrentUserId(), "plans"] });
     },
   });
 }

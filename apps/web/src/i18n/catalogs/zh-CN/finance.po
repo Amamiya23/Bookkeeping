@@ -8,6 +8,14 @@ msgid "finance.monthlyTrend"
 msgstr "月度收支"
 
 #. js-lingui-explicit-id
+msgid "finance.subscriptionCategoryHint"
+msgstr "分类随订阅同步，请在订阅中修改。已有账单保留入账时的分类。"
+
+#. js-lingui-explicit-id
+msgid "finance.viewSubscriptionCategories"
+msgstr "查看订阅分类"
+
+#. js-lingui-explicit-id
 msgid "finance.overviewEyebrow"
 msgstr "每一笔消费，放在一起看"
 

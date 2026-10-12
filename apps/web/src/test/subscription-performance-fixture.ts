@@ -33,6 +33,7 @@ export function subscriptionPerformanceCollectionItems(size: number) {
     repeatReminderInterval: _repeatReminderInterval,
     repeatReminderWindow: _repeatReminderWindow,
     extra: _extra,
+    paymentConfirmationRequired: _paymentConfirmationRequired,
     ...collection
   }) => fromApiSubscriptionCollectionItem(collection));
 }

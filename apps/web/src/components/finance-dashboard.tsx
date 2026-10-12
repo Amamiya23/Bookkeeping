@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormField } from "@/components/ui/form-field";
 import { PaymentSchedule } from "@/components/payment-schedule";
-import { SpendingVisuals } from "@/components/spending-visuals";
+import { DeferredSpendingVisuals as SpendingVisuals } from "@/components/spending-visuals-loader";
 import Link from "@/components/router-link";
 import { useI18n } from "@/i18n/I18nProvider";
 import { formatFinanceAmount } from "@/lib/finance-format";

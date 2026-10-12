@@ -12,7 +12,7 @@ import { FinanceReport } from "@/components/finance-report";
 import { RecurringPlans } from "@/components/recurring-plans";
 import { useCashflow } from "@/components/cashflow-context";
 import { FinanceCategoryIcon } from "@/components/finance-category-icon";
-import { financeCategoryDetails, financeCategoryOptions } from "@/lib/finance-categories";
+import { useFinanceCategoryCatalog } from "@/hooks/use-finance-category-catalog";
 import { FormField, FormFieldRow } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { downloadFile } from "@/shared/browser/download-file";
@@ -78,7 +78,8 @@ function FinanceScreen() {
   };
   const ready = ledger.data;
   const customCategories = ledger.data?.categories ?? [];
-  const categoryDetails = (value: string, kind: string) => financeCategoryDetails(kind === "refund" ? "builtin:refund" : kind === "transfer" ? "builtin:transfer" : value, kind === "expense" ? "expense" : "income", customCategories, t);
+  const categoryCatalog = useFinanceCategoryCatalog(customCategories);
+  const categoryDetails = (value: string, kind: string) => categoryCatalog.details(kind === "refund" ? "builtin:refund" : kind === "transfer" ? "builtin:transfer" : value, kind === "expense" ? "expense" : "income");
   const addCategory = async (item: FinanceCategory) => {
     if (!ledger.data || busy) throw new Error(t("finance.retry"));
     setBusy(true);
@@ -106,8 +107,9 @@ function FinanceScreen() {
         <FinanceInput id="finance-to" label={t("finance.to")} value={to} type="date" onChange={setTo} />
         {view === "transactions" && <FormField id="finance-filter-category" label={t("finance.category")}>{({ id }) => <select id={id} className={financeSelectClass} value={category} onChange={(event) => setCategory(event.target.value)}>
           <option value="">{t("common.none")}</option>
-          {(["expense", "income"] as const).map((kind) => <optgroup key={kind} label={t(financeKindLabels[kind])}>{financeCategoryOptions(kind, customCategories, t).map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</optgroup>)}
-          {[...new Set([...rows.map((row) => row.category), category])].filter((value) => value && ![...financeCategoryOptions("expense", customCategories, t), ...financeCategoryOptions("income", customCategories, t)].some((item) => item.value === value)).map((value) => <option key={value} value={value}>{value}</option>)}
+          <option value="subscription:">{t("finance.navSubscriptions")}</option>
+          {(["expense", "income"] as const).map((kind) => <optgroup key={kind} label={t(financeKindLabels[kind])}>{categoryCatalog.options(kind).map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</optgroup>)}
+          {[...new Set([...rows.map((row) => row.category), category])].filter((value) => value && value !== "subscription:" && ![...categoryCatalog.options("expense"), ...categoryCatalog.options("income")].some((item) => item.value === value)).map((value) => <option key={value} value={value}>{categoryDetails(value, "expense").label}</option>)}
         </select>}</FormField>}
       </FormFieldRow>}
       {enabled && ready && view === "transactions" && <FormFieldRow alignAt="sm" rowClassName="sm:grid-cols-3">

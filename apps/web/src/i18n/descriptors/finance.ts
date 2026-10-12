@@ -4,6 +4,8 @@ export const messages = [
   msg({ id: "finance.navOverview", message: "总览" }),
   msg({ id: "finance.navBills", message: "账单" }),
   msg({ id: "finance.navSubscriptions", message: "订阅" }),
+  msg({ id: "finance.subscriptionCategoryHint", message: "分类随订阅同步，请在订阅中修改。已有账单保留入账时的分类。" }),
+  msg({ id: "finance.viewSubscriptionCategories", message: "查看订阅分类" }),
   msg({ id: "finance.navAnalysis", message: "分析" }),
   msg({ id: "finance.plans", message: "周期计划" }),
   msg({ id: "finance.newPlan", message: "添加周期计划" }),

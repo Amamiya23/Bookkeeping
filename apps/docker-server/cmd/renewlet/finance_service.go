@@ -259,7 +259,7 @@ func validateFinanceTransaction(app core.App, user, ledger, id string, input *fi
 		}
 		input.CNYAmount = financeDecimal(converted)
 	}
-	if !isValidDateOnly(input.OccurredOn) || !financeCurrencyPattern.MatchString(input.Currency) || !financeTextFits(input.Category, 80) || !financeTextFits(input.Merchant, 120) || !financeTextFits(input.Notes, 5000) || len(input.Tags) > 50 || !financeTextFits(input.ExternalSource, 120) || !financeTextFits(input.ExternalID, 120) {
+	if !isValidDateOnly(input.OccurredOn) || !financeCurrencyPattern.MatchString(input.Currency) || !financeCategoryValueFits(input.Category) || !financeTextFits(input.Merchant, 120) || !financeTextFits(input.Notes, 5000) || len(input.Tags) > 50 || !financeTextFits(input.ExternalSource, 120) || !financeTextFits(input.ExternalID, 120) {
 		return financeFail("INVALID_TRANSACTION", 400)
 	}
 	for _, tag := range input.Tags {

@@ -18,6 +18,13 @@ type financeCategoryDTO struct {
 
 var financeCategoryIcons = strings.Fields("utensils cookie shirt bus plane baby paw-print phone wine book-open shopping-basket house sparkles heart-pulse gift fuel gamepad-2 party-popper camera dumbbell grid-2x2 zap hand-heart washing-machine leaf coffee shopping-bag shield-check receipt briefcase-business banknote wallet clock trending-up award landmark coins laptop music bike")
 
+func financeCategoryValueFits(value string) bool {
+	if strings.HasPrefix(value, "subscription:") {
+		return financeTextFits(strings.TrimPrefix(value, "subscription:"), 80)
+	}
+	return financeTextFits(value, 80)
+}
+
 func validateFinanceCategories(categories []financeCategoryDTO) error {
 	if len(categories) > 100 {
 		return financeFail("INVALID_CATEGORIES", 400)

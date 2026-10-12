@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormField } from "@/components/ui/form-field";
 import { FinanceCategoryIcon } from "@/components/finance-category-icon";
-import { builtInFinanceCategories, financeCategoryDetails, financeCategoryOptions } from "@/lib/finance-categories";
+import { builtInFinanceCategories } from "@/lib/finance-categories";
+import { useFinanceCategoryCatalog } from "@/hooks/use-finance-category-catalog";
 import { useI18n } from "@/i18n/I18nProvider";
 import type { MessageKey } from "@/i18n/messages";
 import { cn } from "@/lib/utils";
@@ -17,15 +18,16 @@ export function FinanceCategoryPicker({ kind, value, categories, disabled, onCha
   onChange: (value: string) => void; onAdd: (category: FinanceCategory) => Promise<void>;
 }) {
   const { t } = useI18n();
+  const catalog = useFinanceCategoryCatalog(categories);
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState("");
   const [icon, setIcon] = useState<FinanceCategory["icon"]>("grid-2x2");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const options = financeCategoryOptions(kind, categories, t);
+  const options = catalog.options(kind);
   // Keep historical free-text categories available when editing, including blank.
-  if (!options.some((option) => option.value === value)) options.unshift({ value, ...financeCategoryDetails(value, kind, categories, t) });
+  if (!options.some((option) => option.value === value)) options.unshift({ value, ...catalog.details(value, kind) });
   const filtered = options.filter((option) => option.label.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
   const save = async () => {
     if (disabled || saving) return;
@@ -44,7 +46,7 @@ export function FinanceCategoryPicker({ kind, value, categories, disabled, onCha
   return <fieldset disabled={disabled || saving} className="min-w-0 space-y-3">
     <legend className="sr-only">{t("finance.category")}</legend>
     <div className="flex items-center justify-between gap-2">
-      <div className="flex min-w-0 items-center gap-2 text-sm"><span className="shrink-0 font-medium">{t("finance.category")}</span><span className="truncate text-primary">{financeCategoryDetails(value, kind, categories, t).label}</span></div>
+      <div className="flex min-w-0 items-center gap-2 text-sm"><span className="shrink-0 font-medium">{t("finance.category")}</span><span className="truncate text-primary">{catalog.details(value, kind).label}</span></div>
       <Button type="button" size="sm" variant="ghost" aria-expanded={editing} disabled={categories.length >= 100} onClick={() => { setEditing(!editing); setError(""); }}><Plus className="size-4" aria-hidden="true" />{t("finance.addCategory")}</Button>
     </div>
     {editing ? <div role="region" aria-label={t("finance.addCategory")} className="space-y-3 rounded-lg border bg-muted/30 p-3">

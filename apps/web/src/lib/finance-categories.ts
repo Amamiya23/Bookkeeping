@@ -1,5 +1,16 @@
 import type { FinanceCategory, FinanceCategoryIconName } from "@renewlet/shared/schemas/finance";
 import type { MessageKey } from "@/i18n/messages";
+import type { ConfigItem } from "@/types/config";
+import { localizedLabel, type Locale } from "@/i18n/locales";
+
+export const subscriptionCategoryPrefix = "subscription:";
+export type FinanceCategoryOption = { value: string; label: string; icon: FinanceCategoryIconName };
+export function isSubscriptionFinanceCategory(value: string) {
+  return value.startsWith(subscriptionCategoryPrefix) || value === "builtin:subscriptions";
+}
+export function subscriptionFinanceCategoryOptions(categories: ConfigItem[], locale: Locale, t: (key: MessageKey) => string): FinanceCategoryOption[] {
+  return categories.filter((item) => item.enabled !== false).map((item) => ({ value: subscriptionCategoryPrefix + item.value, label: `${t("finance.navSubscriptions")}-${localizedLabel(item.labels, locale) || item.value}`, icon: "laptop" }));
+}
 
 type BuiltInCategory = { value: string; kind: FinanceCategory["kind"]; icon: FinanceCategoryIconName; label: MessageKey; aliases: string[] };
 export const builtInFinanceCategories: BuiltInCategory[] = [
@@ -49,14 +60,28 @@ export const builtInFinanceCategories: BuiltInCategory[] = [
   { value: "builtin:other-income", kind: "income", icon: "grid-2x2", label: "finance.category.other-income", aliases: ["其它","Other","Прочее"] },
 ];
 
-export function financeCategoryDetails(value: string, kind: string, custom: FinanceCategory[], t: (key: MessageKey) => string) {
+export function financeCategoryDetails(value: string, kind: string, custom: FinanceCategory[], t: (key: MessageKey) => string, subscriptions: FinanceCategoryOption[] = []) {
   const categoryKind = kind === "income" ? "income" : "expense";
+  if (categoryKind === "expense" && value.startsWith(subscriptionCategoryPrefix)) {
+    const subscription = subscriptions.find((item) => item.value === value);
+    return { label: subscription?.label ?? `${t("finance.navSubscriptions")}${value === subscriptionCategoryPrefix ? "" : "-" + value.slice(subscriptionCategoryPrefix.length)}`, icon: "laptop" as const };
+  }
   const own = custom.find((item) => item.name === value && item.kind === categoryKind);
   if (own) return { label: own.name, icon: own.icon };
   const builtin = builtInFinanceCategories.find((item) => item.kind === categoryKind && (item.value === value || item.aliases.includes(value)));
   return builtin ? { label: t(builtin.label), icon: builtin.icon } : { label: value || t("common.none"), icon: "grid-2x2" as const };
 }
 
-export function financeCategoryOptions(kind: FinanceCategory["kind"], custom: FinanceCategory[], t: (key: MessageKey) => string) {
-  return [...builtInFinanceCategories.filter((item) => item.kind === kind).map((item) => ({ value: item.value, label: t(item.label), icon: item.icon })), ...custom.filter((item) => item.kind === kind).map((item) => ({ value: item.name, label: item.name, icon: item.icon }))];
+export function financeCategoryOptions(kind: FinanceCategory["kind"], custom: FinanceCategory[], t: (key: MessageKey) => string, subscriptions: FinanceCategoryOption[] = []) {
+  const options = [...builtInFinanceCategories.filter((item) => item.kind === kind).map((item) => ({ value: item.value, label: t(item.label), icon: item.icon })), ...(kind === "expense" ? subscriptions : []), ...custom.filter((item) => item.kind === kind).map((item) => ({ value: item.name, label: item.name, icon: item.icon }))];
+  return options.filter((item, index) => options.findIndex((other) => other.value === item.value) === index);
+}
+
+export function groupSpendingCategories(categories: Record<string, string>) {
+  const result: Record<string, number> = {};
+  for (const [category, value] of Object.entries(categories)) {
+    const key = isSubscriptionFinanceCategory(category) ? subscriptionCategoryPrefix : category;
+    result[key] = (result[key] ?? 0) + Number(value);
+  }
+  return Object.entries(result).filter(([, value]) => value > 0).sort((a, b) => b[1] - a[1]);
 }

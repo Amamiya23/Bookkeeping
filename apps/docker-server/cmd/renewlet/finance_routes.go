@@ -173,7 +173,10 @@ func handleFinanceTransactionsList(app core.App, e *core.RequestEvent, a finance
 	params["plan"] = q.Get("planId")
 	for _, key := range []string{"account", "kind", "status", "category", "merchant", "refundOf"} {
 		if value := q.Get(key); value != "" {
-			if key == "account" {
+			if key == "category" && value == "subscription:" {
+				filter += " && (category ~ {:subscriptionPrefix} || category = 'builtin:subscriptions')"
+				params["subscriptionPrefix"] = "subscription:%"
+			} else if key == "account" {
 				filter += " && (account = {:account} || counterAccount = {:account})"
 			} else if key == "kind" && value == "income" {
 				filter += " && (kind = 'income' || kind = 'refund' || kind = 'transfer')"

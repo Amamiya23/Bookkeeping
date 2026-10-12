@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { FinanceInput, financeSelectClass } from "@/components/finance-fields";
 import { FormField, FormFieldRow } from "@/components/ui/form-field";
 import { FinanceCategoryPicker } from "@/components/finance-category-picker";
+import { useFinanceCategoryCatalog } from "@/hooks/use-finance-category-catalog";
 import { formatFinanceAmount } from "@/lib/finance-format";
 import { useI18n } from "@/i18n/I18nProvider";
 import Link from "@/components/router-link";
@@ -31,6 +32,7 @@ export function RecurringPlans({ categories, onAddCategory, subscriptionOnly = f
   const query = useRecurringPlans();
   const { t, locale, formatDateOnly } = useI18n();
   const cashflow = useCashflow();
+  const categoryCatalog = useFinanceCategoryCatalog(categories);
   const client = useQueryClient();
   const user = getProductCurrentUserId();
   const [target, setTarget] = useState<FinancePlan | null>(null);
@@ -52,7 +54,7 @@ export function RecurringPlans({ categories, onAddCategory, subscriptionOnly = f
       <form className="space-y-4" onSubmit={(event) => { event.preventDefault(); if (busy) return; setBusy(true); setError(""); void financeService.savePlan(form, target?.id).then(async () => { setForm(null); await Promise.all([client.invalidateQueries({ queryKey: ["finance", user] }), client.invalidateQueries({ queryKey: ["subscriptions"] })]); }).catch((cause) => setError(financeErrorMessage(cause, t))).finally(() => setBusy(false)); }}>
         <FinanceInput id="plan-name" label={t("finance.planName")} value={form.name} required onChange={(value) => update("name", value)} />
         <FormFieldRow alignAt="sm" rowClassName="sm:grid-cols-2"><FinanceInput id="plan-amount" label={t("finance.amount")} value={form.amount} inputMode="decimal" required onChange={(value) => update("amount", value)} /><FinanceInput id="plan-currency" label={t("finance.currency")} value={form.currency} required onChange={(value) => update("currency", value.toUpperCase())} /></FormFieldRow>
-        <FinanceCategoryPicker kind="expense" value={form.category} categories={categories} disabled={busy} onChange={(value) => update("category", value)} onAdd={onAddCategory} />
+        {target?.subscriptionId ? <p className="text-sm">{t("finance.category")} · {categoryCatalog.details(form.category, "expense").label}<span className="mt-1 block text-muted-foreground">{t("finance.subscriptionCategoryHint")}</span></p> : <FinanceCategoryPicker kind="expense" value={form.category} categories={categories} disabled={busy} onChange={(value) => update("category", value)} onAdd={onAddCategory} />}
         <FormFieldRow alignAt="sm" rowClassName="sm:grid-cols-2"><FinanceInput id="plan-interval" label={t("finance.interval")} value={String(form.interval)} type="number" required onChange={(value) => update("interval", Number(value))} /><FormField id="plan-unit" label={t("finance.unit")}>{({ id }) => <select id={id} className={financeSelectClass} value={form.unit} onChange={(event) => update("unit", event.target.value as FinancePlanInput["unit"])}>{(["day", "week", "month", "year"] as const).map((unit) => <option key={unit} value={unit}>{t(unit === "day" ? "finance.unitDay" : unit === "week" ? "finance.unitWeek" : unit === "month" ? "finance.unitMonth" : "finance.unitYear")}</option>)}</select>}</FormField></FormFieldRow>
         <FormFieldRow alignAt="sm" rowClassName="sm:grid-cols-2"><FinanceInput id="plan-date" label={t("finance.nextDue")} value={form.nextDue} type="date" required onChange={(value) => update("nextDue", value)} /><FinanceInput id="plan-end" label={t("finance.endDate")} value={form.endDate} type="date" onChange={(value) => update("endDate", value)} /></FormFieldRow>
         <FormFieldRow alignAt="sm" rowClassName="sm:grid-cols-2"><FormField id="plan-type" label={t("finance.planType")}>{({ id }) => <select id={id} className={financeSelectClass} disabled={Boolean(target?.subscriptionId)} value={form.type} onChange={(event) => update("type", event.target.value as FinancePlanInput["type"])}>{(target?.type === "subscription" ? ["subscription", "bill", "other"] as const : ["bill", "other"] as const).map((type) => <option key={type} value={type}>{t(type === "subscription" ? "finance.typeSubscription" : type === "bill" ? "finance.typeBill" : "finance.typeOther")}</option>)}</select>}</FormField><FormField id="plan-status" label={t("finance.planStatus")}>{({ id }) => <select id={id} className={financeSelectClass} value={form.status} onChange={(event) => update("status", event.target.value as FinancePlanInput["status"])}>{(["active", "paused", "cancelled"] as const).map((status) => <option key={status} value={status}>{t(status === "active" ? "finance.activePlan" : status === "paused" ? "finance.pausedPlan" : "finance.cancelledPlan")}</option>)}</select>}</FormField></FormFieldRow>

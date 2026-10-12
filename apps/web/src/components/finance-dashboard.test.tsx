@@ -7,6 +7,10 @@ const mocks = vi.hoisted(() => ({ enabled: true, empty: false, fail: false, summ
 vi.mock("@/hooks/use-finance", () => ({ useFinanceCapabilities: () => ({ data: { ledger: mocks.enabled }, isPending: false, refetch: vi.fn() }) }));
 vi.mock("@/hooks/use-zoned-today", () => ({ useZonedToday: () => "2026-10-12" }));
 vi.mock("@/hooks/use-settings", () => ({ useSettings: () => ({ data: {} }) }));
+vi.mock("@/contexts/CustomConfigContext", async () => {
+  const { getDefaultCategories } = await import("@/types/config");
+  return { useCustomConfigState: () => ({ config: { categories: getDefaultCategories() } }) };
+});
 vi.mock("@/hooks/use-exchange-rates", () => ({ useExchangeRates: () => ({ loading: false, sourceDate: "2026-10-12", rates: { USD: 1, CNY: 7.34 }, convert: (value: string) => Number(value) * 7.34 }) }));
 vi.mock("@/services/product-session", () => ({ getProductCurrentUserId: () => "test-user" }));
 vi.mock("@/components/router-link", () => ({ default: ({ href, children }: { href: string; children: React.ReactNode }) => <a href={href}>{children}</a> }));
@@ -29,8 +33,8 @@ describe("unified cash-flow overview", () => {
     renderOverview();
     expect((await screen.findAllByText(/446\.80 CNY/)).length).toBeGreaterThan(0);
     expect(screen.getByText(/较上月同期 \+123.4%/)).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "每日收支" })).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "钱花在哪里" })).toBeInTheDocument();
+    expect(await screen.findByRole("img", { name: "每日收支" })).toBeInTheDocument();
+    expect(await screen.findByRole("img", { name: "钱花在哪里" })).toBeInTheDocument();
     expect(screen.getByText("Tool")).toBeInTheDocument();
     expect(screen.getByText(/553\.20 CNY/)).toBeInTheDocument();
     expect(screen.queryByLabelText("币种")).not.toBeInTheDocument();

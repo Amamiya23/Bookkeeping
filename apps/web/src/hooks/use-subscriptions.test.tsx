@@ -211,6 +211,7 @@ describe("use-subscriptions mutations", () => {
     expect(payload).not.toHaveProperty("user");
     expect(payload).not.toHaveProperty("trialEndDate");
     expect(invalidate).toHaveBeenCalledWith({ queryKey: notificationQueryKeys.overview });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ["finance", "user-1", "plans"] });
   });
 
   it("sends nullable start dates for manual recurring creates", async () => {
@@ -281,6 +282,7 @@ describe("use-subscriptions mutations", () => {
     });
 
     expect(invalidate).toHaveBeenCalledWith({ queryKey: notificationQueryKeys.overview });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ["finance", "user-1", "plans"] });
   });
 
   it("sends only quick-action fields through the patch mutation", async () => {
@@ -326,6 +328,7 @@ describe("use-subscriptions mutations", () => {
     expect(queryClient.getQueryData<Subscription>(subscriptionQueryKeys.detail("sub-1"))?.name).toBe("Updated");
     expect(invalidate).toHaveBeenCalledWith({ queryKey: subscriptionQueryKeys.collections });
     expect(invalidate).toHaveBeenCalledWith({ queryKey: notificationQueryKeys.overview });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ["finance", "user-1", "plans"] });
     expect(invalidate).not.toHaveBeenCalledWith({ queryKey: subscriptionQueryKeys.details });
   });
 
@@ -348,6 +351,7 @@ describe("use-subscriptions mutations", () => {
 
     expect(invalidate).toHaveBeenCalledWith({ queryKey: subscriptionQueryKeys.collections });
     expect(invalidate).not.toHaveBeenCalledWith({ queryKey: notificationQueryKeys.overview });
+    expect(invalidate).not.toHaveBeenCalledWith({ queryKey: ["finance", "user-1", "plans"] });
   });
 
   it("removes a deleted detail cache entry before invalidating collections", async () => {
@@ -372,6 +376,7 @@ describe("use-subscriptions mutations", () => {
     expect(queryClient.getQueryData(subscriptionQueryKeys.detail("sub-1"))).toBeUndefined();
     expect(invalidate).toHaveBeenCalledWith({ queryKey: subscriptionQueryKeys.collections });
     expect(invalidate).toHaveBeenCalledWith({ queryKey: notificationQueryKeys.overview });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ["finance", "user-1", "plans"] });
   });
 });
 

@@ -8,6 +8,14 @@ msgid "finance.monthlyTrend"
 msgstr "Денежный поток по месяцам"
 
 #. js-lingui-explicit-id
+msgid "finance.subscriptionCategoryHint"
+msgstr "Категория берётся из подписки. Измените её в разделе подписок. Категории уже записанных платежей сохраняются."
+
+#. js-lingui-explicit-id
+msgid "finance.viewSubscriptionCategories"
+msgstr "Показать категории подписок"
+
+#. js-lingui-explicit-id
 msgid "finance.overviewEyebrow"
 msgstr "Все расходы в одном обзоре"
 

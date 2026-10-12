@@ -13,6 +13,7 @@ const inputAmount = decimal.refine((value) => {
   return BigInt(`${whole}${fraction.padEnd(6, "0")}`) <= 1_000_000_000_000_000n;
 }, "INVALID_AMOUNT");
 const positiveAmount = inputAmount.refine((value) => !value.startsWith("-") && /[1-9]/.test(value), "INVALID_AMOUNT");
+const categoryValue = z.string().max(93).refine((value) => value.startsWith("subscription:") || value.length <= 80);
 
 export const financeCapabilitiesSchema = z.object({
   ledger: z.boolean(), subscriptionPayments: z.boolean(), automation: z.boolean(), protocolVersion: z.literal(1),
@@ -34,7 +35,7 @@ export const financeAccountResponseSchema = apiSuccessResponseSchema(financeAcco
 export const financeAccountsResponseSchema = apiSuccessResponseSchema(z.object({ items: z.array(financeAccountSchema).max(500) }).strict());
 export const financeTransactionInputSchema = z.object({
   kind: z.enum(["expense", "income", "transfer", "refund"]), amount: positiveAmount, currency, account: z.union([id, z.literal("")]).default(""),
-  counterAccount: z.string().default(""), occurredOn: date, category: z.string().max(80).default(""),
+  counterAccount: z.string().default(""), occurredOn: date, category: categoryValue.default(""),
   merchant: z.string().max(120).default(""), tags: z.array(z.string().min(1).max(40)).max(50).default([]),
   notes: z.string().max(5000).default(""), refundOf: z.string().default(""),
   externalSource: z.string().max(120).default(""), externalId: z.string().max(120).default(""),
@@ -72,7 +73,7 @@ export type FinanceSummary = z.infer<typeof financeSummarySchema>;
 
 export const financePlanInputSchema = z.object({
   name: z.string().trim().min(1).max(120), type: z.enum(["subscription", "bill", "other"]),
-  amount: inputAmount.refine((value) => !value.startsWith("-")), currency, category: z.string().max(80),
+  amount: inputAmount.refine((value) => !value.startsWith("-")), currency, category: categoryValue,
   unit: z.enum(["day", "week", "month", "year"]), interval: z.number().int().min(1).max(365),
   nextDue: date, endDate: z.union([date, z.literal("")]), status: z.enum(["active", "paused", "cancelled"]),
   version: z.number().int().nonnegative(),

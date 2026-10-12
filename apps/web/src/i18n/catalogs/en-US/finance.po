@@ -8,6 +8,14 @@ msgid "finance.monthlyTrend"
 msgstr "Monthly cash flow"
 
 #. js-lingui-explicit-id
+msgid "finance.subscriptionCategoryHint"
+msgstr "This category follows the subscription. Change it in Subscriptions. Existing bills keep their recorded category."
+
+#. js-lingui-explicit-id
+msgid "finance.viewSubscriptionCategories"
+msgstr "View subscription categories"
+
+#. js-lingui-explicit-id
 msgid "finance.overviewEyebrow"
 msgstr "Every expense, in perspective"
 

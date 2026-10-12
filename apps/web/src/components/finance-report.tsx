@@ -1,7 +1,7 @@
 import { useI18n } from "@/i18n/I18nProvider";
 import type { FinanceSummary, FinanceCategory } from "@renewlet/shared/schemas/finance";
 import { formatFinanceAmount } from "@/lib/finance-format";
-import { SpendingVisuals } from "@/components/spending-visuals";
+import { DeferredSpendingVisuals as SpendingVisuals } from "@/components/spending-visuals-loader";
 import Link from "@/components/router-link";
 
 export function FinanceReport({ summary, categories = [], group = "" }: { summary: FinanceSummary; categories?: FinanceCategory[]; group?: string }) {

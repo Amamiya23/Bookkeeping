@@ -28,6 +28,7 @@ test("unified subscription and rent payments, CNY reporting and embedded service
     await page.getByRole("region", { name: "订阅概览", exact: true }).getByRole("button", { name: "确认付款", exact: true }).first().click();
     let dialog = page.getByRole("dialog");
     await expect(dialog.getByRole("heading", { name: "确认付款", exact: true })).toBeVisible();
+    await expect(dialog.getByText("订阅-设计创意", { exact: true }).first()).toBeVisible();
     await dialog.getByLabel("实际人民币金额", { exact: true }).fill("146.8");
     await dialog.getByRole("button", { name: "保存", exact: true }).click();
     await expect(dialog).not.toBeVisible();
@@ -36,6 +37,7 @@ test("unified subscription and rent payments, CNY reporting and embedded service
     expect(summary.cnyTotals?.recurringExpense).toBe("146.8");
     const records = financeTransactionsResponseSchema.parse((await productApiFetch(page, "/api/app/finance/transactions")).json).data.items;
     expect(records[0]?.currency).toBe("USD"); expect(records[0]?.amount).toBe("20"); expect(records[0]?.cnyAmount).toBe("146.8");
+    expect(records[0]?.category).toBe("subscription:design");
     await page.getByRole("button", { name: "续费日历", exact: true }).click();
     await expect(page.getByRole("heading", { name: "续费/到期日历", exact: true })).toBeVisible();
     await page.screenshot({ path: testInfo.outputPath("subscription-calendar.png"), fullPage: true });
@@ -48,6 +50,7 @@ test("unified subscription and rent payments, CNY reporting and embedded service
     await page.getByRole("article").filter({ hasText: "Design tool" }).getByRole("button", { name: "编辑", exact: true }).click();
     dialog = page.getByRole("dialog");
     await expect(dialog.getByText("已付款", { exact: false })).toBeVisible();
+    await expect(dialog.getByText(/分类 · 订阅-设计创意/)).toBeVisible();
     await page.screenshot({ path: testInfo.outputPath("subscription-payments.png"), fullPage: true });
     await dialog.getByRole("button", { name: "取消", exact: true }).first().click();
     await page.goto("/transactions?view=plans");
@@ -73,6 +76,16 @@ test("unified subscription and rent payments, CNY reporting and embedded service
     await page.goto("/statistics");
     await expect(page.getByRole("heading", { name: "分析", exact: true })).toBeVisible();
     await expect(page.getByRole("heading", { name: "商家支出", exact: true })).toBeVisible();
+    await page.getByText("查看订阅分类", { exact: true }).click();
+    const subscriptionCategoryLink = page.getByRole("link", { name: /订阅-设计创意/ });
+    await expect(subscriptionCategoryLink).toBeVisible();
+    await subscriptionCategoryLink.click();
+    await expect(page.getByLabel("分类", { exact: true })).toHaveValue("subscription:design");
+    await expect(page.getByRole("article")).toHaveCount(1);
+    await expect(page.getByRole("article").getByText(/订阅-设计创意/)).toBeVisible();
+    await page.getByLabel("分类", { exact: true }).selectOption("subscription:");
+    await expect(page.getByRole("article")).toHaveCount(1);
+    await page.goto("/statistics");
     await page.screenshot({ path: testInfo.outputPath("unified-analysis.png"), fullPage: true });
     await page.getByRole("button", { name: "记一笔", exact: true }).first().click();
     await expect(page.getByRole("dialog").getByRole("heading", { name: "记一笔", exact: true })).toBeVisible();

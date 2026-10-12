@@ -57,7 +57,7 @@ func validateFinancePlan(in *financePlanInput) error {
 	}
 	in.Amount = financeDecimal(amount)
 	in.Name = strings.TrimSpace(in.Name)
-	if in.Name == "" || !financeTextFits(in.Name, 120) || !financeTextFits(in.Category, 80) || !financeCurrencyPattern.MatchString(in.Currency) || !isValidDateOnly(in.NextDue) || (in.EndDate != "" && (!isValidDateOnly(in.EndDate) || in.Status == "active" && in.EndDate < in.NextDue)) || in.Interval < 1 || in.Interval > 365 {
+	if in.Name == "" || !financeTextFits(in.Name, 120) || !financeCategoryValueFits(in.Category) || !financeCurrencyPattern.MatchString(in.Currency) || !isValidDateOnly(in.NextDue) || (in.EndDate != "" && (!isValidDateOnly(in.EndDate) || in.Status == "active" && in.EndDate < in.NextDue)) || in.Interval < 1 || in.Interval > 365 {
 		return financeFail("INVALID_PLAN", 400)
 	}
 	if in.Type != "subscription" && in.Type != "bill" && in.Type != "other" {
@@ -101,26 +101,11 @@ func nextFinanceDue(date, unit string, interval, anchor int) string {
 	return d.Format("2006-01-02")
 }
 func financeSubscriptionCategory(category string) string {
-	switch category {
-	case "entertainment", "streaming", "music", "gaming":
-		return "builtin:entertainment"
-	case "education", "news_media":
-		return "builtin:learning"
-	case "communication":
-		return "builtin:telecom"
-	case "utilities":
-		return "builtin:utilities"
-	case "health_fitness":
-		return "builtin:wellness"
-	case "food_dining":
-		return "builtin:meals"
-	case "travel":
-		return "builtin:travel"
-	case "shopping":
-		return "builtin:shopping"
-	default:
-		return "builtin:work"
+	category = strings.TrimSpace(category)
+	if category == "" {
+		category = "other"
 	}
+	return "subscription:" + category
 }
 func financeSubscriptionSignature(s *core.Record) string {
 	values := []any{s.GetString("name"), s.GetString("price"), s.GetString("currency"), s.GetString("billingCycle"), s.GetInt("customDays"), s.GetString("customCycleUnit"), s.GetString("nextBillingDate"), s.GetString("status"), s.GetString("category")}
@@ -157,7 +142,8 @@ func syncFinanceSubscriptionPlans(app core.App, user, ledger string) error {
 					return err
 				}
 				signature := financeSubscriptionSignature(s)
-				if !fresh && p.GetString("sourceSignature") == signature {
+				category := financeSubscriptionCategory(s.GetString("category"))
+				if !fresh && p.GetString("sourceSignature") == signature && p.GetString("category") == category {
 					continue
 				}
 				unit, interval := "month", 1
@@ -209,9 +195,8 @@ func syncFinanceSubscriptionPlans(app core.App, user, ledger string) error {
 				p.Set("status", status)
 				p.Set("subscriptionId", s.Id)
 				p.Set("sourceSignature", signature)
-				if fresh {
-					p.Set("category", financeSubscriptionCategory(s.GetString("category")))
-				} else {
+				p.Set("category", category)
+				if !fresh {
 					p.Set("version", p.GetInt("version")+1)
 				}
 				if err := tx.Save(p); err != nil {
@@ -276,6 +261,9 @@ func saveFinancePlan(app core.App, a financeActor, ledger, id string, in finance
 			before = financePlan(p)
 			if p.GetString("subscriptionId") != "" && in.Type != "subscription" {
 				return financeFail("INVALID_PLAN", 400)
+			}
+			if p.GetString("subscriptionId") != "" {
+				in.Category = p.GetString("category")
 			}
 			p.Set("version", in.Version+1)
 		}
@@ -419,6 +407,9 @@ func settleFinancePlan(app core.App, a financeActor, ledger, id string, in finan
 			} else {
 				if in.Transaction.Kind != "expense" || in.Transaction.Account != "" || in.Transaction.Version != 0 || in.Transaction.ExternalID != "" {
 					return financeFail("INVALID_PLAN_PAYMENT", 400)
+				}
+				if in.Transaction.Category == "" {
+					in.Transaction.Category = p.GetString("category")
 				}
 				posted, err := saveFinanceTransaction(tx, a, ledger, "", "recurring", in.Transaction)
 				if err != nil {

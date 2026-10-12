@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import fixture from "../../data/finance-contract-fixtures.json";
-import { financeAccountInputSchema, financeTransactionInputSchema, financeCapabilitiesResponseSchema, financeLedgerSchema } from "./finance";
+import { financeAccountInputSchema, financeTransactionInputSchema, financeCapabilitiesResponseSchema, financeLedgerSchema, financePlanInputSchema } from "./finance";
 
 describe("finance contract fixtures", () => {
   it("keeps historical accounts and transaction kinds readable", () => {
@@ -29,6 +29,13 @@ describe("finance contract fixtures", () => {
   });
   it("supports explicit runtime capabilities without granting permissions", () => {
     expect(financeCapabilitiesResponseSchema.parse({ ok: true, data: { ledger: false, subscriptionPayments: false, automation: false, protocolVersion: 1 } }).data.ledger).toBe(false);
+  });
+  it("allows the subscription prefix without reducing the original category length limit", () => {
+    for (const schema of [financeTransactionInputSchema.shape.category, financePlanInputSchema.shape.category]) {
+      expect(schema.safeParse("subscription:" + "a".repeat(80)).success).toBe(true);
+      expect(schema.safeParse("subscription:" + "a".repeat(81)).success).toBe(false);
+      expect(schema.safeParse("a".repeat(81)).success).toBe(false);
+    }
   });
   it("reads old ledgers and validates custom category identities and safe icons", () => {
     const ledger = { id: "ledger000000001", name: "Personal", baseCurrency: "CNY", timeZone: "UTC", version: 1 };
