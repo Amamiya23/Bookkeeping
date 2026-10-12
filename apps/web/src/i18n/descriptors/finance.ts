@@ -1,6 +1,20 @@
 import { msg } from "@lingui/core/macro";
 
 export const messages = [
+  msg({ id: "finance.previousYear", message: "上一年" }),
+  msg({ id: "finance.nextYear", message: "下一年" }),
+  msg({ id: "finance.backToCurrentMonth", message: "回到本月" }),
+  msg({ id: "finance.confirmationOverdue", message: "已过期 {days} 天，待确认" }),
+  msg({ id: "finance.dueToday", message: "今天到期，待确认" }),
+  msg({ id: "finance.dueInDays", message: "距今 {days} 天" }),
+  msg({ id: "finance.estimatedPaymentAmount", message: "预计 {amount}" }),
+  msg({ id: "finance.confirmEarly", message: "提前确认" }),
+  msg({ id: "finance.monthPaymentsHandled", message: "{month} 付款安排已处理" }),
+  msg({ id: "finance.awaitingConfirmation", message: "待确认" }),
+  msg({ id: "finance.upNext", message: "接下来" }),
+  msg({ id: "finance.noPaymentsNext30Days", message: "未来 30 天没有付款安排，下次付款如下。" }),
+  msg({ id: "finance.noActivePaymentPlans", message: "暂无进行中的付款计划，可添加周期计划或管理订阅。" }),
+  msg({ id: "finance.emptyPaymentHistory", message: "所选月份没有付款安排或处理记录。" }),
   msg({ id: "finance.navOverview", message: "总览" }),
   msg({ id: "finance.navBills", message: "账单" }),
   msg({ id: "finance.navSubscriptions", message: "订阅" }),

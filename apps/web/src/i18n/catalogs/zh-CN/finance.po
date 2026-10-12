@@ -976,3 +976,59 @@ msgstr "较上一周期 {percent}%"
 #. js-lingui-explicit-id
 msgid "finance.noPreviousComparison"
 msgstr "上一周期暂无可比较支出"
+
+#. js-lingui-explicit-id
+msgid "finance.confirmationOverdue"
+msgstr "已过期 {days} 天，待确认"
+
+#. js-lingui-explicit-id
+msgid "finance.dueToday"
+msgstr "今天到期，待确认"
+
+#. js-lingui-explicit-id
+msgid "finance.dueInDays"
+msgstr "距今 {days} 天"
+
+#. js-lingui-explicit-id
+msgid "finance.estimatedPaymentAmount"
+msgstr "预计 {amount}"
+
+#. js-lingui-explicit-id
+msgid "finance.confirmEarly"
+msgstr "提前确认"
+
+#. js-lingui-explicit-id
+msgid "finance.monthPaymentsHandled"
+msgstr "{month} 付款安排已处理"
+
+#. js-lingui-explicit-id
+msgid "finance.awaitingConfirmation"
+msgstr "待确认"
+
+#. js-lingui-explicit-id
+msgid "finance.upNext"
+msgstr "接下来"
+
+#. js-lingui-explicit-id
+msgid "finance.noPaymentsNext30Days"
+msgstr "未来 30 天没有付款安排，下次付款如下。"
+
+#. js-lingui-explicit-id
+msgid "finance.noActivePaymentPlans"
+msgstr "暂无进行中的付款计划，可添加周期计划或管理订阅。"
+
+#. js-lingui-explicit-id
+msgid "finance.emptyPaymentHistory"
+msgstr "所选月份没有付款安排或处理记录。"
+
+#. js-lingui-explicit-id
+msgid "finance.previousYear"
+msgstr "上一年"
+
+#. js-lingui-explicit-id
+msgid "finance.nextYear"
+msgstr "下一年"
+
+#. js-lingui-explicit-id
+msgid "finance.backToCurrentMonth"
+msgstr "回到本月"

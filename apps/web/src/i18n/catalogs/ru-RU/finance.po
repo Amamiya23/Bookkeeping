@@ -976,3 +976,59 @@ msgstr "{percent}% к предыдущему периоду"
 #. js-lingui-explicit-id
 msgid "finance.noPreviousComparison"
 msgstr "Нет расходов за предыдущий период для сравнения"
+
+#. js-lingui-explicit-id
+msgid "finance.confirmationOverdue"
+msgstr "Срок прошёл {days} дн. назад · ожидает подтверждения"
+
+#. js-lingui-explicit-id
+msgid "finance.dueToday"
+msgstr "Срок сегодня · ожидает подтверждения"
+
+#. js-lingui-explicit-id
+msgid "finance.dueInDays"
+msgstr "Через {days} дн."
+
+#. js-lingui-explicit-id
+msgid "finance.estimatedPaymentAmount"
+msgstr "Ожидается {amount}"
+
+#. js-lingui-explicit-id
+msgid "finance.confirmEarly"
+msgstr "Подтвердить заранее"
+
+#. js-lingui-explicit-id
+msgid "finance.monthPaymentsHandled"
+msgstr "Платежи за {month} обработаны"
+
+#. js-lingui-explicit-id
+msgid "finance.awaitingConfirmation"
+msgstr "Ожидают подтверждения"
+
+#. js-lingui-explicit-id
+msgid "finance.upNext"
+msgstr "Ближайшие платежи"
+
+#. js-lingui-explicit-id
+msgid "finance.noPaymentsNext30Days"
+msgstr "В ближайшие 30 дней платежей нет. Следующие платежи указаны ниже."
+
+#. js-lingui-explicit-id
+msgid "finance.noActivePaymentPlans"
+msgstr "Нет активных планов платежей. Добавьте регулярный платёж или настройте подписки."
+
+#. js-lingui-explicit-id
+msgid "finance.emptyPaymentHistory"
+msgstr "В выбранном месяце нет запланированных платежей или записей об обработке."
+
+#. js-lingui-explicit-id
+msgid "finance.previousYear"
+msgstr "Предыдущий год"
+
+#. js-lingui-explicit-id
+msgid "finance.nextYear"
+msgstr "Следующий год"
+
+#. js-lingui-explicit-id
+msgid "finance.backToCurrentMonth"
+msgstr "Вернуться к текущему месяцу"

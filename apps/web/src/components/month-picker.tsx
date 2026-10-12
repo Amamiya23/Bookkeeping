@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n/I18nProvider";
 
 interface MonthPickerProps {
   id?: string;
@@ -13,6 +14,7 @@ interface MonthPickerProps {
 }
 
 export function MonthPicker({ id, value, max, onChange, className }: MonthPickerProps) {
+  const { t, formatDateTime } = useI18n();
   const [open, setOpen] = useState(false);
   const currentYear = Number(value.slice(0, 4)) || new Date().getFullYear();
   const currentMonth = Number(value.slice(5, 7)) || new Date().getMonth() + 1;
@@ -55,14 +57,13 @@ export function MonthPicker({ id, value, max, onChange, className }: MonthPicker
     currentMonth === 12 ? 1 : currentMonth + 1
   );
 
-  const monthNames = [
-    "1月", "2月", "3月", "4月", "5月", "6月",
-    "7月", "8月", "9月", "10月", "11月", "12月"
-  ];
+  const monthNames = Array.from({ length: 12 }, (_, index) => formatDateTime(new Date(2024, index, 1), { month: "short" }));
+  const selectedLabel = formatDateTime(new Date(currentYear, currentMonth - 1, 1), { year: "numeric", month: "long" });
+  const latestMonth = max ?? `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}`;
 
   return (
-    <div className={cn("inline-flex items-center gap-1", className)}>
-      {/* 隐藏并保持可查询的真实 input[type=month] 以完全兼容现有测试与表单事件 */}
+    <div className={cn("inline-flex max-w-full items-center", className)}>
+      {/* 保留原生月份值，统一表单输入与快捷切月的数据流。 */}
       <input
         id={id}
         type="month"
@@ -73,102 +74,121 @@ export function MonthPicker({ id, value, max, onChange, className }: MonthPicker
         tabIndex={-1}
       />
 
-      <div className="inline-flex items-center rounded-xl border border-border/80 bg-secondary/50 p-1 shadow-xs">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
-          onClick={handlePrevMonth}
-          title="上个月"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          <span className="sr-only">上个月</span>
-        </Button>
-
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
+      <Popover open={open} onOpenChange={(nextOpen) => {
+        if (nextOpen) setDisplayYear(currentYear);
+        setOpen(nextOpen);
+      }}>
+        <PopoverAnchor asChild>
+          <div className="inline-flex items-center gap-0.5 rounded-2xl border border-border/80 bg-card p-1 shadow-xs transition-colors focus-within:border-primary/40 hover:border-primary/30">
             <Button
               type="button"
               variant="ghost"
-              size="sm"
-              className="h-8 gap-2 rounded-lg px-3 font-semibold text-foreground hover:bg-card/80 hover:text-foreground"
+              size="icon"
+              className="size-9 rounded-xl text-muted-foreground hover:bg-secondary hover:text-foreground"
+              onClick={handlePrevMonth}
+              title={t("calendar.previousMonth")}
+              aria-label={t("calendar.previousMonth")}
             >
-              <CalendarIcon className="h-3.5 w-3.5 text-primary" />
-              <span>{currentYear}年 {currentMonth}月</span>
+              <ChevronLeft className="h-4 w-4" />
             </Button>
-          </PopoverTrigger>
 
-          <PopoverContent className="w-64 p-3 rounded-2xl border-border/80 bg-card shadow-xl" align="end">
-            <div className="flex items-center justify-between pb-3 mb-2 border-b border-border/60">
+            <span aria-hidden="true" className="mx-0.5 h-4 w-px bg-border/70" />
+            <PopoverTrigger asChild>
               <Button
                 type="button"
                 variant="ghost"
-                size="icon"
-                className="h-7 w-7 rounded-lg"
-                onClick={() => setDisplayYear((y) => y - 1)}
+                size="sm"
+                className="h-9 min-w-36 gap-2 rounded-xl px-2.5 text-foreground hover:bg-secondary/70 data-[state=open]:bg-primary/5"
+                aria-label={`${t("finance.month")}: ${selectedLabel}`}
               >
-                <ChevronLeft className="h-4 w-4" />
+                <CalendarDays className="size-4 text-primary" aria-hidden="true" />
+                <span className="flex-1 text-center font-semibold tabular-nums">{selectedLabel}</span>
+                <ChevronDown className={cn("size-3.5 text-muted-foreground transition-transform", open && "rotate-180")} aria-hidden="true" />
               </Button>
-              <span className="text-sm font-bold text-foreground">{displayYear} 年</span>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 rounded-lg"
-                disabled={displayYear >= maxYear}
-                onClick={() => setDisplayYear((y) => y + 1)}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
+            </PopoverTrigger>
+            <span aria-hidden="true" className="mx-0.5 h-4 w-px bg-border/70" />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              disabled={!canGoNext}
+              className="size-9 rounded-xl text-muted-foreground hover:bg-secondary hover:text-foreground disabled:opacity-30"
+              onClick={handleNextMonth}
+              title={t("calendar.nextMonth")}
+              aria-label={t("calendar.nextMonth")}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </PopoverAnchor>
 
-            <div className="grid grid-cols-3 gap-1.5">
-              {monthNames.map((name, idx) => {
-                const mNum = idx + 1;
-                const disabled = isMonthDisabled(displayYear, mNum);
-                const isSelected = displayYear === currentYear && mNum === currentMonth;
+        <PopoverContent className="w-(--radix-popover-trigger-width) rounded-2xl border-border/80 bg-card p-3 shadow-lg" align="end" sideOffset={10} mobileTitle={t("finance.month")} mobileDetent="compact" aria-label={t("finance.month")}>
+          <div className="mb-3 flex items-center justify-between">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="size-8 rounded-lg text-muted-foreground hover:text-foreground"
+              aria-label={t("finance.previousYear")}
+              onClick={() => setDisplayYear((y) => y - 1)}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-sm font-semibold text-foreground tabular-nums" aria-live="polite">{formatDateTime(new Date(displayYear, 0, 1), { year: "numeric" })}</span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="size-8 rounded-lg text-muted-foreground hover:text-foreground"
+              aria-label={t("finance.nextYear")}
+              disabled={displayYear >= maxYear}
+              onClick={() => setDisplayYear((y) => y + 1)}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
 
-                return (
-                  <Button
-                    key={name}
-                    type="button"
-                    variant={isSelected ? "default" : "ghost"}
-                    size="sm"
-                    disabled={disabled}
-                    className={cn(
-                      "h-9 rounded-xl text-xs font-medium transition-all",
-                      isSelected
-                        ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                        : "hover:bg-secondary text-foreground"
-                    )}
-                    onClick={() => {
-                      const nextVal = `${displayYear}-${String(mNum).padStart(2, "0")}`;
-                      onChange(nextVal);
-                      setOpen(false);
-                    }}
-                  >
-                    {name}
-                  </Button>
-                );
-              })}
-            </div>
-          </PopoverContent>
-        </Popover>
+          <div className="grid grid-cols-4 gap-2">
+            {monthNames.map((name, idx) => {
+              const mNum = idx + 1;
+              const disabled = isMonthDisabled(displayYear, mNum);
+              const isSelected = displayYear === currentYear && mNum === currentMonth;
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          disabled={!canGoNext}
-          className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground disabled:opacity-30"
-          onClick={handleNextMonth}
-          title="下个月"
-        >
-          <ChevronRight className="h-4 w-4" />
-          <span className="sr-only">下个月</span>
-        </Button>
-      </div>
+              return (
+                <Button
+                  key={name}
+                  type="button"
+                  variant={isSelected ? "default" : "ghost"}
+                  size="sm"
+                  disabled={disabled}
+                  aria-pressed={isSelected}
+                  className={cn(
+                    "h-10 min-w-0 rounded-xl px-1 text-xs font-medium transition-colors disabled:opacity-30",
+                    isSelected
+                      ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                      : "bg-secondary/40 text-foreground hover:bg-secondary"
+                  )}
+                  onClick={() => {
+                    const nextVal = `${displayYear}-${String(mNum).padStart(2, "0")}`;
+                    onChange(nextVal);
+                    setOpen(false);
+                  }}
+                >
+                  {name}
+                </Button>
+              );
+            })}
+          </div>
+          <div className="mt-4 border-t border-border/60 pt-3">
+            <Button type="button" variant="ghost" size="sm" className="w-full rounded-xl text-primary hover:bg-primary/5 hover:text-primary" disabled={value === latestMonth} onClick={() => {
+              onChange(latestMonth);
+              setOpen(false);
+            }}>
+              {t("finance.backToCurrentMonth")}
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }

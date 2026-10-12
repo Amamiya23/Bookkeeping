@@ -31,7 +31,11 @@ function PlanHistory({ plan }: { plan: FinancePlan }) {
     {payments.map((payment) => { const record = history.data?.items.find((row) => row.id === payment.transactionId); return <div key={payment.id} className="flex flex-wrap justify-between gap-2 border-b pb-2 text-sm"><span>{formatDateOnly(payment.dueOn)} · {t(payment.status === "paid" ? "finance.paid" : payment.status === "skipped" ? "finance.skipped" : "finance.pending")}{payment.reason && ` · ${payment.reason}`}</span>{record && <Link href={`/transactions?planId=${plan.id}`} className="tabular-nums underline underline-offset-4">{formatFinanceAmount(record.cnyAmount || record.amount, record.cnyAmount ? "CNY" : record.currency, locale)}</Link>}</div>; })}
   </section>;
 }
-export function RecurringPlans({ categories, onAddCategory, subscriptionOnly = false }: { categories: FinanceCategory[]; onAddCategory: (category: FinanceCategory) => Promise<void>; subscriptionOnly?: boolean }) {
+function newFinancePlan(nextDue: string): FinancePlanInput {
+  return { name: "", type: "bill", amount: "0", currency: "CNY", category: "builtin:housing", unit: "month", interval: 1, nextDue, endDate: "", status: "active", version: 0 };
+}
+
+export function RecurringPlans({ categories, onAddCategory, subscriptionOnly = false, initialCreateDate }: { categories: FinanceCategory[]; onAddCategory: (category: FinanceCategory) => Promise<void>; subscriptionOnly?: boolean; initialCreateDate?: string }) {
   const query = useRecurringPlans();
   const { t, locale, formatDateOnly } = useI18n();
   const cashflow = useCashflow();
@@ -39,14 +43,14 @@ export function RecurringPlans({ categories, onAddCategory, subscriptionOnly = f
   const client = useQueryClient();
   const user = getProductCurrentUserId();
   const [target, setTarget] = useState<FinancePlan | null>(null);
-  const [form, setForm] = useState<FinancePlanInput | null>(null);
+  const [form, setForm] = useState<FinancePlanInput | null>(() => initialCreateDate ? newFinancePlan(initialCreateDate) : null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const edit = (plan: FinancePlan) => { setTarget(plan); const { id: _id, ledger: _ledger, subscriptionId: _subscription, anchorDay: _anchor, paidCny: _paid, ...input } = plan; setForm(input); setError(""); };
   const update = <K extends keyof FinancePlanInput>(key: K, value: FinancePlanInput[K]) => setForm((previous) => previous && ({ ...previous, [key]: value }));
   const plans = query.data?.items.filter((plan) => !subscriptionOnly || plan.type === "subscription") ?? [];
   return <section className="space-y-4" aria-label={t("finance.plans")}>
-    <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-base font-semibold">{t(subscriptionOnly ? "finance.paymentHistory" : "finance.plans")}</h2>{!subscriptionOnly && <Button variant="outline" className="rounded-xl" onClick={() => { setTarget(null); setError(""); setForm({ name: "", type: "bill", amount: "0", currency: "CNY", category: "builtin:housing", unit: "month", interval: 1, nextDue: query.data?.today ?? new Date().toISOString().slice(0, 10), endDate: "", status: "active", version: 0 }); }}><Plus />{t("finance.newPlan")}</Button>}</div>
+    <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-base font-semibold">{t(subscriptionOnly ? "finance.paymentHistory" : "finance.plans")}</h2>{!subscriptionOnly && <Button variant="outline" className="rounded-xl" onClick={() => { setTarget(null); setError(""); setForm(newFinancePlan(query.data?.today ?? new Date().toISOString().slice(0, 10))); }}><Plus />{t("finance.newPlan")}</Button>}</div>
     {query.isPending && <p role="status" className="text-sm text-muted-foreground">{t("common.loading")}</p>}{query.error && <p role="alert">{t("error.generic")}</p>}
     {query.data?.items.length === 0 && <p className="rounded-2xl border border-dashed px-6 py-12 text-center text-sm text-muted-foreground">{t("finance.emptyPlans")}</p>}
     {plans.length > 0 && <div className="divide-y divide-border/70 overflow-hidden rounded-2xl border border-border/80 bg-card shadow-card">{plans.map((plan) => <article key={plan.id} className={cn("flex flex-wrap items-center justify-between gap-x-4 gap-y-3 px-4 py-3.5 transition-colors hover:bg-secondary/40 sm:px-5", plan.status !== "active" && "opacity-70")}>

@@ -976,3 +976,59 @@ msgstr "{percent}% vs previous period"
 #. js-lingui-explicit-id
 msgid "finance.noPreviousComparison"
 msgstr "No spending in the previous period to compare"
+
+#. js-lingui-explicit-id
+msgid "finance.confirmationOverdue"
+msgstr "{days} days past due · awaiting confirmation"
+
+#. js-lingui-explicit-id
+msgid "finance.dueToday"
+msgstr "Due today · awaiting confirmation"
+
+#. js-lingui-explicit-id
+msgid "finance.dueInDays"
+msgstr "In {days} days"
+
+#. js-lingui-explicit-id
+msgid "finance.estimatedPaymentAmount"
+msgstr "Estimated {amount}"
+
+#. js-lingui-explicit-id
+msgid "finance.confirmEarly"
+msgstr "Confirm early"
+
+#. js-lingui-explicit-id
+msgid "finance.monthPaymentsHandled"
+msgstr "Payment arrangements for {month} are handled"
+
+#. js-lingui-explicit-id
+msgid "finance.awaitingConfirmation"
+msgstr "Awaiting confirmation"
+
+#. js-lingui-explicit-id
+msgid "finance.upNext"
+msgstr "Up next"
+
+#. js-lingui-explicit-id
+msgid "finance.noPaymentsNext30Days"
+msgstr "No payments are scheduled in the next 30 days. Your next payments are below."
+
+#. js-lingui-explicit-id
+msgid "finance.noActivePaymentPlans"
+msgstr "No active payment plans. Add a recurring plan or manage your subscriptions."
+
+#. js-lingui-explicit-id
+msgid "finance.emptyPaymentHistory"
+msgstr "No payment arrangements or records for the selected month."
+
+#. js-lingui-explicit-id
+msgid "finance.previousYear"
+msgstr "Previous year"
+
+#. js-lingui-explicit-id
+msgid "finance.nextYear"
+msgstr "Next year"
+
+#. js-lingui-explicit-id
+msgid "finance.backToCurrentMonth"
+msgstr "Back to this month"

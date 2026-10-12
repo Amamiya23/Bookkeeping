@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { FinanceDashboard } from "./finance-dashboard";
@@ -7,6 +7,7 @@ const mocks = vi.hoisted(() => ({ enabled: true, empty: false, fail: false, summ
 vi.mock("@/hooks/use-finance", () => ({ useFinanceCapabilities: () => ({ data: { ledger: mocks.enabled }, isPending: false, refetch: vi.fn() }) }));
 vi.mock("@/hooks/use-zoned-today", () => ({ useZonedToday: () => "2026-10-12" }));
 vi.mock("@/hooks/use-settings", () => ({ useSettings: () => ({ data: {} }) }));
+vi.mock("@/hooks/use-subscriptions", () => ({ useSubscriptionDetail: () => ({ data: undefined }) }));
 vi.mock("@/contexts/CustomConfigContext", async () => {
   const { getDefaultCategories } = await import("@/types/config");
   return { useCustomConfigState: () => ({ config: { categories: getDefaultCategories() } }) };
@@ -46,6 +47,19 @@ describe("unified cash-flow overview", () => {
     await waitFor(() => expect(mocks.summary).toHaveBeenCalledWith("2026-08-01", "2026-08-31"));
     // 口径筛选只属于分析页，总览不再重复提供。
     expect(screen.queryByRole("button", { name: "日常消费" })).not.toBeInTheDocument();
+  });
+  it("previews next month's payment without including it in this month's estimate", async () => {
+    mocks.plans.mockResolvedValue({
+      items: [{ id: "plan", name: "Next month", amount: "20", currency: "USD", type: "subscription", nextDue: "2026-11-15", endDate: "", status: "active", category: "builtin:work" }],
+      schedule: [], today: "2026-10-12",
+      payments: [{ id: "payment", planId: "plan", dueOn: "2026-10-10", transactionId: "transaction", status: "paid", reason: "" }],
+    });
+    renderOverview();
+    expect(await screen.findByText("Next month")).toBeInTheDocument();
+    expect(screen.getByText("2026-10 付款安排已处理")).toBeInTheDocument();
+    const estimate = screen.getByText("本月计划待付").closest("div")!;
+    expect(within(estimate).getByText("0.00 CNY")).toBeInTheDocument();
+    expect(mocks.plans).toHaveBeenCalledWith("2026-10-01", "2026-10-31");
   });
   it("handles empty periods and recoverable errors", async () => {
     mocks.empty = true; const view = renderOverview(); expect(await screen.findByText(/这段时间还没有支出/)).toBeInTheDocument(); view.unmount();

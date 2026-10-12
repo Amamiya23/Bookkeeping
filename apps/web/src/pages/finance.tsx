@@ -171,7 +171,7 @@ function FinanceScreen() {
         </div>)}
         {transactions.hasNextPage && <div className="flex justify-center"><Button variant="outline" className="rounded-xl" disabled={transactions.isFetchingNextPage} onClick={() => void transactions.fetchNextPage()}>{t("finance.loadMore")}</Button></div>}
       </section>}
-      {enabled && ready && view === "plans" && <RecurringPlans categories={customCategories} onAddCategory={addCategory} />}
+      {enabled && ready && view === "plans" && <RecurringPlans categories={customCategories} onAddCategory={addCategory} {...(params.get("action") === "new" ? { initialCreateDate: today } : {})} />}
       {enabled && ready && view === "reports" && summary.isPending && <div role="status" className="h-80 animate-pulse rounded-2xl bg-muted"><span className="sr-only">{t("common.loading")}</span></div>}
       {enabled && ready && view === "reports" && summary.data && <FinanceReport summary={summary.data} previous={previousSummary.data} categories={customCategories} group={filters.group} />}
       {error && !transactionForm && !voiding && <p role="alert" className="text-sm text-destructive">{error}</p>}

@@ -70,11 +70,11 @@ const Calendar = ({ embedded = false }: { embedded?: boolean }) => {
   }
 
   return (
-    <div className={embedded ? "" : "app-page bg-background"}>
+    <div className={embedded ? "lg:flex lg:flex-1 lg:flex-col" : "app-page bg-background"}>
       {!embedded && <Header onAddSubscription={handleAddSubscription} availableTags={availableTags} />}
 
       <Container
-        className={embedded ? "space-y-6" : "app-main mx-auto max-w-7xl"}
+        className={embedded ? "space-y-6 lg:flex lg:flex-1 lg:flex-col" : "app-main mx-auto max-w-7xl"}
         aria-busy={subscriptionsQuery.isFetching ? true : undefined}
       >
         {!embedded && <div className="mb-6">
@@ -83,6 +83,7 @@ const Calendar = ({ embedded = false }: { embedded?: boolean }) => {
         </div>}
 
         <SubscriptionCalendar 
+          className={embedded ? "lg:flex-1" : ""}
           subscriptions={subscriptions} 
           currentMonth={currentMonth}
           onCurrentMonthChange={setCurrentMonth}

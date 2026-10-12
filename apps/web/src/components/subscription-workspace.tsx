@@ -56,19 +56,19 @@ export function SubscriptionWorkspace({ onCategorySelect }: { onCategorySelect: 
         <FinanceMetric icon={<FlaskConical />} label={t("dashboard.trials")} value={String(stats.trialCount)} />
       </dl>
 
-      {/* 续费日历占主列；即将续费和支出分布叠放在侧列，两列高度大致相当。 */}
-      <div className="grid items-start gap-4 lg:grid-cols-3">
-        <div className="min-w-0 lg:col-span-2">
+      {/* 桌面端两列等高，日历网格和支出分布面板填充剩余空间。 */}
+      <div className="grid items-stretch gap-4 lg:grid-cols-3">
+        <div className="min-w-0 lg:col-span-2 lg:flex lg:flex-col">
           <Suspense fallback={<div role="status" className="h-128 animate-pulse rounded-2xl bg-muted"><span className="sr-only">{t("common.loading")}</span></div>}>
             <Calendar embedded />
           </Suspense>
         </div>
-        <div className="grid min-w-0 gap-4">
+        <div className="flex min-w-0 flex-col gap-4">
           <FinancePanel title={t("dashboard.upcomingRenewals")}>
             {plans.data && <PaymentSchedule data={plans.data} subscriptionOnly limit={4} />}
             {plans.error && <p role="alert" className="text-sm text-destructive">{t("error.generic")}</p>}
           </FinancePanel>
-          <FinancePanel title={t("dashboard.spendingDistribution")} action={costReady && total > 0 && <span className="text-xs font-semibold text-muted-foreground tabular-nums">{formatCurrency(total, "CNY")} {t("statistics.perMonth")}</span>}>
+          <FinancePanel className="lg:flex-1" bodyClassName="lg:flex lg:flex-col lg:justify-center" title={t("dashboard.spendingDistribution")} action={costReady && total > 0 && <span className="text-xs font-semibold text-muted-foreground tabular-nums">{formatCurrency(total, "CNY")} {t("statistics.perMonth")}</span>}>
             {costReady && chartData.length > 0 ? (
               <div className="grid items-center gap-5 sm:grid-cols-[7.5rem_minmax(0,1fr)]">
                 <div className="flex justify-center">

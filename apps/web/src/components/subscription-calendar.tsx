@@ -40,6 +40,7 @@ import { getSubscriptionCalendarRange } from '@/modules/subscriptions/domain/sub
 import { useSubscriptionDetailDialog } from '@/hooks/use-subscription-detail-dialog';
 
 interface SubscriptionCalendarProps {
+  className?: string;
   /** 订阅列表（前端 domain 类型）。 */
   subscriptions: SubscriptionCollectionItem[];
   currentMonth: Date;
@@ -61,6 +62,7 @@ const WEEKDAY_REFERENCE_DATES = [
 
 /** 续费/到期日历组件。 */
 export const SubscriptionCalendar = ({
+  className,
   subscriptions,
   currentMonth,
   onCurrentMonthChange,
@@ -186,7 +188,7 @@ export const SubscriptionCalendar = ({
 
   return (
     <>
-      <div className="min-w-0 rounded-2xl border border-border/80 bg-card p-4 shadow-card sm:p-5">
+      <div className={cn("flex min-w-0 flex-col rounded-2xl border border-border/80 bg-card p-4 shadow-card sm:p-5", className)}>
         {/* 顶部栏 */}
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
@@ -494,7 +496,7 @@ export const SubscriptionCalendar = ({
           </>
         ) : (
           /* 日历网格：留白分隔代替网格线，每格只放 1 个事件胶囊，其余折叠为 +N。 */
-          <div className="grid grid-cols-7 gap-1">
+          <div className="grid flex-1 grid-cols-7 gap-1">
             {calendarDays.map((day) => {
               const dateKey = format(day, 'yyyy-MM-dd');
               const daySubs = subscriptionsByDate.get(dateKey) || [];

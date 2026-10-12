@@ -11,7 +11,7 @@ import { getProductCurrentUserId } from "@/services/product-session";
 import { financeService } from "@/services/finance-service";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
-import { PaymentSchedule } from "@/components/payment-schedule";
+import { OverviewPaymentSchedule } from "@/components/overview-payment-schedule";
 import { FinanceCategoryIcon } from "@/components/finance-category-icon";
 import { useFinanceCategoryCatalog } from "@/hooks/use-finance-category-catalog";
 import { groupSpendingCategories } from "@/lib/finance-categories";
@@ -118,8 +118,8 @@ export function FinanceDashboard() {
       </section>
       {summary.data && summary.data.unconvertedCurrencies.length > 0 && <p role="status" className="rounded-xl border border-warning/30 bg-warning/5 p-3 text-sm">{t("finance.missingConversions")}</p>}
       <div className="grid gap-4 lg:grid-cols-2">
-        <FinancePanel title={t("finance.pendingPayments")} action={<Link href="/transactions?view=plans" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline underline-offset-4">{t("finance.plans")}<ChevronRight className="size-4" /></Link>}>
-          {plans.isPending && <p role="status" className="text-sm text-muted-foreground">{t("common.loading")}</p>}{plans.error && <p role="alert">{t("error.generic")}</p>}{plans.data && <PaymentSchedule data={plans.data} categories={ledger.data?.categories ?? []} limit={5} />}
+        <FinancePanel className="self-start" title={t("finance.pendingPayments")} action={<Link href="/transactions?view=plans" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline underline-offset-4">{t("finance.plans")}<ChevronRight className="size-4" /></Link>}>
+          {plans.isPending && <p role="status" className="text-sm text-muted-foreground">{t("common.loading")}</p>}{plans.error && <p role="alert">{t("error.generic")}</p>}{plans.data && <OverviewPaymentSchedule data={plans.data} month={month} categories={ledger.data?.categories ?? []} />}
         </FinancePanel>
         <FinancePanel title={t("finance.recentTransactions")} action={<Link href={`/transactions?from=${from}&to=${to}`} className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline underline-offset-4">{t("finance.navBills")}<ChevronRight className="size-4" /></Link>}>
           {recent.isPending && <p role="status" className="text-sm text-muted-foreground">{t("common.loading")}</p>}
