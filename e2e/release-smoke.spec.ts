@@ -11,7 +11,7 @@ test.describe("release smoke", () => {
 
   test("release smoke @release keeps the initialized admin session usable", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByText("月均支出")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "消费总览", exact: true })).toBeVisible();
 
     await page.goto("/subscriptions");
     await expect(page.getByRole("heading", { name: "订阅列表" })).toBeVisible();
@@ -78,7 +78,7 @@ test.describe("release smoke", () => {
     const subscriptionName = uniqueE2EName(testInfo, "Release AI Draft");
     try {
       await page.goto("/");
-      await expect(page.getByText("月均支出")).toBeVisible();
+      await expect(page.getByRole("heading", { name: "消费总览", exact: true })).toBeVisible();
       await updateProductSettings(page, {
         aiRecognition: {
           providerType: "openai",
@@ -139,7 +139,7 @@ test.describe("release smoke", () => {
     const nextPassword = "password456";
 
     await page.goto("/");
-    await expect(page.getByText("月均支出")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "消费总览", exact: true })).toBeVisible();
     await createAdminManagedUser(page, {
       name: "Release User",
       email,

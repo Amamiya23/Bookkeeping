@@ -17,7 +17,6 @@ import {
   renderSettingsScreen,
   SETTINGS_SECTION_IDS,
   StatefulEmailNotificationPanel,
-  useStatefulMonthlyBudgetController,
 } from "./settings-screen.test-utils";
 
 function useStatefulPublicStatusController() {
@@ -100,7 +99,7 @@ describe("SettingsScreen SMTP email settings", () => {
     }
     expect(screen.getByRole("button", { name: "保存配置" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "立即备份" })).toBeDisabled();
-    expect(screen.getByLabelText("月度预算金额")).toBeEnabled();
+    expect(screen.queryByLabelText("月度预算金额")).not.toBeInTheDocument();
   });
 
   it("keeps the SMTP port as a bounded NumericInput string", async () => {
@@ -303,37 +302,11 @@ describe("SettingsScreen SMTP email settings", () => {
     expect(screen.getByText("≈ $0.1475 USD")).toBeInTheDocument();
   });
 
-  it("renders the monthly budget as a formatted text input instead of a spinbutton", () => {
+  it("removes budget settings while keeping data configuration available", () => {
     renderSettingsScreen();
-
-    const budgetInput = screen.getByLabelText("月度预算金额");
-    expect(budgetInput).toHaveAttribute("type", "text");
-    expect(budgetInput).toHaveAttribute("name", "monthlyBudget");
-    expect(budgetInput).toHaveAttribute("inputmode", "decimal");
-    expect(budgetInput).toHaveAttribute("enterkeyhint", "done");
-    expect(screen.queryByRole("spinbutton", { name: "月度预算金额" })).not.toBeInTheDocument();
-  });
-
-  it("keeps the monthly budget empty while editing and formats the next valid value", async () => {
-    const user = userEvent.setup();
-    mocks.useSettingsFormController.mockImplementation(() => useStatefulMonthlyBudgetController());
-
-    renderSettingsScreen();
-
-    const budgetInput = screen.getByLabelText("月度预算金额") as HTMLInputElement;
-    expect(budgetInput).toHaveValue("10,000");
-
-    await user.clear(budgetInput);
-
-    expect(budgetInput).toHaveValue("");
-    expect(budgetInput).not.toHaveValue("0");
-    expect(screen.getByText("预算金额无效")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "保存更改" })).toBeDisabled();
-
-    await user.type(budgetInput, "10000");
-
-    expect(budgetInput).toHaveValue("10,000");
-    expect(screen.queryByText("预算金额无效")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("月度预算金额")).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "预算设置" })).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "数据配置" })).toBeInTheDocument();
   });
 
   it("lets users edit the global notification reminder lead time", async () => {

@@ -107,7 +107,7 @@ export async function installPerformanceProbe(page: Page, fixtureDay: string) {
     };
     let ready = false;
     switch (name) {
-      case "dashboard": ready = visible(document.querySelector('[data-testid="dashboard-stat-grid"]')); break;
+      case "dashboard": ready = visible(document.querySelector('[data-testid="consumption-overview"]')); break;
       case "subscriptions": ready = visible(document.querySelector('[data-testid="subscription-card"]')); break;
       case "statistics": {
         const charts = [...document.querySelectorAll('[data-testid="statistics-chart-frame"]')];

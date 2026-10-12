@@ -19,7 +19,6 @@ import {
 const PrivateAppShell = lazy(lazyPrivateAppShellLoader);
 const Dashboard = lazy(lazyRouteLoader("dashboard"));
 const Subscriptions = lazy(lazyRouteLoader("subscriptions"));
-const Calendar = lazy(lazyRouteLoader("calendar"));
 const Statistics = lazy(lazyRouteLoader("statistics"));
 const Settings = lazy(lazyRouteLoader("settings"));
 const Setup = lazy(lazyRouteLoader("setup"));
@@ -49,11 +48,11 @@ export default function App() {
           <Route element={<ProtectedRoute><PrivateAppShell /></ProtectedRoute>}>
             <Route index element={<Dashboard />} />
             <Route path="subscriptions" element={<Subscriptions />} />
-            <Route path="calendar" element={<Calendar />} />
+            <Route path="calendar" element={<Navigate to="/subscriptions?view=calendar" replace />} />
             <Route path="statistics" element={<Statistics />} />
             <Route path="transactions" element={<Finance />} />
-            <Route path="accounts" element={<Finance />} />
-            <Route path="finance/statistics" element={<Finance />} />
+            <Route path="accounts" element={<Navigate to="/transactions" replace />} />
+            <Route path="finance/statistics" element={<Navigate to="/statistics" replace />} />
             <Route path="settings" element={<Settings />} />
             <Route path="admin/users" element={<ProtectedRoute adminOnly><AdminUsers /></ProtectedRoute>} />
           </Route>

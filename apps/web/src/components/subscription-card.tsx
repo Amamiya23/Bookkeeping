@@ -264,6 +264,8 @@ function SubscriptionCardComponent({
         : t("subscription.card.expiresInDays", { days: daysUntilRenewal });
     }
 
+    if (subscription.paymentConfirmationRequired && daysUntilRenewal <= 0) return t("finance.pending");
+
     return daysUntilRenewal === 0
       ? t("subscription.card.renewsToday")
       : t("subscription.card.renewsInDays", { days: daysUntilRenewal });
@@ -519,6 +521,7 @@ function SubscriptionCardComponent({
               <span data-testid="subscription-card-badge-status" className="inline-flex shrink-0">
                 <SubscriptionStatusBadge status={effectiveStatus} className="px-2 sm:px-2.5" />
               </span>
+              {subscription.paymentConfirmationRequired && !isInactive && subscription.nextBillingDate <= today && <Badge variant="outline" className="text-xs">{t("finance.pending")}</Badge>}
               <Badge
                 data-testid="subscription-card-badge-renewal"
                 variant={isBuyout || isFixedTermOneTime ? "secondary" : subscription.autoRenew ? "outline" : "secondary"}

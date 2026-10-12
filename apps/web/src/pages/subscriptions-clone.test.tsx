@@ -18,6 +18,8 @@ import {
   subscriptionIndexQueryFixture,
 } from "./subscriptions.test-fixtures";
 import Subscriptions from "./subscriptions";
+vi.mock("@/components/subscription-workspace", () => ({ SubscriptionWorkspace: () => null }));
+vi.mock("@/components/ui/tooltip", () => ({ Tooltip: ({ children }: { children: ReactNode }) => <>{children}</>, TooltipTrigger: ({ children }: { children: ReactNode }) => <>{children}</>, TooltipContent: () => null }));
 
 interface MockInfiniteSubscriptionsResult {
   subscriptions?: Subscription[];

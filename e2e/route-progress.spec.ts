@@ -3,7 +3,7 @@ import { expect, test } from "./support/test";
 
 test("navigation progress waits for main data without moving the header", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByTestId("dashboard-stat-grid")).toBeVisible();
+  await expect(page.getByTestId("consumption-overview")).toBeVisible();
   await expect(page.getByTestId("route-progress")).toHaveCSS("opacity", "0");
 
   let releaseRequest: () => void = () => {};
@@ -56,7 +56,7 @@ test("navigation progress waits for main data without moving the header", async 
     expect(initialReads.filter((result) => result === "net::ERR_ABORTED").length).toBeLessThanOrEqual(1);
 
     await page.goBack();
-    await expect(page.getByTestId("dashboard-stat-grid")).toBeVisible();
+    await expect(page.getByTestId("consumption-overview")).toBeVisible();
     await expect(progress).toHaveCSS("opacity", "0");
     await page.goForward();
     await expect(page.getByRole("heading", { name: "订阅列表" })).toBeVisible();

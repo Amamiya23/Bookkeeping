@@ -4,6 +4,95 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 
 #. js-lingui-explicit-id
+msgid "finance.monthlyTrend"
+msgstr "Денежный поток по месяцам"
+
+#. js-lingui-explicit-id
+msgid "finance.overviewEyebrow"
+msgstr "Все расходы в одном обзоре"
+
+#. js-lingui-explicit-id
+msgid "finance.overview"
+msgstr "Обзор расходов"
+
+#. js-lingui-explicit-id
+msgid "finance.totalSpend"
+msgstr "Всего расходов"
+
+#. js-lingui-explicit-id
+msgid "finance.dailyAverage"
+msgstr "В среднем за день"
+
+#. js-lingui-explicit-id
+msgid "finance.averageHint"
+msgstr "За дни выбранного периода"
+
+#. js-lingui-explicit-id
+msgid "finance.incomeHint"
+msgstr "Включая переводы и возвраты"
+
+#. js-lingui-explicit-id
+msgid "finance.balanceHint"
+msgstr "Доходы минус расходы"
+
+#. js-lingui-explicit-id
+msgid "finance.comparison"
+msgstr "{percent}% к тому же периоду прошлого месяца"
+
+#. js-lingui-explicit-id
+msgid "finance.noComparison"
+msgstr "Нет расходов для сравнения"
+
+#. js-lingui-explicit-id
+msgid "finance.dailyTrend"
+msgstr "Доходы и расходы по дням"
+
+#. js-lingui-explicit-id
+msgid "finance.viewDaily"
+msgstr "Показать суммы по дням"
+
+#. js-lingui-explicit-id
+msgid "finance.spendingStructure"
+msgstr "Куда уходят деньги"
+
+#. js-lingui-explicit-id
+msgid "finance.emptySpending"
+msgstr "За этот период нет расходов. Добавьте запись для анализа."
+
+#. js-lingui-explicit-id
+msgid "finance.overviewBasis"
+msgstr "Только проведённые записи. Возвраты и переводы учитываются как доход. Валюты показаны отдельно."
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionRole"
+msgstr "Подписки в ваших расходах"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionShare"
+msgstr "Доля записанных расходов на подписки"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionForecast"
+msgstr "Текущие подписки · расходы в месяц"
+
+#. js-lingui-explicit-id
+msgid "finance.manageSubscriptions"
+msgstr "Управление подписками"
+
+#. js-lingui-explicit-id
+msgid "finance.forecastHint"
+msgstr "Оценка по периодам оплаты не включена в фактические расходы. Запишите оплату в категории «Подписки», чтобы учесть её в обзоре."
+
+#. js-lingui-explicit-id
+msgid "finance.category.refund"
+msgstr "Возвраты"
+
+#. js-lingui-explicit-id
+msgid "finance.category.transfer"
+msgstr "Полученные переводы"
+
+
+#. js-lingui-explicit-id
 msgid "finance.ledgerName"
 msgstr "Название учёта"
 
@@ -193,7 +282,7 @@ msgstr "Загрузить ещё"
 
 #. js-lingui-explicit-id
 msgid "finance.netExpense"
-msgstr "Чистые расходы (после возвратов)"
+msgstr "Всего расходов"
 
 #. js-lingui-explicit-id
 msgid "finance.netIncome"
@@ -201,7 +290,7 @@ msgstr "Остаток"
 
 #. js-lingui-explicit-id
 msgid "finance.basis"
-msgstr "По проведённым операциям; переводы и начальные балансы не учитываются."
+msgstr "По проведённым операциям; возвраты и полученные переводы учитываются как доход."
 
 #. js-lingui-explicit-id
 msgid "finance.unconverted"
@@ -233,7 +322,7 @@ msgstr "Запись изменилась. Перезагрузите её пе�
 
 #. js-lingui-explicit-id
 msgid "finance.invalid"
-msgstr "Проверьте сумму, дату и счёт."
+msgstr "Проверьте сумму, дату и валюту."
 
 #. js-lingui-explicit-id
 msgid "finance.subscriptionBasis"
@@ -623,3 +712,243 @@ msgstr "Музыка"
 #. js-lingui-explicit-id
 msgid "finance.icon.bike"
 msgstr "Велосипед"
+
+#. js-lingui-explicit-id
+msgid "finance.navOverview"
+msgstr "Обзор"
+
+#. js-lingui-explicit-id
+msgid "finance.navBills"
+msgstr "Операции"
+
+#. js-lingui-explicit-id
+msgid "finance.navSubscriptions"
+msgstr "Подписки"
+
+#. js-lingui-explicit-id
+msgid "finance.navAnalysis"
+msgstr "Анализ"
+
+#. js-lingui-explicit-id
+msgid "finance.plans"
+msgstr "Регулярные платежи"
+
+#. js-lingui-explicit-id
+msgid "finance.newPlan"
+msgstr "Добавить план"
+
+#. js-lingui-explicit-id
+msgid "finance.planName"
+msgstr "Название плана"
+
+#. js-lingui-explicit-id
+msgid "finance.planType"
+msgstr "Тип плана"
+
+#. js-lingui-explicit-id
+msgid "finance.typeSubscription"
+msgstr "Подписка"
+
+#. js-lingui-explicit-id
+msgid "finance.typeBill"
+msgstr "Бытовой платёж"
+
+#. js-lingui-explicit-id
+msgid "finance.typeOther"
+msgstr "Другие регулярные расходы"
+
+#. js-lingui-explicit-id
+msgid "finance.dueOn"
+msgstr "Дата платежа"
+
+#. js-lingui-explicit-id
+msgid "finance.nextDue"
+msgstr "Следующая дата"
+
+#. js-lingui-explicit-id
+msgid "finance.endDate"
+msgstr "Дата окончания (необязательно)"
+
+#. js-lingui-explicit-id
+msgid "finance.interval"
+msgstr "Каждые"
+
+#. js-lingui-explicit-id
+msgid "finance.unit"
+msgstr "Единица периода"
+
+#. js-lingui-explicit-id
+msgid "finance.unitDay"
+msgstr "дней"
+
+#. js-lingui-explicit-id
+msgid "finance.unitWeek"
+msgstr "недель"
+
+#. js-lingui-explicit-id
+msgid "finance.unitMonth"
+msgstr "месяцев"
+
+#. js-lingui-explicit-id
+msgid "finance.unitYear"
+msgstr "лет"
+
+#. js-lingui-explicit-id
+msgid "finance.planStatus"
+msgstr "Статус плана"
+
+#. js-lingui-explicit-id
+msgid "finance.activePlan"
+msgstr "Активен"
+
+#. js-lingui-explicit-id
+msgid "finance.pausedPlan"
+msgstr "Приостановлен"
+
+#. js-lingui-explicit-id
+msgid "finance.cancelledPlan"
+msgstr "Завершён"
+
+#. js-lingui-explicit-id
+msgid "finance.confirmPayment"
+msgstr "Подтвердить оплату"
+
+#. js-lingui-explicit-id
+msgid "finance.linkPayment"
+msgstr "Связать операцию"
+
+#. js-lingui-explicit-id
+msgid "finance.skipPayment"
+msgstr "Пропустить платёж"
+
+#. js-lingui-explicit-id
+msgid "finance.skipReason"
+msgstr "Причина пропуска"
+
+#. js-lingui-explicit-id
+msgid "finance.linkHint"
+msgstr "Выберите уже записанный платёж. Новая операция не создаётся."
+
+#. js-lingui-explicit-id
+msgid "finance.cnyAmount"
+msgstr "Фактическая сумма в CNY"
+
+#. js-lingui-explicit-id
+msgid "finance.cnyHint"
+msgstr "Используйте расчёт по курсу или фактическую сумму CNY. Сохранённая сумма не меняется."
+
+#. js-lingui-explicit-id
+msgid "finance.cnyRequired"
+msgstr "Укажите фактическую сумму CNY."
+
+#. js-lingui-explicit-id
+msgid "finance.pendingPayments"
+msgstr "Предстоящие платежи"
+
+#. js-lingui-explicit-id
+msgid "finance.pending"
+msgstr "Ожидает подтверждения"
+
+#. js-lingui-explicit-id
+msgid "finance.scheduled"
+msgstr "Предстоящий"
+
+#. js-lingui-explicit-id
+msgid "finance.overdue"
+msgstr "К оплате"
+
+#. js-lingui-explicit-id
+msgid "finance.paid"
+msgstr "Оплачен"
+
+#. js-lingui-explicit-id
+msgid "finance.skipped"
+msgstr "Пропущен"
+
+#. js-lingui-explicit-id
+msgid "finance.paymentHistory"
+msgstr "История платежей"
+
+#. js-lingui-explicit-id
+msgid "finance.cumulativePaid"
+msgstr "Всего оплачено"
+
+#. js-lingui-explicit-id
+msgid "finance.recurringSpend"
+msgstr "Регулярные расходы"
+
+#. js-lingui-explicit-id
+msgid "finance.remainingPayments"
+msgstr "Запланировано до конца месяца"
+
+#. js-lingui-explicit-id
+msgid "finance.dailySpending"
+msgstr "Повседневные расходы"
+
+#. js-lingui-explicit-id
+msgid "finance.allSpending"
+msgstr "Все расходы"
+
+#. js-lingui-explicit-id
+msgid "finance.emptyPlans"
+msgstr "Добавьте аренду и другие платежи. Подписки также отображаются здесь."
+
+#. js-lingui-explicit-id
+msgid "finance.emptyPayments"
+msgstr "На этот период платежей нет."
+
+#. js-lingui-explicit-id
+msgid "finance.variableAmount"
+msgstr "Сумма неизвестна (оценка 0)"
+
+#. js-lingui-explicit-id
+msgid "finance.estimate"
+msgstr "Оценка"
+
+#. js-lingui-explicit-id
+msgid "finance.historyFixed"
+msgstr "Расчёт по сохранённым суммам CNY с исходной валютой."
+
+#. js-lingui-explicit-id
+msgid "finance.missingConversions"
+msgstr "Для полного итога укажите CNY в старых операциях."
+
+#. js-lingui-explicit-id
+msgid "finance.noPaymentPlan"
+msgstr "У услуги нет регулярного плана. Запишите оплату в операциях."
+
+#. js-lingui-explicit-id
+msgid "finance.planHint"
+msgstr "Введите 0 для переменной суммы. Расход записывается после подтверждения."
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionOverview"
+msgstr "Обзор подписок"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionCalendar"
+msgstr "Календарь продлений"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionAnalysis"
+msgstr "Анализ подписок"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionList"
+msgstr "Сервисы"
+
+#. js-lingui-explicit-id
+msgid "finance.merchants"
+msgstr "Расходы по продавцам"
+
+#. js-lingui-explicit-id
+msgid "finance.reopenedPayment"
+msgstr "После аннулирования платёж ожидает подтверждения."
+
+#. js-lingui-explicit-id
+msgid "finance.confirmFirst"
+msgstr "Сначала обработайте предыдущий платёж"
+
+#. js-lingui-explicit-id
+msgid "finance.plannedVsActual"
+msgstr "Факт и план"

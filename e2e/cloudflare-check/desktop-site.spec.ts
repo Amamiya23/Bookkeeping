@@ -29,7 +29,7 @@ const protectedPages: Array<{ path: string; label: string; assertReady: (page: P
     path: "/",
     label: "dashboard",
     assertReady: async (page) => {
-      await expect(page.getByText("月均支出")).toBeVisible();
+      await expect(page.getByRole("heading", { name: "消费总览", exact: true })).toBeVisible();
     },
   },
   {
@@ -151,7 +151,8 @@ test("temporary subscription write-edit-read-delete is consistent across pages",
     await expect(subscriptionCard(page, editedName)).toBeVisible();
 
     await page.goto("/");
-    await expect(page.getByText("月均支出")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "消费总览", exact: true })).toBeVisible();
+    await page.getByRole("link", { name: "管理订阅", exact: true }).click();
     await expect(subscriptionCard(page, editedName)).toBeVisible();
 
     await page.goto("/calendar");

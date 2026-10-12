@@ -12,7 +12,7 @@ import {
   type SubscriptionFixtureOverrides,
 } from "@/test/subscription-fixtures";
 import { moneyToNumber } from "@renewlet/shared/money";
-import Statistics from "./statistics";
+import Statistics from "./subscription-statistics";
 
 type SubscriptionBaseFixture = Omit<SubscriptionCollectionItem, "billingCycle" | "customDays" | "customCycleUnit" | "oneTimeTermCount" | "oneTimeTermUnit">;
 type SubscriptionOverrides = SubscriptionFixtureOverrides<SubscriptionCollectionItem>;
@@ -434,7 +434,7 @@ describe("Statistics page", () => {
   it("disables position animation for all chart tooltips", () => {
     renderStatistics();
 
-    expect(mocks.rechartsTooltipProps).toHaveLength(5);
+    expect(mocks.rechartsTooltipProps).toHaveLength(4);
     for (const props of mocks.rechartsTooltipProps) {
       expect(props["isAnimationActive"]).toBe(false);
       expect(props["offset"]).toBe(12);
@@ -447,8 +447,8 @@ describe("Statistics page", () => {
     renderStatistics();
 
     expect(mocks.rechartsLegendProps).toHaveLength(0);
-    expect(mocks.rechartsPieChartProps).toHaveLength(3);
-    expect(mocks.rechartsPieChartProps.map((props) => props["title"])).toEqual(["分类视图", "支付方式视图", "费用与预算"]);
+    expect(mocks.rechartsPieChartProps).toHaveLength(2);
+    expect(mocks.rechartsPieChartProps.map((props) => props["title"])).toEqual(["分类视图", "支付方式视图"]);
     for (const props of mocks.rechartsPieChartProps) {
       expect(props).toEqual(
         expect.objectContaining({
@@ -458,7 +458,7 @@ describe("Statistics page", () => {
         }),
       );
     }
-    expect(mocks.rechartsPieProps).toHaveLength(3);
+    expect(mocks.rechartsPieProps).toHaveLength(2);
     for (const props of mocks.rechartsPieProps) {
       expect(props).toEqual(
         expect.objectContaining({
@@ -473,7 +473,8 @@ describe("Statistics page", () => {
     const visibleChartLegends = screen
       .getAllByRole("list")
       .filter((list) => list.getAttribute("aria-label") !== "未来 12 个月费用走势明细");
-    expect(visibleChartLegends).toHaveLength(3);
+    expect(visibleChartLegends).toHaveLength(2);
+    expect(screen.queryByText("费用与预算")).not.toBeInTheDocument();
   });
 
   it("gives Recharts positive dimensions before ResizeObserver reports layout", () => {
@@ -483,7 +484,7 @@ describe("Statistics page", () => {
       expect(frame).toHaveClass("recharts-frame");
     }
     const donutContainerProps = mocks.rechartsResponsiveContainerProps.filter((props) => props["height"] === 220);
-    expect(donutContainerProps).toHaveLength(3);
+    expect(donutContainerProps).toHaveLength(2);
     for (const props of donutContainerProps) {
       const initialDimension = props["initialDimension"] as { width: number; height: number };
 

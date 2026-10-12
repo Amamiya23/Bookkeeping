@@ -4,6 +4,95 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 
 #. js-lingui-explicit-id
+msgid "finance.monthlyTrend"
+msgstr "Monthly cash flow"
+
+#. js-lingui-explicit-id
+msgid "finance.overviewEyebrow"
+msgstr "Every expense, in perspective"
+
+#. js-lingui-explicit-id
+msgid "finance.overview"
+msgstr "Spending overview"
+
+#. js-lingui-explicit-id
+msgid "finance.totalSpend"
+msgstr "Total spending"
+
+#. js-lingui-explicit-id
+msgid "finance.dailyAverage"
+msgstr "Daily average"
+
+#. js-lingui-explicit-id
+msgid "finance.averageHint"
+msgstr "Across days in the selected period"
+
+#. js-lingui-explicit-id
+msgid "finance.incomeHint"
+msgstr "Includes received transfers and refunds"
+
+#. js-lingui-explicit-id
+msgid "finance.balanceHint"
+msgstr "Income minus expenses"
+
+#. js-lingui-explicit-id
+msgid "finance.comparison"
+msgstr "{percent}% vs. the same period last month"
+
+#. js-lingui-explicit-id
+msgid "finance.noComparison"
+msgstr "No comparable spending last month"
+
+#. js-lingui-explicit-id
+msgid "finance.dailyTrend"
+msgstr "Daily cash flow"
+
+#. js-lingui-explicit-id
+msgid "finance.viewDaily"
+msgstr "View daily amounts"
+
+#. js-lingui-explicit-id
+msgid "finance.spendingStructure"
+msgstr "Where your money goes"
+
+#. js-lingui-explicit-id
+msgid "finance.emptySpending"
+msgstr "No spending in this period. Record an expense to see your breakdown."
+
+#. js-lingui-explicit-id
+msgid "finance.overviewBasis"
+msgstr "Posted records only. Refunds and received transfers count as income. Currencies are shown separately."
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionRole"
+msgstr "Subscriptions in your spending"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionShare"
+msgstr "Share of recorded subscription spending"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionForecast"
+msgstr "Current subscriptions · estimated monthly cost"
+
+#. js-lingui-explicit-id
+msgid "finance.manageSubscriptions"
+msgstr "Manage subscriptions"
+
+#. js-lingui-explicit-id
+msgid "finance.forecastHint"
+msgstr "Estimated monthly cost is normalized by billing cycle and excluded from actual spending. Record payments under Subscriptions to include them in the overview."
+
+#. js-lingui-explicit-id
+msgid "finance.category.refund"
+msgstr "Refunds"
+
+#. js-lingui-explicit-id
+msgid "finance.category.transfer"
+msgstr "Received transfers"
+
+
+#. js-lingui-explicit-id
 msgid "finance.ledgerName"
 msgstr "Ledger name"
 
@@ -193,7 +282,7 @@ msgstr "Load more"
 
 #. js-lingui-explicit-id
 msgid "finance.netExpense"
-msgstr "Net expense (after refunds)"
+msgstr "Total spending"
 
 #. js-lingui-explicit-id
 msgid "finance.netIncome"
@@ -201,7 +290,7 @@ msgstr "Net cash flow"
 
 #. js-lingui-explicit-id
 msgid "finance.basis"
-msgstr "Based on posted transactions; transfers and opening balances are excluded."
+msgstr "Based on posted transactions; refunds and received transfers count as income."
 
 #. js-lingui-explicit-id
 msgid "finance.unconverted"
@@ -233,7 +322,7 @@ msgstr "This record changed. Reload before editing again."
 
 #. js-lingui-explicit-id
 msgid "finance.invalid"
-msgstr "Check the amount, date and account."
+msgstr "Check the amount, date and currency."
 
 #. js-lingui-explicit-id
 msgid "finance.subscriptionBasis"
@@ -623,3 +712,243 @@ msgstr "Music"
 #. js-lingui-explicit-id
 msgid "finance.icon.bike"
 msgstr "Bicycle"
+
+#. js-lingui-explicit-id
+msgid "finance.navOverview"
+msgstr "Overview"
+
+#. js-lingui-explicit-id
+msgid "finance.navBills"
+msgstr "Bills"
+
+#. js-lingui-explicit-id
+msgid "finance.navSubscriptions"
+msgstr "Subscriptions"
+
+#. js-lingui-explicit-id
+msgid "finance.navAnalysis"
+msgstr "Analysis"
+
+#. js-lingui-explicit-id
+msgid "finance.plans"
+msgstr "Recurring plans"
+
+#. js-lingui-explicit-id
+msgid "finance.newPlan"
+msgstr "Add recurring plan"
+
+#. js-lingui-explicit-id
+msgid "finance.planName"
+msgstr "Plan name"
+
+#. js-lingui-explicit-id
+msgid "finance.planType"
+msgstr "Plan type"
+
+#. js-lingui-explicit-id
+msgid "finance.typeSubscription"
+msgstr "Service subscription"
+
+#. js-lingui-explicit-id
+msgid "finance.typeBill"
+msgstr "Household bill"
+
+#. js-lingui-explicit-id
+msgid "finance.typeOther"
+msgstr "Other recurring expense"
+
+#. js-lingui-explicit-id
+msgid "finance.dueOn"
+msgstr "Scheduled date"
+
+#. js-lingui-explicit-id
+msgid "finance.nextDue"
+msgstr "Next payment date"
+
+#. js-lingui-explicit-id
+msgid "finance.endDate"
+msgstr "End date (optional)"
+
+#. js-lingui-explicit-id
+msgid "finance.interval"
+msgstr "Every"
+
+#. js-lingui-explicit-id
+msgid "finance.unit"
+msgstr "Period unit"
+
+#. js-lingui-explicit-id
+msgid "finance.unitDay"
+msgstr "days"
+
+#. js-lingui-explicit-id
+msgid "finance.unitWeek"
+msgstr "weeks"
+
+#. js-lingui-explicit-id
+msgid "finance.unitMonth"
+msgstr "months"
+
+#. js-lingui-explicit-id
+msgid "finance.unitYear"
+msgstr "years"
+
+#. js-lingui-explicit-id
+msgid "finance.planStatus"
+msgstr "Plan status"
+
+#. js-lingui-explicit-id
+msgid "finance.activePlan"
+msgstr "Active"
+
+#. js-lingui-explicit-id
+msgid "finance.pausedPlan"
+msgstr "Paused"
+
+#. js-lingui-explicit-id
+msgid "finance.cancelledPlan"
+msgstr "Ended"
+
+#. js-lingui-explicit-id
+msgid "finance.confirmPayment"
+msgstr "Confirm payment"
+
+#. js-lingui-explicit-id
+msgid "finance.linkPayment"
+msgstr "Link existing bill"
+
+#. js-lingui-explicit-id
+msgid "finance.skipPayment"
+msgstr "Skip this payment"
+
+#. js-lingui-explicit-id
+msgid "finance.skipReason"
+msgstr "Reason for skipping"
+
+#. js-lingui-explicit-id
+msgid "finance.linkHint"
+msgstr "Select the payment you already recorded. Linking creates no additional expense."
+
+#. js-lingui-explicit-id
+msgid "finance.cnyAmount"
+msgstr "Actual amount in CNY"
+
+#. js-lingui-explicit-id
+msgid "finance.cnyHint"
+msgstr "Use the rate estimate or enter the actual CNY amount. Saved historical amounts stay fixed."
+
+#. js-lingui-explicit-id
+msgid "finance.cnyRequired"
+msgstr "Enter the actual CNY amount."
+
+#. js-lingui-explicit-id
+msgid "finance.pendingPayments"
+msgstr "Payment schedule"
+
+#. js-lingui-explicit-id
+msgid "finance.pending"
+msgstr "Awaiting confirmation"
+
+#. js-lingui-explicit-id
+msgid "finance.scheduled"
+msgstr "Upcoming"
+
+#. js-lingui-explicit-id
+msgid "finance.overdue"
+msgstr "Due"
+
+#. js-lingui-explicit-id
+msgid "finance.paid"
+msgstr "Paid"
+
+#. js-lingui-explicit-id
+msgid "finance.skipped"
+msgstr "Skipped"
+
+#. js-lingui-explicit-id
+msgid "finance.paymentHistory"
+msgstr "Payment history"
+
+#. js-lingui-explicit-id
+msgid "finance.cumulativePaid"
+msgstr "Total paid"
+
+#. js-lingui-explicit-id
+msgid "finance.recurringSpend"
+msgstr "Recurring payments made"
+
+#. js-lingui-explicit-id
+msgid "finance.remainingPayments"
+msgstr "Scheduled remaining this month"
+
+#. js-lingui-explicit-id
+msgid "finance.dailySpending"
+msgstr "Everyday spending"
+
+#. js-lingui-explicit-id
+msgid "finance.allSpending"
+msgstr "All spending"
+
+#. js-lingui-explicit-id
+msgid "finance.emptyPlans"
+msgstr "Add rent and other recurring bills. Service subscriptions appear here too."
+
+#. js-lingui-explicit-id
+msgid "finance.emptyPayments"
+msgstr "No payments scheduled for this period."
+
+#. js-lingui-explicit-id
+msgid "finance.variableAmount"
+msgstr "Variable amount (estimate 0)"
+
+#. js-lingui-explicit-id
+msgid "finance.estimate"
+msgstr "Estimated"
+
+#. js-lingui-explicit-id
+msgid "finance.historyFixed"
+msgstr "Actual cash flow uses saved CNY amounts, with original currencies retained."
+
+#. js-lingui-explicit-id
+msgid "finance.missingConversions"
+msgstr "Some historical foreign-currency bills need a CNY amount before totals are complete."
+
+#. js-lingui-explicit-id
+msgid "finance.noPaymentPlan"
+msgstr "This service has no recurring plan. Record its actual payment in Bills."
+
+#. js-lingui-explicit-id
+msgid "finance.planHint"
+msgstr "Use 0 for a variable amount. Due payments await confirmation before becoming expenses."
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionOverview"
+msgstr "Subscription overview"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionCalendar"
+msgstr "Renewal calendar"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionAnalysis"
+msgstr "Subscription analysis"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionList"
+msgstr "Services"
+
+#. js-lingui-explicit-id
+msgid "finance.merchants"
+msgstr "Spending by merchant"
+
+#. js-lingui-explicit-id
+msgid "finance.reopenedPayment"
+msgstr "Voiding a payment reopens it for confirmation."
+
+#. js-lingui-explicit-id
+msgid "finance.confirmFirst"
+msgstr "Resolve the earlier payment first"
+
+#. js-lingui-explicit-id
+msgid "finance.plannedVsActual"
+msgstr "Actual and planned"

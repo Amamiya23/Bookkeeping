@@ -2,7 +2,7 @@ import { SETTINGS_SECTIONS, type SettingsSectionId } from "./settings-section-na
 
 export const SETTINGS_ADVANCED_GROUPS = {
   resourcesAi: ["settings-icon-sources", "settings-uploaded-icons", "settings-ai-recognition"],
-  budgetData: ["settings-budget", "settings-data-config", "settings-exchange"],
+  budgetData: ["settings-data-config", "settings-exchange"],
   cloudCalendar: ["settings-cloud-backup", "settings-calendar-feed"],
   publicNotifications: ["settings-public-status", "settings-public-api", "settings-timezone", "settings-notifications"],
 } as const satisfies Record<string, readonly SettingsSectionId[]>;

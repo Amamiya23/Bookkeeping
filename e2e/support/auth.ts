@@ -31,5 +31,5 @@ export async function loginThroughProductUI(page: Page, email: string, password:
   const loginResponse = await loginResponsePromise;
   expect(loginResponse.ok(), await loginResponse.text()).toBe(true);
   await expect(page).toHaveURL(/\/$/);
-  await expect(page.getByText("月均支出")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "消费总览", exact: true })).toBeVisible();
 }

@@ -56,7 +56,6 @@ describe("SettingsScreen section navigation", () => {
       ["settings-icon-sources", "图标来源"],
       ["settings-uploaded-icons", "上传图标"],
       ["settings-ai-recognition", "AI 识别"],
-      ["settings-budget", "预算"],
       ["settings-data-config", "数据配置"],
       ["settings-cloud-backup", "云同步与备份"],
       ["settings-exchange", "汇率"],
@@ -260,7 +259,7 @@ describe("SettingsScreen section navigation", () => {
     expect(within(desktopNav).getByRole("link", { name: "通知" })).toHaveAttribute("aria-current", "location");
   });
 
-  it("keeps icon sources active when the adjacent budget section is also visible", async () => {
+  it("keeps icon sources active when the adjacent data configuration section is also visible", async () => {
     const user = userEvent.setup();
     renderSettingsScreen();
 
@@ -270,7 +269,7 @@ describe("SettingsScreen section navigation", () => {
 
     setSettingsSectionTops({
       "settings-icon-sources": TEST_ACTIVE_SECTION_TOP_PX,
-      "settings-budget": TEST_NEXT_SECTION_TOP_PX,
+      "settings-data-config": TEST_NEXT_SECTION_TOP_PX,
     });
     dispatchRootScroll(root);
     root.dispatchEvent(new Event("scrollend"));
@@ -278,7 +277,7 @@ describe("SettingsScreen section navigation", () => {
     await waitFor(() => {
       expect(within(desktopNav).getByRole("link", { name: "图标来源" })).toHaveAttribute("aria-current", "location");
     });
-    expect(within(desktopNav).getByRole("link", { name: "预算" })).not.toHaveAttribute("aria-current");
+    expect(within(desktopNav).getByRole("link", { name: "数据配置" })).not.toHaveAttribute("aria-current");
   });
 
   it("hands active state back to root scroll when the user interrupts a menu scroll", async () => {

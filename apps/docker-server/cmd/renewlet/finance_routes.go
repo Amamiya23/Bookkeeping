@@ -44,9 +44,10 @@ func financeRespondError(e *core.RequestEvent, err error) error {
 
 func registerFinanceRoutes(app core.App, auth *productRouteGroup) {
 	auth.GET("/finance/capabilities", func(e *core.RequestEvent) error {
-		return apiSuccessJSON(e, 200, map[string]any{"ledger": true, "subscriptionPayments": false, "automation": false, "protocolVersion": 1})
+		return apiSuccessJSON(e, 200, map[string]any{"ledger": true, "subscriptionPayments": true, "automation": true, "protocolVersion": 1})
 	})
 	f := auth.Group("/finance")
+	registerFinancePlanRoutes(app, f)
 	f.GET("/export", financeRoute(app, func(app core.App, e *core.RequestEvent, a financeActor, l *core.Record) (any, error) {
 		return exportFinanceSnapshot(app, a.User)
 	}))
@@ -160,11 +161,22 @@ func handleFinanceTransactionsList(app core.App, e *core.RequestEvent, a finance
 		return nil, financeFail("INVALID_QUERY", 400)
 	}
 	filter := "user = {:user} && ledger = {:ledger}"
+	if group := q.Get("group"); group == "recurring" {
+		filter += " && planId != ''"
+	} else if group == "daily" {
+		filter += " && planId = ''"
+	}
+	if plan := q.Get("planId"); plan != "" {
+		filter += " && planId = {:plan}"
+	}
 	params := dbx.Params{"user": a.User, "ledger": l.Id}
+	params["plan"] = q.Get("planId")
 	for _, key := range []string{"account", "kind", "status", "category", "merchant", "refundOf"} {
 		if value := q.Get(key); value != "" {
 			if key == "account" {
 				filter += " && (account = {:account} || counterAccount = {:account})"
+			} else if key == "kind" && value == "income" {
+				filter += " && (kind = 'income' || kind = 'refund' || kind = 'transfer')"
 			} else {
 				filter += " && " + key + " = {:" + key + "}"
 			}

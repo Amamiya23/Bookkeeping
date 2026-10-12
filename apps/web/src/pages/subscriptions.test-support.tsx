@@ -10,6 +10,7 @@ import {
 } from "@/test/subscription-fixtures";
 import type { Subscription } from "@/types/subscription";
 import Subscriptions from "./subscriptions";
+vi.mock("@/components/subscription-workspace", () => ({ SubscriptionWorkspace: () => null }));
 
 type SubscriptionBaseFixture = Omit<
   Subscription,

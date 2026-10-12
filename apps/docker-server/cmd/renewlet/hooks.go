@@ -104,7 +104,28 @@ func registerRecordHooks(app core.App) {
 		if err := demoModePolicy.EnforceRecordDelete(e.Record); err != nil {
 			return err
 		}
-		return e.Next()
+		// Delete subscription facts while their derived scheduler records still exist.
+		// The default cascade may remove scheduler state before subscription hooks run.
+		return e.App.RunInTransaction(func(tx core.App) error {
+			for {
+				rows, err := tx.FindRecordsByFilter("subscriptions", "user = {:user}", "id", 500, 0, dbx.Params{"user": e.Record.Id})
+				if err != nil {
+					return err
+				}
+				for _, row := range rows {
+					if err := tx.Delete(row); err != nil {
+						return err
+					}
+				}
+				if len(rows) < 500 {
+					break
+				}
+			}
+			original := e.App
+			e.App = tx
+			defer func() { e.App = original }()
+			return e.Next()
+		})
 	})
 	app.OnRecordCreateExecute("subscriptions").BindFunc(func(e *core.RecordEvent) error {
 		return executeSubscriptionDerivedMutation(e, subscriptionDerivedCreate)

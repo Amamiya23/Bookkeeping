@@ -243,13 +243,13 @@ func projectedSubscriptionPage(
 		base.conditions = append(base.conditions, `(CASE
 			WHEN idx.status = 'expired' THEN 'expired'
 			WHEN idx.billing_cycle = 'one-time' AND COALESCE(idx.one_time_term_count, 0) <= 0 THEN idx.status
-			WHEN idx.status IN ('active', 'trial') AND idx.next_billing_date < {:today} THEN 'expired'
+			WHEN idx.status IN ('active', 'trial') AND idx.billing_cycle = 'one-time' AND COALESCE(idx.one_time_term_count, 0) > 0 AND idx.next_billing_date < {:today} THEN 'expired'
 			ELSE idx.status
 		END) = {:status}`)
 		base.params["status"] = query.Status
 	}
 	if query.HideExpired {
-		base.conditions = append(base.conditions, "NOT (idx.status = 'expired' OR (idx.status IN ('active', 'trial') AND idx.next_billing_date < {:today}))")
+		base.conditions = append(base.conditions, "NOT (idx.status = 'expired' OR (idx.status IN ('active', 'trial') AND idx.billing_cycle = 'one-time' AND COALESCE(idx.one_time_term_count, 0) > 0 AND idx.next_billing_date < {:today}))")
 	}
 	if query.HideLifetime {
 		base.conditions = append(base.conditions, "NOT (idx.billing_cycle = 'one-time' AND COALESCE(idx.one_time_term_count, 0) <= 0)")
@@ -375,7 +375,7 @@ func buildSubscriptionProjectionPagePlan(
 				CASE
 					WHEN idx.status IN ('expired', 'paused', 'cancelled') THEN 1
 					WHEN idx.billing_cycle = 'one-time' AND COALESCE(idx.one_time_term_count, 0) <= 0 THEN 0
-					WHEN idx.status IN ('active', 'trial') AND idx.next_billing_date < {:today} THEN 1
+					WHEN idx.status IN ('active', 'trial') AND idx.billing_cycle = 'one-time' AND COALESCE(idx.one_time_term_count, 0) > 0 AND idx.next_billing_date < {:today} THEN 1
 					ELSE 0
 				END AS inactive
 				FROM %s

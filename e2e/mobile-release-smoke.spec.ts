@@ -7,7 +7,7 @@ const mobileReleasePages: Array<{ path: string; label: string; assertReady: (pag
     path: "/",
     label: "release mobile dashboard",
     assertReady: async (page) => {
-      await expect(page.getByText("月均支出")).toBeVisible();
+      await expect(page.getByRole("heading", { name: "消费总览", exact: true })).toBeVisible();
     },
   },
   {

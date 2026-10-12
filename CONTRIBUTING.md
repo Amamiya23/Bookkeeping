@@ -10,7 +10,7 @@ Requirements:
 
 - Node.js `>=24.19.0 <25` or `>=26.5.0 <27`.
 - pnpm 11.20.0 via Corepack.
-- Go 1.26.6 for the Docker server.
+- Go 1.27.2 for the Docker server (see `apps/docker-server/go.mod`).
 - Docker Compose v2 for Docker deployment checks.
 
 Node 24.19.0 LTS is the reproducible Docker and release baseline. The CI quality matrix also runs on Node 26.5.0 so contributors can use the current even-numbered release without engine warnings; EOL Node 25 and untested Node 27+ are not supported.
@@ -20,7 +20,7 @@ Check the toolchain before installing dependencies:
 ```bash
 node --version       # v24.19.x or >=v26.5.0 <v27
 corepack pnpm --version  # 11.20.0
-go version           # go1.26.6
+go version           # go1.27.2
 ```
 
 Install dependencies from the repository root:

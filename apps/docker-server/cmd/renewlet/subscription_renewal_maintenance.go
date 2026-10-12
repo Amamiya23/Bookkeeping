@@ -1,12 +1,8 @@
 package main
 
-// subscription_renewal_maintenance.go 注册 Docker/Go 自动续订维护任务。
-//
-// 维护任务按用户时区计算 today，并在通知生成前幂等推进 autoRenew 订阅，
-// 避免已自动续订的记录仍用旧账单日进入 expired/renewal 通知。
+// Accounting-enabled installations keep due dates until payment confirmation.
+// Legacy helpers still initialize notification scheduler state for cold accounts.
 import (
-	"log/slog"
-	"sync"
 	"time"
 
 	"github.com/pocketbase/dbx"
@@ -14,8 +10,6 @@ import (
 )
 
 const subscriptionRenewalMaintenancePageSize = 500
-
-var subscriptionRenewalCronMu sync.Mutex
 
 func positiveRecurringBillingCycleFilter(field string) string {
 	// 正向枚举让自动续订候选查询命中复合索引；!= one-time 在 D1/PocketBase 下都容易退化成宽扫描。
@@ -33,34 +27,15 @@ type subscriptionRenewalMaintenanceResult struct {
 }
 
 func registerSubscriptionRenewalCron(app core.App) error {
-	if !envBool("SUBSCRIPTION_RENEWAL_SCHEDULER_ENABLED", true) {
-		return nil
-	}
-	expr := envString("SUBSCRIPTION_RENEWAL_SCHEDULER_CRON", "* * * * *")
-	return app.Cron().Add("renewlet_subscription_renewals", expr, func() {
-		if !subscriptionRenewalCronMu.TryLock() {
-			// Cron tick 可能因慢数据库或大量用户重叠；跳过重入比并发推进同一订阅更安全。
-			slog.Info("subscription renewal maintenance skipped overlapping tick")
-			return
-		}
-		defer subscriptionRenewalCronMu.Unlock()
-
-		result, err := renewAutoSubscriptionsForAllUsers(app, time.Now())
-		if err != nil {
-			slog.Error("subscription renewal maintenance failed", "error", err)
-			return
-		}
-		if result.SubscriptionsUpdated > 0 {
-			slog.Info("subscription renewal maintenance completed",
-				"users", result.UsersProcessed,
-				"updated", result.SubscriptionsUpdated,
-			)
-		}
-	})
+	// Due dates advance only when a payment is confirmed or explicitly skipped.
+	return nil
 }
 
 func renewAutoSubscriptionsForAllUsers(app core.App, now time.Time) (subscriptionRenewalMaintenanceResult, error) {
 	result := subscriptionRenewalMaintenanceResult{}
+	if financeCollectionID(app, "finance_plans") != "" {
+		return result, nil
+	}
 	for {
 		userIDs, err := listAutoRenewDueUserIDs(app, now, subscriptionRenewalMaintenancePageSize)
 		if err != nil {
@@ -93,6 +68,9 @@ func renewAutoSubscriptionsForUser(app core.App, userID string, timezone string,
 	state, err := getSubscriptionSchedulerState(app, userID)
 	if err != nil {
 		return 0, err
+	}
+	if financeCollectionID(app, "finance_plans") != "" {
+		return 0, nil
 	}
 	if state.AutoRenewCount <= 0 {
 		return 0, nil

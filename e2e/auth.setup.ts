@@ -42,7 +42,7 @@ setup("install admin through Renewlet setup UI", async ({ page }) => {
   const loginResponse = await loginResponsePromise;
   expect(loginResponse.ok(), await loginResponse.text()).toBe(true);
   await expect(page).toHaveURL(/\/$/);
-  await expect(page.getByText("月均支出")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "消费总览", exact: true })).toBeVisible();
   // 仅给少数 E2E 内部表 seed 用例提供 collection 写入 token；真实产品 API 认证走 HttpOnly cookie + CSRF。
   const pocketBaseAuth = await page.evaluate(async ({ email, password }) => {
     const response = await fetch("/api/collections/users/auth-with-password", {

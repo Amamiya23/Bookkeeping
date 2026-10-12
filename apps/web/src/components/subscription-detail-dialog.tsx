@@ -45,6 +45,8 @@ import {
 import { getEffectiveSubscriptionStatus } from "@/modules/subscriptions/domain/subscription-status";
 import { isManualRenewEligible } from "@renewlet/shared/subscription-renewal";
 import { calculateCostSharingSummary } from "@renewlet/shared/cost-sharing";
+import { useCashflow } from "@/components/cashflow-context";
+import { SubscriptionPaymentHistory } from "@/components/subscription-payment-history";
 
 const DEFAULT_LOGO_FALLBACK_COLOR = "hsl(var(--primary))";
 
@@ -127,6 +129,7 @@ function SubscriptionDetailContent({
   priceReferenceCurrency,
 }: SubscriptionDetailContentProps) {
   const { data: settings } = useSettings();
+  const cashflow = useCashflow();
   const { t, locale, formatDateOnly, formatCurrency } = useI18n();
   if (loading) {
     const loadingSlots = createSubscriptionDetailLoadingSlots({
@@ -289,6 +292,7 @@ function SubscriptionDetailContent({
       )}
       extensions={(
         <>
+          <SubscriptionPaymentHistory subscriptionId={subscription.id} />
           {subscription.tags.length > 0 ? (
             <DetailRow label={t("subscription.field.tags")} alignStart>
               <div className="flex flex-wrap gap-1 sm:justify-end">
@@ -334,7 +338,7 @@ function SubscriptionDetailContent({
               {t("subscription.addToCalendar")}
             </Button>
           ) : null}
-          {canManualRenew ? (
+          {cashflow?.enabled && !isBuyout && !isFixedTermOneTime ? <Button variant="outline" onClick={() => { onClose(); cashflow.paySubscription(subscription.id); }}>{t("finance.confirmPayment")}</Button> : canManualRenew ? (
             <Button
               variant="outline"
               className="w-full justify-center border-border sm:w-auto"

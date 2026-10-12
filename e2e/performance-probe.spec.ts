@@ -14,7 +14,7 @@ test.afterEach(() => mock.restoreAll());
 
 test("SPA timing starts on click rather than hover or automation preparation", async ({ page }) => {
   await page.evaluate(() => {
-    document.body.innerHTML = '<header><a href="/next">Navigate</a></header><div data-testid="dashboard-stat-grid">Content</div>';
+    document.body.innerHTML = '<header><a href="/next">Navigate</a></header><div data-testid="consumption-overview">Content</div>';
     document.querySelector("a")?.addEventListener("click", (event) => {
       event.preventDefault();
       document.body.dataset["clickedAt"] = String(performance.now());

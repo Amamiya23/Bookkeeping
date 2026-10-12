@@ -7,8 +7,10 @@ describe("finance categories", () => {
   it("keeps stable identities while localizing labels and separating income from expenses", () => {
     const expenses = financeCategoryOptions("expense", [], t);
     const income = financeCategoryOptions("income", [], t);
-    expect(expenses).toHaveLength(32); expect(income).toHaveLength(10);
-    expect(new Set(builtInFinanceCategories.map((item) => item.value)).size).toBe(42);
+    expect(expenses).toHaveLength(32); expect(income).toHaveLength(12);
+    expect(income.map((item) => item.value)).toContain("builtin:refund");
+    expect(income.map((item) => item.value)).toContain("builtin:transfer");
+    expect(new Set(builtInFinanceCategories.map((item) => item.value)).size).toBe(44);
     expect(expenses.find((item) => item.value === "builtin:meals")).toMatchObject({ label: "translated:finance.category.meals", icon: "utensils" });
     expect(income.some((item) => item.value === "builtin:meals")).toBe(false);
   });

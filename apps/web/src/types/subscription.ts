@@ -152,6 +152,7 @@ export const WEBHOOK_PAYLOAD_PLACEHOLDER = '{"title": "{title}", "content": "{co
 export type { CostSharing, CostSharingMember, CostSharingSplitMode } from '@renewlet/shared/cost-sharing';
 
 type SubscriptionCollectionDomainFields = {
+  paymentConfirmationRequired?: boolean;
   logo: string | undefined;
   category: Category;
   paymentMethod: PaymentMethod | undefined;

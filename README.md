@@ -16,7 +16,7 @@
   <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-111827?style=flat-square">
 </p>
 
-Renewlet is a self-hosted subscription ledger for recurring expenses. See what you spend, what is due next, and get a reminder before renewal.
+Renewlet is a self-hosted accounting platform with subscription management. Daily transactions, subscription payments, and recurring bills share one ledger, so you can review overall spending and upcoming payments.
 
 Run it in a single Docker container or deploy it to Cloudflare Workers.
 
@@ -33,12 +33,83 @@ Sign in with `demo@renewlet.local` / `renewlet-demo`. Data resets regularly; do 
 ## Features
 
 - Keep prices, billing cycles, renewal dates, payment methods, and notes in one place.
-- Review monthly or yearly spending, track a budget, and convert between currencies.
+- Unified accounting (Go backend): record income and expenses, preserve original currencies with saved CNY amounts, and review spending by purpose and merchant.
+- Recurring payments (Go backend): confirm subscription, rent, and household payments or link existing expenses before advancing the next due date.
 - Send reminders in your timezone through Telegram, Notifyx, Webhook, WeCom, DingTalk, email, Bark, ServerChan, Discord, or PushPlus.
 - Turn screenshots, notes, or tables into editable drafts, then review them before import. You can also import or export Renewlet data, or migrate from Wallos.
 - Add all or individual subscriptions to a calendar, or share a public status page with prices hidden when needed.
 - Secure the account with an authenticator, recovery codes, or passkeys, and optionally protect password login with Cloudflare Turnstile.
 - Connect CLI tools, Shortcuts, and other automation through the read-only [Public API](docs/public-api.md).
+
+## Run Locally for Testing (Source)
+
+Use the Go backend with the Vite frontend to test changes in your current checkout. The frontend supports hot reload. Docker, a Cloudflare account, and AI credentials are not required; daily transactions and the spending overview require the Go backend.
+
+### 1. Install Dependencies
+
+| Tool | Required version |
+| --- | --- |
+| [Node.js](https://nodejs.org/en/download) | `>=24.19.0 <25` or `>=26.5.0 <27`; 24.19.x is recommended. |
+| pnpm | `11.20.0`, selected by Corepack from the root `package.json`. |
+| [Go](https://go.dev/dl/) | `1.27.2` or a later compatible version; see `apps/docker-server/go.mod`. |
+
+Run once from the repository root:
+
+```powershell
+node --version
+corepack pnpm --version
+go version
+corepack pnpm install --frozen-lockfile
+```
+
+If Corepack is unavailable, run `npm install --global corepack` and reopen the terminal. Calling `corepack pnpm` directly does not require creating global shims with `corepack enable`.
+
+### 2. Terminal One: Backend
+
+Open PowerShell in the repository root:
+
+```powershell
+Set-Location apps/docker-server
+$env:SETUP_ENABLED = "true"
+$env:RENEWLET_DEMO_MODE = "false"
+$env:NOTIFICATION_SCHEDULER_ENABLED = "false"
+go run ./cmd/renewlet serve --http=127.0.0.1:3000 --dir=./pb_data_dev
+```
+
+The first run downloads Go dependencies and compiles the server. Wait for the listening message. Test data persists in `apps/docker-server/pb_data_dev/`. These commands disable the notification scheduler; set its environment variable to `"true"` and restart the backend when testing scheduled notifications.
+
+### 3. Terminal Two: Frontend
+
+Keep the backend running and open another PowerShell in the repository root:
+
+```powershell
+$env:VITE_DEV_PROXY_TARGET = "http://127.0.0.1:3000"
+corepack pnpm --filter @renewlet/client exec vite --host 127.0.0.1 --port 5173 --strictPort
+```
+
+Open **http://127.0.0.1:5173/setup** to create the first administrator, then use **http://127.0.0.1:5173/** for subsequent logins. Use this frontend address for browser testing; Vite proxies API requests to the backend.
+
+Use the global “Add transaction” button to record income and expenses. Review and correct them in Bills; Overview and Analysis show unified CNY totals, trends, and spending categories. Record refunds and received transfers as income. Add rent and other recurring bills under Bills → Recurring plans; confirmed subscription payments also enter this ledger. Subscription calendars, service cost analysis, and payment history are inside Subscriptions. See the [accounting and recurring payments guide (Chinese)](docs/finance.zh-CN.md).
+
+Frontend edits update automatically. After Go edits, press `Ctrl+C` in terminal one and rerun the backend command. Press `Ctrl+C` in both terminals to stop the app. This development workflow does not require `pnpm start` or copying frontend assets. The Go process reads environment variables directly and does not automatically load the root `.env` file.
+
+### Troubleshooting
+
+- **Go is not recognized:** install Go, ensure its `bin` directory is on `PATH`, and reopen the terminal. On the Windows machine previously used for local testing, the temporary toolchain may still be available:
+
+  ```powershell
+  $env:PATH = (Join-Path $env:LOCALAPPDATA "Temp\renewlet-go127\go\bin") + ";" + $env:PATH
+  go version
+  ```
+
+- **Port already in use:** change the backend to `--http=127.0.0.1:3001` and update `VITE_DEV_PROXY_TARGET` to `http://127.0.0.1:3001`. Change the frontend to `--port 5174` and browse port 5174 if needed.
+- **API or login fails:** keep both terminals running and check that the proxy targets the backend port. Check backend health at `http://127.0.0.1:3000/api/app/health`.
+- **Fresh test data:** stop the backend and choose a new directory, such as `--dir=./pb_data_dev_2`, then restart and create a new administrator.
+- **Dependency downloads fail:** check network and proxy settings. Corepack and Go need network access on their first run.
+
+On macOS/Linux, use the same versions and commands, replacing `$env:NAME = "value"` with `export NAME=value` and `Set-Location` with `cd`.
+
+Command references: [pnpm install](https://pnpm.io/cli/install), [Vite CLI](https://vite.dev/guide/cli.html), and [Go commands](https://go.dev/cmd/go/). See [CONTRIBUTING.md](CONTRIBUTING.md) for additional development and validation commands.
 
 ## Docker Quick Start
 

@@ -14,42 +14,61 @@ import (
 type financeTotals struct {
 	Income, Expense, Refund *big.Int
 	Categories              map[string]*big.Int
+	Daily                   map[string]*financeTotals
+	Recurring               *big.Int
+	Merchants               map[string]*big.Int
 }
 
 func newFinanceTotals() *financeTotals {
-	return &financeTotals{new(big.Int), new(big.Int), new(big.Int), map[string]*big.Int{}}
+	return &financeTotals{Income: new(big.Int), Expense: new(big.Int), Refund: new(big.Int), Recurring: new(big.Int), Categories: map[string]*big.Int{}, Merchants: map[string]*big.Int{}, Daily: map[string]*financeTotals{}}
 }
 func (t *financeTotals) add(r *core.Record) error {
-	amount, err := financeUnits(r.GetString("amount"), false)
+	return t.addAmount(r, r.GetString("amount"))
+}
+func (t *financeTotals) addAmount(r *core.Record, value string) error {
+	amount, err := financeUnits(value, false)
 	if err != nil {
 		return err
 	}
 	switch r.GetString("kind") {
-	case "income":
+	case "income", "transfer", "refund":
 		t.Income.Add(t.Income, amount)
-	case "expense", "refund":
+	case "expense":
+		if r.GetString("planId") != "" {
+			t.Recurring.Add(t.Recurring, amount)
+		}
+		merchant := r.GetString("merchant")
+		if merchant != "" {
+			if t.Merchants[merchant] == nil {
+				t.Merchants[merchant] = new(big.Int)
+			}
+			t.Merchants[merchant].Add(t.Merchants[merchant], amount)
+		}
 		category := r.GetString("category")
 		if t.Categories[category] == nil {
 			t.Categories[category] = new(big.Int)
 		}
-		if r.GetString("kind") == "expense" {
-			t.Expense.Add(t.Expense, amount)
-			t.Categories[category].Add(t.Categories[category], amount)
-		} else {
-			t.Refund.Add(t.Refund, amount)
-			t.Categories[category].Sub(t.Categories[category], amount)
-		}
+		t.Expense.Add(t.Expense, amount)
+		t.Categories[category].Add(t.Categories[category], amount)
 	}
 	return nil
 }
 func (t *financeTotals) data() map[string]any {
-	net := new(big.Int).Sub(t.Expense, t.Refund)
+	net := new(big.Int).Set(t.Expense)
 	balance := new(big.Int).Sub(t.Income, net)
 	categories := map[string]string{}
 	for k, v := range t.Categories {
 		categories[k] = financeDecimal(v)
 	}
-	return map[string]any{"income": financeDecimal(t.Income), "grossExpense": financeDecimal(t.Expense), "refunds": financeDecimal(t.Refund), "netExpense": financeDecimal(net), "netIncome": financeDecimal(balance), "categories": categories}
+	daily := map[string]any{}
+	merchants := map[string]string{}
+	for k, v := range t.Merchants {
+		merchants[k] = financeDecimal(v)
+	}
+	for date, totals := range t.Daily {
+		daily[date] = map[string]string{"income": financeDecimal(totals.Income), "expense": financeDecimal(totals.Expense)}
+	}
+	return map[string]any{"income": financeDecimal(t.Income), "grossExpense": financeDecimal(t.Expense), "refunds": "0", "netExpense": financeDecimal(net), "netIncome": financeDecimal(balance), "categories": categories, "daily": daily, "recurringExpense": financeDecimal(t.Recurring), "merchants": merchants}
 }
 
 func financeDefaultDateRange(instant time.Time, timeZone string) (string, string, error) {
@@ -81,11 +100,43 @@ func handleFinanceSummary(app core.App, e *core.RequestEvent, a financeActor, l 
 		return nil, financeFail("INVALID_DATE_RANGE", 400)
 	}
 	totals := map[string]*financeTotals{}
+	cny := newFinanceTotals()
+	missing := map[string]bool{}
+	filter := "status = 'posted' && occurredOn >= {:from} && occurredOn <= {:to}"
+	if group := e.Request.URL.Query().Get("group"); group == "recurring" {
+		filter += " && planId != ''"
+	} else if group == "daily" {
+		filter += " && planId = ''"
+	}
 	err = app.RunInTransaction(func(tx core.App) error {
-		return financeScan(tx, a.User, l.Id, "status = 'posted' && occurredOn >= {:from} && occurredOn <= {:to}", dbx.Params{"from": from, "to": to}, func(r *core.Record) error {
+		return financeScan(tx, a.User, l.Id, filter, dbx.Params{"from": from, "to": to}, func(r *core.Record) error {
 			currency := r.GetString("currency")
 			if totals[currency] == nil {
 				totals[currency] = newFinanceTotals()
+			}
+			date := r.GetString("occurredOn")
+			value := r.GetString("cnyAmount")
+			if currency == "CNY" {
+				value = r.GetString("amount")
+			}
+			if value != "" {
+				if cny.Daily[date] == nil {
+					cny.Daily[date] = newFinanceTotals()
+				}
+				if err := cny.Daily[date].addAmount(r, value); err != nil {
+					return err
+				}
+				if err := cny.addAmount(r, value); err != nil {
+					return err
+				}
+			} else {
+				missing[currency] = true
+			}
+			if totals[currency].Daily[date] == nil {
+				totals[currency].Daily[date] = newFinanceTotals()
+			}
+			if err := totals[currency].Daily[date].add(r); err != nil {
+				return err
 			}
 			return totals[currency].add(r)
 		})
@@ -97,14 +148,14 @@ func handleFinanceSummary(app core.App, e *core.RequestEvent, a financeActor, l 
 	unconverted := []string{}
 	for currency, total := range totals {
 		byCurrency[currency] = total.data()
-		if currency != l.GetString("baseCurrency") {
+		if missing[currency] {
 			unconverted = append(unconverted, currency)
 		}
 	}
 	if _, ok := byCurrency[l.GetString("baseCurrency")]; !ok {
 		byCurrency[l.GetString("baseCurrency")] = newFinanceTotals().data()
 	}
-	return map[string]any{"from": from, "to": to, "timeZone": l.GetString("timeZone"), "basis": "posted-cash-flow", "baseCurrency": l.GetString("baseCurrency"), "byCurrency": byCurrency, "unconvertedCurrencies": unconverted}, nil
+	return map[string]any{"from": from, "to": to, "timeZone": l.GetString("timeZone"), "basis": "posted-cash-flow", "baseCurrency": l.GetString("baseCurrency"), "byCurrency": byCurrency, "unconvertedCurrencies": unconverted, "cnyTotals": cny.data()}, nil
 }
 
 var financeMonthPattern = regexp.MustCompile(`^[0-9]{4}-(0[1-9]|1[0-2])$`)

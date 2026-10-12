@@ -3,7 +3,7 @@ import fixture from "../../data/finance-contract-fixtures.json";
 import { financeAccountInputSchema, financeTransactionInputSchema, financeCapabilitiesResponseSchema, financeLedgerSchema } from "./finance";
 
 describe("finance contract fixtures", () => {
-  it("accepts negative opening balances and all four transaction kinds", () => {
+  it("keeps historical accounts and transaction kinds readable", () => {
     const accounts = new Map(fixture.accounts.map((account, index) => [account.ref, `account0000000${index}`]));
     const transactions = new Map(fixture.transactions.map((transaction, index) => [transaction.ref, `transact000000${index}`]));
     for (const { ref, ...account } of fixture.accounts) {
@@ -12,6 +12,14 @@ describe("finance contract fixtures", () => {
     for (const { ref, ...transaction } of fixture.transactions) {
       expect(ref).toBeTruthy();
       expect(financeTransactionInputSchema.safeParse({ ...transaction, account: accounts.get(transaction.account), counterAccount: accounts.get(transaction.counterAccount ?? "") ?? "", refundOf: transactions.get(transaction.refundOf ?? "") ?? "" }).success).toBe(true);
+    }
+  });
+  it("accepts income and expenses without a funding account", () => {
+    for (const kind of ["income", "expense"] as const) {
+      const record = financeTransactionInputSchema.parse({ kind, amount: "12.34", currency: "CNY", occurredOn: "2026-10-12" });
+      expect(record.account).toBe("");
+      expect(record.counterAccount).toBe("");
+      expect(record.refundOf).toBe("");
     }
   });
   it("rejects the same invalid amounts as the Go service", () => {

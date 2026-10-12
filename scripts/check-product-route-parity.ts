@@ -59,7 +59,7 @@ function parseWorkerRouteManifest(value: unknown): WorkerRouteManifestEntry[] {
 }
 
 const runtimeOnly = {
-  // Docker finance routes are gated by /api/app/finance/capabilities until P5.
+  // Accounting and recurring payments are capability-gated on Docker/Go.
   // Stale checks reject exceptions removed or implemented on both runtimes.
   go: new Set([
     "GET /api/cron/notifications",
@@ -69,6 +69,7 @@ const runtimeOnly = {
     "GET /api/app/finance/transactions/{id}", "PATCH /api/app/finance/transactions/{id}", "POST /api/app/finance/transactions/{id}/void",
     "GET /api/app/finance/reports/summary", "GET /api/app/finance/budgets", "PUT /api/app/finance/budgets",
     "GET /api/app/finance/audit", "GET /api/app/finance/export", "POST /api/app/finance/restore",
+    "GET /api/app/finance/plans", "POST /api/app/finance/plans", "PATCH /api/app/finance/plans/{id}", "POST /api/app/finance/plans/{id}/settle",
   ]),
   worker: new Set<string>(),
 };

@@ -21,10 +21,12 @@ import type {
   SubscriptionFormSubmission,
 } from "@/types/subscription";
 import type { SubscriptionRenewBody } from "@renewlet/shared/schemas/subscriptions";
+import { useCashflow } from "@/components/cashflow-context";
 
 /** CRUD 控制器只保存会话目标与列表快照；完整对象始终来自唯一的详情查询缓存。 */
 export function useSubscriptionCrud(subscriptions: readonly SubscriptionCollectionItem[]) {
   const queryClient = useQueryClient();
+  const cashflow = useCashflow();
   const { mutate: createSubscription } = useCreateSubscription();
   const { mutate: updateSubscription } = useUpdateSubscription();
   const { mutate: patchSubscription } = usePatchSubscription();
@@ -104,13 +106,14 @@ export function useSubscriptionCrud(subscriptions: readonly SubscriptionCollecti
   }, [patchSubscription, subscriptions]);
 
   const handleRenewSubscription = useCallback((id: string) => {
+    if (cashflow?.enabled) { cashflow.paySubscription(id); return; }
     renewRestoreFocusRef.current = typeof document !== "undefined" && document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null;
     cancelRenewCleanup();
     setRenewingTarget(createSubscriptionDialogTarget(subscriptions, id));
     setRenewDialogOpen(true);
-  }, [cancelRenewCleanup, subscriptions]);
+  }, [cancelRenewCleanup, subscriptions, cashflow]);
 
   const handleEditSubscription = useCallback((id: string) => {
     cancelEditCleanup();

@@ -3,6 +3,8 @@ import type { MessageKey } from "@/i18n/messages";
 
 type BuiltInCategory = { value: string; kind: FinanceCategory["kind"]; icon: FinanceCategoryIconName; label: MessageKey; aliases: string[] };
 export const builtInFinanceCategories: BuiltInCategory[] = [
+  { value: "builtin:refund", kind: "income", icon: "receipt", label: "finance.category.refund", aliases: ["退款", "Refunds", "Возвраты"] },
+  { value: "builtin:transfer", kind: "income", icon: "banknote", label: "finance.category.transfer", aliases: ["转账收入", "Received transfers", "Полученные переводы"] },
   { value: "builtin:meals", kind: "expense", icon: "utensils", label: "finance.category.meals", aliases: ["三餐","Meals","Питание","餐饮"] },
   { value: "builtin:snacks", kind: "expense", icon: "cookie", label: "finance.category.snacks", aliases: ["零食","Snacks","Перекусы"] },
   { value: "builtin:clothes", kind: "expense", icon: "shirt", label: "finance.category.clothes", aliases: ["衣服","Clothing","Одежда"] },

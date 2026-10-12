@@ -57,6 +57,7 @@ type financeTransactionInput struct {
 	ExternalSource string   `json:"externalSource"`
 	ExternalID     string   `json:"externalId"`
 	Version        int      `json:"version"`
+	CNYAmount      string   `json:"cnyAmount"`
 }
 type financeTransactionDTO struct {
 	ID     string `json:"id"`
@@ -66,6 +67,8 @@ type financeTransactionDTO struct {
 	Source     string `json:"source"`
 	VoidReason string `json:"voidReason"`
 	Created    string `json:"created"`
+	PlanID     string `json:"planId"`
+	DueOn      string `json:"dueOn"`
 }
 
 func financeOwned(app core.App, collection, user, ledger, id string) (*core.Record, error) {
@@ -122,7 +125,7 @@ func financeTransaction(r *core.Record) financeTransactionDTO {
 	if tags == nil {
 		tags = []string{}
 	}
-	return financeTransactionDTO{ID: r.Id, Ledger: r.GetString("ledger"), Status: r.GetString("status"), Source: r.GetString("source"), VoidReason: r.GetString("voidReason"), Created: recordTimeString(r, "created"), financeTransactionInput: financeTransactionInput{Kind: r.GetString("kind"), Amount: r.GetString("amount"), Currency: r.GetString("currency"), Account: r.GetString("account"), CounterAccount: r.GetString("counterAccount"), OccurredOn: r.GetString("occurredOn"), Category: r.GetString("category"), Merchant: r.GetString("merchant"), Tags: tags, Notes: r.GetString("notes"), RefundOf: r.GetString("refundOf"), ExternalSource: r.GetString("externalSource"), ExternalID: r.GetString("externalId"), Version: r.GetInt("version")}}
+	return financeTransactionDTO{PlanID: r.GetString("planId"), DueOn: r.GetString("dueOn"), ID: r.Id, Ledger: r.GetString("ledger"), Status: r.GetString("status"), Source: r.GetString("source"), VoidReason: r.GetString("voidReason"), Created: recordTimeString(r, "created"), financeTransactionInput: financeTransactionInput{Kind: r.GetString("kind"), Amount: r.GetString("amount"), Currency: r.GetString("currency"), Account: r.GetString("account"), CounterAccount: r.GetString("counterAccount"), OccurredOn: r.GetString("occurredOn"), Category: r.GetString("category"), Merchant: r.GetString("merchant"), Tags: tags, Notes: r.GetString("notes"), RefundOf: r.GetString("refundOf"), ExternalSource: r.GetString("externalSource"), ExternalID: r.GetString("externalId"), CNYAmount: r.GetString("cnyAmount"), Version: r.GetInt("version")}}
 }
 
 // Iteration is bounded in memory; callers run inside a database transaction when
@@ -247,6 +250,15 @@ func validateFinanceTransaction(app core.App, user, ledger, id string, input *fi
 		return financeFail("INVALID_AMOUNT", 400)
 	}
 	input.Amount = financeDecimal(amount)
+	if input.Currency == "CNY" {
+		input.CNYAmount = input.Amount
+	} else if input.CNYAmount != "" {
+		converted, err := financeUnits(input.CNYAmount, false)
+		if err != nil || converted.Sign() <= 0 {
+			return financeFail("INVALID_CNY_AMOUNT", 400)
+		}
+		input.CNYAmount = financeDecimal(converted)
+	}
 	if !isValidDateOnly(input.OccurredOn) || !financeCurrencyPattern.MatchString(input.Currency) || !financeTextFits(input.Category, 80) || !financeTextFits(input.Merchant, 120) || !financeTextFits(input.Notes, 5000) || len(input.Tags) > 50 || !financeTextFits(input.ExternalSource, 120) || !financeTextFits(input.ExternalID, 120) {
 		return financeFail("INVALID_TRANSACTION", 400)
 	}
@@ -260,6 +272,14 @@ func validateFinanceTransaction(app core.App, user, ledger, id string, input *fi
 	}
 	if (input.ExternalSource == "") != (input.ExternalID == "") {
 		return financeFail("INVALID_EXTERNAL_REFERENCE", 400)
+	}
+	// New cash-flow records have no funding account. Account-backed records
+	// remain valid for older clients and backups.
+	if input.Account == "" {
+		if (input.Kind != "income" && input.Kind != "expense") || input.CounterAccount != "" || input.RefundOf != "" {
+			return financeFail("INVALID_TRANSACTION", 400)
+		}
+		return nil
 	}
 	account, err := financeOwned(app, "accounts", user, ledger, input.Account)
 	if err != nil {
@@ -373,6 +393,13 @@ func saveFinanceTransaction(app core.App, actor financeActor, ledger, id, source
 		if err := validateFinanceTransaction(tx, actor.User, ledger, id, &input); err != nil {
 			return err
 		}
+		if input.Account == "" && input.Currency != "CNY" && input.CNYAmount == "" {
+			return financeFail("CNY_AMOUNT_REQUIRED", 400)
+		}
+		if r.GetString("planId") != "" && input.Kind != "expense" {
+			return financeFail("INVALID_PLAN_PAYMENT", 400)
+		}
+		r.Set("cnyAmount", input.CNYAmount)
 		if input.ExternalID != "" {
 			count, err := tx.CountRecords("transactions", dbx.HashExp{"user": actor.User, "ledger": ledger, "externalSource": input.ExternalSource, "externalId": input.ExternalID}, dbx.Not(dbx.HashExp{"id": id}))
 			if err != nil {
@@ -452,6 +479,9 @@ func voidFinanceTransaction(app core.App, actor financeActor, ledger, id string,
 			return err
 		}
 		result = financeTransaction(r)
+		if err := reopenFinancePayment(tx, actor, ledger, r); err != nil {
+			return err
+		}
 		return financeAudit(tx, actor, ledger, "transaction.void", r.Id, before, result)
 	})
 	return result, err

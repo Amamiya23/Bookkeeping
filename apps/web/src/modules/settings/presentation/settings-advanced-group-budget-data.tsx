@@ -1,7 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
 import { Activity, Coins, CreditCard, FolderKanban, Settings2 } from "lucide-react";
-import { FormField } from "@/components/ui/form-field";
-import { NumericInput } from "@/components/ui/numeric-input";
 import type { SearchableSelectOption } from "@/components/ui/searchable-select";
 import { useManagedCurrencyOptions } from "@/hooks/use-managed-currency-options";
 import { useI18n } from "@/i18n/I18nProvider";
@@ -34,14 +32,10 @@ export function SettingsAdvancedBudgetDataGroup({
     ratesErrorDetails,
     ratesWarning,
     reportBasisStatus,
-    getCurrencySymbol,
     updateCategories,
     updateStatuses,
     updatePaymentMethods,
     updateSetting,
-    monthlyBudgetInput,
-    monthlyBudgetError,
-    handleMonthlyBudgetInputChange,
     handleRefreshRates,
     handleUpdateCurrencies,
     handleDefaultCurrencyChange,
@@ -86,34 +80,6 @@ export function SettingsAdvancedBudgetDataGroup({
 
   return (
     <>
-      <section id="settings-budget" className={SETTINGS_SECTION_FRAME_CLASS}>
-        <h2 className="mb-6 text-lg font-semibold text-foreground">{t("settings.budget")}</h2>
-        <div className="grid gap-4">
-          <FormField id="monthlyBudget" label={t("settings.monthlyBudget")} description={t("settings.monthlyBudgetHelp")} error={monthlyBudgetError}>
-            {(field) => (
-              <div className="flex flex-col gap-2 min-[380px]:flex-row min-[380px]:items-center min-[380px]:gap-3">
-                <NumericInput
-                  id={field.id}
-                  name={field.id}
-                  allowNegative={false}
-                  allowedDecimalSeparators={[".", "。"]}
-                  inputMode="decimal"
-                  enterKeyHint="done"
-                  value={monthlyBudgetInput}
-                  onRawValueChange={handleMonthlyBudgetInputChange}
-                  className="w-full border-border bg-secondary min-[380px]:w-[min(12.5rem,100%)]"
-                  placeholder="1500"
-                  thousandSeparator
-                  aria-invalid={field.invalid}
-                  aria-describedby={field.describedBy}
-                />
-                <span className="text-sm text-muted-foreground">{getCurrencySymbol(settings.defaultCurrency)} {settings.defaultCurrency} {t("settings.perMonth")}</span>
-              </div>
-            )}
-          </FormField>
-        </div>
-      </section>
-
       <section id="settings-data-config" className={SETTINGS_SECTION_FRAME_CLASS}>
         <div className="mb-4 flex items-center gap-2"><Settings2 className="h-5 w-5 text-primary" /><h2 className="text-lg font-semibold text-foreground">{t("settings.dataConfig")}</h2></div>
         <p className="mb-6 text-sm text-muted-foreground">{t("settings.dataConfigDescription")}</p>

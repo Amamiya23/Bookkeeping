@@ -34,6 +34,8 @@ type financeSnapshot struct {
 	Transactions  []financeTransactionDTO `json:"transactions"`
 	Budgets       []financeBudgetDTO      `json:"budgets"`
 	Audit         []financeAuditDTO       `json:"audit"`
+	Plans         []financePlanDTO        `json:"plans"`
+	Payments      []financePaymentDTO     `json:"payments"`
 }
 
 func exportFinanceSnapshot(app core.App, user string) (*financeSnapshot, error) {
@@ -43,8 +45,13 @@ func exportFinanceSnapshot(app core.App, user string) (*financeSnapshot, error) 
 		if err != nil {
 			return err
 		}
+		if err := syncFinanceSubscriptionPlans(tx, user, ledger.Id); err != nil {
+			return err
+		}
 		result = &financeSnapshot{SchemaVersion: 1, Ledger: financeLedger(ledger), Accounts: []financeAccountDTO{}, Transactions: []financeTransactionDTO{}, Budgets: []financeBudgetDTO{}, Audit: []financeAuditDTO{}}
-		for _, collection := range []string{"accounts", "transactions", "finance_budgets", "finance_audit"} {
+		result.Plans = []financePlanDTO{}
+		result.Payments = []financePaymentDTO{}
+		for _, collection := range []string{"accounts", "transactions", "finance_budgets", "finance_audit", "finance_plans", "finance_payments"} {
 			count, err := tx.CountRecords(collection, dbx.HashExp{"user": user, "ledger": ledger.Id})
 			if err != nil {
 				return err
@@ -58,6 +65,10 @@ func exportFinanceSnapshot(app core.App, user string) (*financeSnapshot, error) 
 			}
 			for _, r := range rows {
 				switch collection {
+				case "finance_plans":
+					result.Plans = append(result.Plans, financePlan(r))
+				case "finance_payments":
+					result.Payments = append(result.Payments, financePayment(r))
 				case "accounts":
 					balance, err := financeBalance(tx, user, ledger.Id, r)
 					if err != nil {
@@ -118,7 +129,7 @@ func validateFinanceSnapshot(s *financeSnapshot) error {
 	if err := validateFinanceCategories(s.Ledger.Categories); err != nil {
 		return invalid()
 	}
-	if len(s.Accounts) > 500 || len(s.Transactions) > 10000 || len(s.Budgets) > 500 || len(s.Audit) > 10000 {
+	if len(s.Accounts) > 500 || len(s.Transactions) > 10000 || len(s.Budgets) > 500 || len(s.Audit) > 10000 || len(s.Plans) > 1000 || len(s.Payments) > 10000 {
 		return financeFail("FINANCE_IMPORT_LIMIT", 413)
 	}
 	accounts := map[string]financeAccountDTO{}
@@ -134,6 +145,14 @@ func validateFinanceSnapshot(s *financeSnapshot) error {
 		balances[a.ID] = units
 	}
 	external := map[string]bool{}
+	plans := map[string]financePlanDTO{}
+	for _, p := range s.Plans {
+		in := p.financePlanInput
+		if !financeIDPattern.MatchString(p.ID) || p.Ledger != s.Ledger.ID || p.Version < 1 || plans[p.ID].ID != "" || p.AnchorDay < 1 || p.AnchorDay > 31 || (p.SubscriptionID != "" && !financeIDPattern.MatchString(p.SubscriptionID)) || validateFinancePlan(&in) != nil {
+			return invalid()
+		}
+		plans[p.ID] = p
+	}
 	for _, t := range s.Transactions {
 		if !financeIDPattern.MatchString(t.ID) || transactions[t.ID].ID != "" || t.Ledger != s.Ledger.ID || t.Version < 1 || (t.Status != "posted" && t.Status != "void") || !isValidDateOnly(t.OccurredOn) {
 			return invalid()
@@ -145,8 +164,17 @@ func validateFinanceSnapshot(s *financeSnapshot) error {
 		if err != nil || amount.Sign() <= 0 {
 			return invalid()
 		}
+		if t.CNYAmount != "" {
+			cny, err := financeUnits(t.CNYAmount, false)
+			if err != nil || cny.Sign() <= 0 || (t.Currency == "CNY" && cny.Cmp(amount) != 0) {
+				return invalid()
+			}
+		}
+		if t.PlanID != "" && (plans[t.PlanID].ID == "" || !isValidDateOnly(t.DueOn) || t.Kind != "expense") {
+			return invalid()
+		}
 		a := accounts[t.Account]
-		if a.ID == "" || a.Currency != t.Currency || t.OccurredOn < a.OpeningDate {
+		if !financeCurrencyPattern.MatchString(t.Currency) || (t.Account != "" && (a.ID == "" || a.Currency != t.Currency || t.OccurredOn < a.OpeningDate)) || (t.Account == "" && t.Kind != "income" && t.Kind != "expense") {
 			return invalid()
 		}
 		if !financeTextFits(t.Category, 80) || !financeTextFits(t.Merchant, 120) || !financeTextFits(t.Notes, 5000) || len(t.Tags) > 50 || !financeTextFits(t.VoidReason, 500) || !financeTextFits(t.Source, 32) || !financeTextFits(t.ExternalID, 120) || !financeTextFits(t.ExternalSource, 120) {
@@ -184,7 +212,7 @@ func validateFinanceSnapshot(s *financeSnapshot) error {
 			return invalid()
 		}
 		transactions[t.ID] = t
-		if t.Status == "posted" {
+		if t.Status == "posted" && t.Account != "" {
 			if t.Kind == "expense" || t.Kind == "transfer" {
 				balances[t.Account].Sub(balances[t.Account], amount)
 			} else {
@@ -193,6 +221,23 @@ func validateFinanceSnapshot(s *financeSnapshot) error {
 			if t.Kind == "transfer" {
 				balances[t.CounterAccount].Add(balances[t.CounterAccount], amount)
 			}
+		}
+	}
+	seenPayments := map[string]bool{}
+	seenPaymentIDs := map[string]bool{}
+	for _, p := range s.Payments {
+		key := p.PlanID + ":" + p.DueOn
+		if !financeIDPattern.MatchString(p.ID) || seenPayments[key] || seenPaymentIDs[p.ID] || plans[p.PlanID].ID == "" || !isValidDateOnly(p.DueOn) || !financeTextFits(p.Reason, 500) {
+			return invalid()
+		}
+		seenPayments[key], seenPaymentIDs[p.ID] = true, true
+		if p.Status == "paid" {
+			t := transactions[p.TransactionID]
+			if t.ID == "" || t.Status != "posted" || t.PlanID != p.PlanID || t.DueOn != p.DueOn {
+				return invalid()
+			}
+		} else if (p.Status != "skipped" && p.Status != "pending") || p.TransactionID != "" {
+			return invalid()
 		}
 	}
 	for _, t := range s.Transactions {
@@ -258,7 +303,7 @@ func checkFinanceRestore(app core.App, user string, s *financeSnapshot) error {
 	if l.GetString("restoredHash") == financeSnapshotHash(s) {
 		return nil
 	}
-	for _, name := range []string{"accounts", "transactions", "finance_budgets"} {
+	for _, name := range []string{"accounts", "transactions", "finance_budgets", "finance_plans", "finance_payments"} {
 		count, err := app.CountRecords(name, dbx.HashExp{"user": user, "ledger": l.Id})
 		if err != nil {
 			return err
@@ -291,6 +336,26 @@ func restoreFinanceSnapshot(app core.App, actor financeActor, s *financeSnapshot
 		accountIDs := map[string]string{}
 		transactionIDs := map[string]string{}
 		budgetIDs := map[string]string{}
+		planIDs := map[string]string{}
+		for _, p := range s.Plans {
+			r, err := financeNewRecord(tx, "finance_plans", actor.User, l.Id)
+			if err != nil {
+				return err
+			}
+			fields := map[string]any{"name": p.Name, "type": p.Type, "amount": p.Amount, "currency": p.Currency, "category": p.Category, "unit": p.Unit, "interval": p.Interval, "nextDue": p.NextDue, "endDate": p.EndDate, "status": p.Status, "anchorDay": p.AnchorDay, "version": p.Version}
+			for k, v := range fields {
+				r.Set(k, v)
+			}
+			if p.Type == "subscription" {
+				if err := restoreFinanceSubscriptionLink(tx, actor.User, r); err != nil {
+					return err
+				}
+			}
+			if err := tx.Save(r); err != nil {
+				return err
+			}
+			planIDs[p.ID] = r.Id
+		}
 		for _, a := range s.Accounts {
 			r, err := financeNewRecord(tx, "accounts", actor.User, l.Id)
 			if err != nil {
@@ -320,6 +385,9 @@ func restoreFinanceSnapshot(app core.App, actor financeActor, s *financeSnapshot
 				r.Set("kind", t.Kind)
 				r.Set("amount", t.Amount)
 				r.Set("currency", t.Currency)
+				r.Set("cnyAmount", t.CNYAmount)
+				r.Set("planId", planIDs[t.PlanID])
+				r.Set("dueOn", t.DueOn)
 				r.Set("account", accountIDs[t.Account])
 				r.Set("counterAccount", accountIDs[t.CounterAccount])
 				r.Set("occurredOn", t.OccurredOn)
@@ -355,6 +423,20 @@ func restoreFinanceSnapshot(app core.App, actor financeActor, s *financeSnapshot
 				return err
 			}
 			budgetIDs[b.ID] = r.Id
+		}
+		for _, p := range s.Payments {
+			r, err := financeNewRecord(tx, "finance_payments", actor.User, l.Id)
+			if err != nil {
+				return err
+			}
+			r.Set("planId", planIDs[p.PlanID])
+			r.Set("dueOn", p.DueOn)
+			r.Set("transactionId", transactionIDs[p.TransactionID])
+			r.Set("status", p.Status)
+			r.Set("reason", p.Reason)
+			if err := tx.Save(r); err != nil {
+				return err
+			}
 		}
 		for _, event := range s.Audit {
 			r, err := financeNewRecord(tx, "finance_audit", actor.User, l.Id)

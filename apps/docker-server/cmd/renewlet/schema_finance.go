@@ -9,7 +9,7 @@ import (
 	"github.com/pocketbase/pocketbase/tools/types"
 )
 
-var financeCollections = []string{"ledgers", "accounts", "transactions", "finance_budgets", "finance_audit"}
+var financeCollections = []string{"ledgers", "accounts", "transactions", "finance_budgets", "finance_audit", "finance_plans", "finance_payments"}
 
 const financeAuditJSONMaxBytes = 65536
 
@@ -43,6 +43,7 @@ func ensureFinanceSchema(app core.App, users *core.Collection) error {
 				fields = append(fields, &core.TextField{Name: "name", Required: true, Max: 120}, &core.TextField{Name: "currency", Required: true, Pattern: `^[A-Z]{3}$`}, &core.TextField{Name: "openingBalance", Required: true, Max: 24}, &core.TextField{Name: "openingDate", Required: true, Max: 10}, &core.BoolField{Name: "archived"})
 				c.AddIndex("idx_accounts_ledger", false, "user, ledger, id", "")
 			case "transactions":
+				fields = append(fields, &core.TextField{Name: "cnyAmount", Max: 24}, &core.TextField{Name: "planId", Max: 15}, &core.TextField{Name: "dueOn", Max: 10})
 				for _, key := range []string{"account", "counterAccount", "refundOf"} {
 					target := "accounts"
 					if key == "refundOf" {
@@ -52,7 +53,7 @@ func ensureFinanceSchema(app core.App, users *core.Collection) error {
 					if target == "transactions" {
 						id = c.Id
 					}
-					fields = append(fields, &core.RelationField{Name: key, CollectionId: id, MaxSelect: 1, Required: key == "account", CascadeDelete: true})
+					fields = append(fields, &core.RelationField{Name: key, CollectionId: id, MaxSelect: 1, CascadeDelete: true})
 				}
 				fields = append(fields, &core.SelectField{Name: "kind", Required: true, Values: []string{"expense", "income", "transfer", "refund"}}, &core.TextField{Name: "amount", Required: true, Max: 24}, &core.TextField{Name: "currency", Required: true, Pattern: `^[A-Z]{3}$`}, &core.TextField{Name: "occurredOn", Required: true, Max: 10}, &core.TextField{Name: "category", Max: 80}, &core.TextField{Name: "merchant", Max: 120}, &core.TextField{Name: "notes", Max: 5000}, &core.JSONField{Name: "tags", MaxSize: 16384}, &core.SelectField{Name: "status", Required: true, Values: []string{"posted", "void"}}, &core.TextField{Name: "source", Max: 32}, &core.TextField{Name: "externalSource", Max: 120}, &core.TextField{Name: "externalId", Max: 120}, &core.TextField{Name: "voidReason", Max: 500})
 				c.AddIndex("idx_transactions_ledger_date", false, "user, ledger, occurredOn, id", "")
@@ -66,6 +67,13 @@ func ensureFinanceSchema(app core.App, users *core.Collection) error {
 			case "finance_audit":
 				fields = append(fields, &core.TextField{Name: "actor", Required: true, Max: 120}, &core.TextField{Name: "action", Required: true, Max: 80}, &core.TextField{Name: "target", Max: 120}, &core.TextField{Name: "requestId", Max: 120}, &core.TextField{Name: "sourceIP", Max: 64}, &core.JSONField{Name: "before", MaxSize: financeAuditJSONMaxBytes}, &core.JSONField{Name: "after", MaxSize: financeAuditJSONMaxBytes})
 				c.AddIndex("idx_finance_audit_user", false, "user, created, id", "")
+			case "finance_plans":
+				fields = append(fields, &core.TextField{Name: "name", Required: true, Max: 120}, &core.TextField{Name: "type", Required: true, Max: 20}, &core.TextField{Name: "amount", Required: true, Max: 24}, &core.TextField{Name: "currency", Required: true, Pattern: `^[A-Z]{3}$`}, &core.TextField{Name: "category", Max: 80}, &core.TextField{Name: "unit", Required: true, Max: 10}, &core.NumberField{Name: "interval", OnlyInt: true}, &core.NumberField{Name: "anchorDay", OnlyInt: true}, &core.TextField{Name: "nextDue", Required: true, Max: 10}, &core.TextField{Name: "endDate", Max: 10}, &core.TextField{Name: "status", Required: true, Max: 20}, &core.TextField{Name: "subscriptionId", Max: 15}, &core.TextField{Name: "sourceSignature", Max: 64})
+				c.AddIndex("idx_finance_plans_subscription", true, "user, subscriptionId", "subscriptionId != ''")
+				c.AddIndex("idx_finance_plans_due", false, "user, ledger, status, nextDue", "")
+			case "finance_payments":
+				fields = append(fields, &core.TextField{Name: "planId", Required: true, Max: 15}, &core.TextField{Name: "dueOn", Required: true, Max: 10}, &core.TextField{Name: "transactionId", Max: 15}, &core.TextField{Name: "status", Required: true, Max: 20}, &core.TextField{Name: "reason", Max: 500})
+				c.AddIndex("idx_finance_payments_occurrence", true, "user, ledger, planId, dueOn", "")
 			}
 			for _, field := range fields {
 				if err := upsertField(c, field); err != nil {

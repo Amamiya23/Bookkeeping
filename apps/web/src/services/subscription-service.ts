@@ -10,6 +10,9 @@ import type {
   SubscriptionFormSubmission,
 } from "@/types/subscription";
 import {
+  renewletRuntime,
+} from "./runtime";
+import {
   apiSubscriptionCollectionItemSchema,
   apiSubscriptionSchema,
   subscriptionDeleteResponseSchema,
@@ -103,6 +106,7 @@ function fromApiSubscriptionCollectionBase(
   parsedRow: ApiSubscriptionCollectionItem,
 ): SubscriptionCollectionBaseForService {
   return {
+    ...(renewletRuntime === "pocketbase" && parsedRow.billingCycle !== "one-time" ? { paymentConfirmationRequired: true } : {}),
     id: parsedRow.id,
     name: parsedRow.name,
     logo: parsedRow.logo,

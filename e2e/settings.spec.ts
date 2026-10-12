@@ -75,7 +75,7 @@ test("settings hash restores through back navigation and refresh", async ({ page
 test("settings save, language switch, and floating layer layout stability", async ({ page }) => {
   await gotoSettingsSectionAfterHydration(page, "settings-notifications");
   await expect(page.getByRole("heading", { name: "系统配置" })).toBeVisible();
-  await expectLabelControlGap(page.getByLabel("月度预算金额", { exact: true }), "settings monthly budget");
+  await expect(page.getByLabel("月度预算金额", { exact: true })).toHaveCount(0);
   await expectLabelControlGap(page.getByLabel("第三方 API 测试号码", { exact: true }), "settings test phone");
 
   const testPhoneInput = page.getByLabel("第三方 API 测试号码", { exact: true });

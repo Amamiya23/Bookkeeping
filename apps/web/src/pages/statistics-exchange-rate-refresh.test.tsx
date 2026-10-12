@@ -2,7 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Statistics from "./statistics";
+import Statistics from "./subscription-statistics";
 
 const mocks = vi.hoisted(() => ({
   refresh: vi.fn(),

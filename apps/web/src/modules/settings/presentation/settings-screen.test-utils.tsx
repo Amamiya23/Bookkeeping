@@ -46,7 +46,6 @@ export const SETTINGS_SECTION_IDS = [
   "settings-icon-sources",
   "settings-uploaded-icons",
   "settings-ai-recognition",
-  "settings-budget",
   "settings-data-config",
   "settings-cloud-backup",
   "settings-exchange",

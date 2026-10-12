@@ -13,12 +13,15 @@ import type { BillingCycle, SubscriptionCollectionItem, SubscriptionStatus } fro
 export function getEffectiveSubscriptionStatus(
   subscription: Pick<SubscriptionCollectionItem, "status" | "nextBillingDate"> & {
     billingCycle?: BillingCycle;
+    paymentConfirmationRequired?: boolean;
     oneTimeTermCount?: number | undefined;
     oneTimeTermUnit?: SubscriptionCollectionItem["oneTimeTermUnit"];
   },
   today: DateOnly | string,
 ): SubscriptionStatus {
   if (subscription.status === "expired") return "expired";
+  // A pending payment does not cancel an accounting-managed recurring service.
+  if (subscription.paymentConfirmationRequired && subscription.billingCycle !== "one-time") return subscription.status;
   // one-time 买断记录没有权益到期边界；固定服务期则继续使用 nextBillingDate 进入 expired 兼容状态。
   if (subscription.billingCycle === "one-time" && isOneTimeBuyout({
     billingCycle: subscription.billingCycle,

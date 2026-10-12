@@ -4,6 +4,95 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 
 #. js-lingui-explicit-id
+msgid "finance.monthlyTrend"
+msgstr "月度收支"
+
+#. js-lingui-explicit-id
+msgid "finance.overviewEyebrow"
+msgstr "每一笔消费，放在一起看"
+
+#. js-lingui-explicit-id
+msgid "finance.overview"
+msgstr "消费总览"
+
+#. js-lingui-explicit-id
+msgid "finance.totalSpend"
+msgstr "总支出"
+
+#. js-lingui-explicit-id
+msgid "finance.dailyAverage"
+msgstr "日均消费"
+
+#. js-lingui-explicit-id
+msgid "finance.averageHint"
+msgstr "按所选期间的天数计算"
+
+#. js-lingui-explicit-id
+msgid "finance.incomeHint"
+msgstr "包含收到的转账和退款"
+
+#. js-lingui-explicit-id
+msgid "finance.balanceHint"
+msgstr "收入减去支出"
+
+#. js-lingui-explicit-id
+msgid "finance.comparison"
+msgstr "较上月同期 {percent}%"
+
+#. js-lingui-explicit-id
+msgid "finance.noComparison"
+msgstr "上月同期暂无可比较支出"
+
+#. js-lingui-explicit-id
+msgid "finance.dailyTrend"
+msgstr "每日收支"
+
+#. js-lingui-explicit-id
+msgid "finance.viewDaily"
+msgstr "查看每日明细"
+
+#. js-lingui-explicit-id
+msgid "finance.spendingStructure"
+msgstr "钱花在哪里"
+
+#. js-lingui-explicit-id
+msgid "finance.emptySpending"
+msgstr "这段时间还没有支出，记一笔后即可查看消费分布。"
+
+#. js-lingui-explicit-id
+msgid "finance.overviewBasis"
+msgstr "按已入账流水统计，退款与收到的转账计入收入。不同币种分别展示。"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionRole"
+msgstr "消费中的订阅"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionShare"
+msgstr "已记账订阅支出占比"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionForecast"
+msgstr "当前订阅 · 预估月成本"
+
+#. js-lingui-explicit-id
+msgid "finance.manageSubscriptions"
+msgstr "管理订阅"
+
+#. js-lingui-explicit-id
+msgid "finance.forecastHint"
+msgstr "预估月成本按订阅周期折算，不计入实际支出。订阅付款记入「订阅服务」分类后，会进入消费总览。"
+
+#. js-lingui-explicit-id
+msgid "finance.category.refund"
+msgstr "退款"
+
+#. js-lingui-explicit-id
+msgid "finance.category.transfer"
+msgstr "转账收入"
+
+
+#. js-lingui-explicit-id
 msgid "finance.ledgerName"
 msgstr "账本名称"
 
@@ -193,7 +282,7 @@ msgstr "加载更多"
 
 #. js-lingui-explicit-id
 msgid "finance.netExpense"
-msgstr "净支出（已扣除退款）"
+msgstr "总支出"
 
 #. js-lingui-explicit-id
 msgid "finance.netIncome"
@@ -201,7 +290,7 @@ msgstr "结余"
 
 #. js-lingui-explicit-id
 msgid "finance.basis"
-msgstr "按已入账流水统计；转账和期初余额不计入收支。"
+msgstr "按已入账流水统计；退款与收到的转账计入收入。"
 
 #. js-lingui-explicit-id
 msgid "finance.unconverted"
@@ -233,7 +322,7 @@ msgstr "记录已被更新，请刷新后重新更正。"
 
 #. js-lingui-explicit-id
 msgid "finance.invalid"
-msgstr "请检查金额、日期及账户信息。"
+msgstr "请检查金额、日期及币种。"
 
 #. js-lingui-explicit-id
 msgid "finance.subscriptionBasis"
@@ -623,3 +712,243 @@ msgstr "音乐"
 #. js-lingui-explicit-id
 msgid "finance.icon.bike"
 msgstr "自行车"
+
+#. js-lingui-explicit-id
+msgid "finance.navOverview"
+msgstr "总览"
+
+#. js-lingui-explicit-id
+msgid "finance.navBills"
+msgstr "账单"
+
+#. js-lingui-explicit-id
+msgid "finance.navSubscriptions"
+msgstr "订阅"
+
+#. js-lingui-explicit-id
+msgid "finance.navAnalysis"
+msgstr "分析"
+
+#. js-lingui-explicit-id
+msgid "finance.plans"
+msgstr "周期计划"
+
+#. js-lingui-explicit-id
+msgid "finance.newPlan"
+msgstr "添加周期计划"
+
+#. js-lingui-explicit-id
+msgid "finance.planName"
+msgstr "计划名称"
+
+#. js-lingui-explicit-id
+msgid "finance.planType"
+msgstr "计划类型"
+
+#. js-lingui-explicit-id
+msgid "finance.typeSubscription"
+msgstr "服务订阅"
+
+#. js-lingui-explicit-id
+msgid "finance.typeBill"
+msgstr "生活缴费"
+
+#. js-lingui-explicit-id
+msgid "finance.typeOther"
+msgstr "其他周期支出"
+
+#. js-lingui-explicit-id
+msgid "finance.dueOn"
+msgstr "计划付款日"
+
+#. js-lingui-explicit-id
+msgid "finance.nextDue"
+msgstr "下次付款日期"
+
+#. js-lingui-explicit-id
+msgid "finance.endDate"
+msgstr "结束日期（可选）"
+
+#. js-lingui-explicit-id
+msgid "finance.interval"
+msgstr "每隔"
+
+#. js-lingui-explicit-id
+msgid "finance.unit"
+msgstr "周期单位"
+
+#. js-lingui-explicit-id
+msgid "finance.unitDay"
+msgstr "天"
+
+#. js-lingui-explicit-id
+msgid "finance.unitWeek"
+msgstr "周"
+
+#. js-lingui-explicit-id
+msgid "finance.unitMonth"
+msgstr "月"
+
+#. js-lingui-explicit-id
+msgid "finance.unitYear"
+msgstr "年"
+
+#. js-lingui-explicit-id
+msgid "finance.planStatus"
+msgstr "计划状态"
+
+#. js-lingui-explicit-id
+msgid "finance.activePlan"
+msgstr "进行中"
+
+#. js-lingui-explicit-id
+msgid "finance.pausedPlan"
+msgstr "已暂停"
+
+#. js-lingui-explicit-id
+msgid "finance.cancelledPlan"
+msgstr "已结束"
+
+#. js-lingui-explicit-id
+msgid "finance.confirmPayment"
+msgstr "确认付款"
+
+#. js-lingui-explicit-id
+msgid "finance.linkPayment"
+msgstr "关联已有账单"
+
+#. js-lingui-explicit-id
+msgid "finance.skipPayment"
+msgstr "跳过本期"
+
+#. js-lingui-explicit-id
+msgid "finance.skipReason"
+msgstr "跳过原因"
+
+#. js-lingui-explicit-id
+msgid "finance.linkHint"
+msgstr "选择已记录的这次付款，关联后不会再新增支出。"
+
+#. js-lingui-explicit-id
+msgid "finance.cnyAmount"
+msgstr "实际人民币金额"
+
+#. js-lingui-explicit-id
+msgid "finance.cnyHint"
+msgstr "可按汇率预填，或填写实际人民币扣款金额；保存后历史金额固定。"
+
+#. js-lingui-explicit-id
+msgid "finance.cnyRequired"
+msgstr "请填写实际人民币金额。"
+
+#. js-lingui-explicit-id
+msgid "finance.pendingPayments"
+msgstr "付款安排"
+
+#. js-lingui-explicit-id
+msgid "finance.pending"
+msgstr "待确认"
+
+#. js-lingui-explicit-id
+msgid "finance.scheduled"
+msgstr "即将付款"
+
+#. js-lingui-explicit-id
+msgid "finance.overdue"
+msgstr "已到期"
+
+#. js-lingui-explicit-id
+msgid "finance.paid"
+msgstr "已付款"
+
+#. js-lingui-explicit-id
+msgid "finance.skipped"
+msgstr "已跳过"
+
+#. js-lingui-explicit-id
+msgid "finance.paymentHistory"
+msgstr "付款历史"
+
+#. js-lingui-explicit-id
+msgid "finance.cumulativePaid"
+msgstr "累计实际付款"
+
+#. js-lingui-explicit-id
+msgid "finance.recurringSpend"
+msgstr "已付周期支出"
+
+#. js-lingui-explicit-id
+msgid "finance.remainingPayments"
+msgstr "本月计划待付"
+
+#. js-lingui-explicit-id
+msgid "finance.dailySpending"
+msgstr "日常消费"
+
+#. js-lingui-explicit-id
+msgid "finance.allSpending"
+msgstr "全部消费"
+
+#. js-lingui-explicit-id
+msgid "finance.emptyPlans"
+msgstr "添加房租、缴费等周期计划；服务订阅也会在这里统一管理。"
+
+#. js-lingui-explicit-id
+msgid "finance.emptyPayments"
+msgstr "这段时间没有待付计划。"
+
+#. js-lingui-explicit-id
+msgid "finance.variableAmount"
+msgstr "金额待定（预估为 0）"
+
+#. js-lingui-explicit-id
+msgid "finance.estimate"
+msgstr "预估"
+
+#. js-lingui-explicit-id
+msgid "finance.historyFixed"
+msgstr "实际收支按入账时的人民币金额汇总，原币金额保留。"
+
+#. js-lingui-explicit-id
+msgid "finance.missingConversions"
+msgstr "部分历史外币账单缺少人民币金额，请在账单中补充后查看完整汇总。"
+
+#. js-lingui-explicit-id
+msgid "finance.noPaymentPlan"
+msgstr "此服务暂无周期付款计划，可在账单中记录实际付款。"
+
+#. js-lingui-explicit-id
+msgid "finance.planHint"
+msgstr "金额可填 0，确认付款时填写实际金额。到期只提醒，确认后才计入支出。"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionOverview"
+msgstr "订阅概览"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionCalendar"
+msgstr "续费日历"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionAnalysis"
+msgstr "订阅分析"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionList"
+msgstr "服务列表"
+
+#. js-lingui-explicit-id
+msgid "finance.merchants"
+msgstr "商家支出"
+
+#. js-lingui-explicit-id
+msgid "finance.reopenedPayment"
+msgstr "付款作废后，本期重新等待确认。"
+
+#. js-lingui-explicit-id
+msgid "finance.confirmFirst"
+msgstr "先处理前一期付款"
+
+#. js-lingui-explicit-id
+msgid "finance.plannedVsActual"
+msgstr "实际与计划"

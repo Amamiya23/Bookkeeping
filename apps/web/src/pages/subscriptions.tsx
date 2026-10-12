@@ -83,6 +83,7 @@ import {
 } from '@/components/subscription-advanced-filter';
 
 const SubscriptionBulkVisibilityToolbar = lazy(() => import('@/components/subscription-bulk-visibility-toolbar').then((module) => ({ default: module.SubscriptionBulkVisibilityToolbar })));
+const SubscriptionWorkspace = lazy(() => import('@/components/subscription-workspace').then((module) => ({ default: module.SubscriptionWorkspace })));
 
 /** 空订阅数组：用于在数据未加载完成时提供稳定引用，避免 useMemo 依赖抖动。 */
 const EMPTY_SUBSCRIPTIONS: SubscriptionCollectionItem[] = [];
@@ -325,7 +326,7 @@ const Subscriptions = () => {
   if (subscriptionsQuery.isPending) {
     return (
       <div className="app-page bg-background">
-        <Header onAddSubscription={handleAddSubscription} availableTags={allTags} subscriptionActions={aiRecognitionAction} />
+        <Header onAddSubscription={handleAddSubscription} availableTags={allTags} />
         <main className="app-main mx-auto max-w-7xl">
           <SubscriptionsPageSkeleton withPageShell={false} />
         </main>
@@ -334,14 +335,14 @@ const Subscriptions = () => {
   }
   return (
     <div className="app-page bg-background">
-      <Header onAddSubscription={handleAddSubscription} availableTags={allTags} subscriptionActions={aiRecognitionAction} />
+      <Header onAddSubscription={handleAddSubscription} availableTags={allTags} />
       <main className={cn(
         "app-main mx-auto max-w-7xl",
         hasPublicVisibilitySelection && "pb-[calc(9rem+env(safe-area-inset-bottom))] sm:pb-[calc(6rem+env(safe-area-inset-bottom))]",
       )}>
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">{t("subscriptions.title")}</h1>
+            <h1 className="text-2xl font-semibold text-foreground">{t("finance.navSubscriptions")}</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               {t("subscriptions.count", { count: displayedTotal })}
               {unfilteredTotal !== undefined && ` ${t("subscriptions.filteredCount", { count: unfilteredTotal })}`}
@@ -349,6 +350,8 @@ const Subscriptions = () => {
             </p>
           </div>
           <div className="flex items-center gap-2">
+            {aiRecognitionAction}
+            <AddSubscriptionDialog onAdd={handleAddSubscription} availableTags={allTags} trigger={<Button variant="outline" className="gap-2"><Plus className="size-4" /><span className="hidden sm:inline">{t("subscription.add")}</span><span className="sr-only sm:hidden">{t("subscription.add")}</span></Button>} />
             {(publicVisibilitySelectionMode || publicStatusPageEnabled) ? (
               <Button
                 type="button"
@@ -417,6 +420,8 @@ const Subscriptions = () => {
             </Button>
           </div>
         </div>
+        <Suspense fallback={<p role="status" className="py-6 text-sm text-muted-foreground">{t("common.loading")}</p>}><SubscriptionWorkspace onCategorySelect={(category) => setSelectedCategories([category])} /></Suspense>
+        <div hidden={["calendar", "analysis", "payments"].includes(searchParams.get("view") || "")}>
         <div className={cn("mb-6 rounded-xl border border-border bg-card p-5", isMobileTagFilter ? "grid gap-3" : "grid gap-4")}>
           {isMobileTagFilter ? (
             <>
@@ -707,6 +712,7 @@ const Subscriptions = () => {
             )}
           </>
         )}
+        </div>
       </main>
 
       <BackToTopFloatButton

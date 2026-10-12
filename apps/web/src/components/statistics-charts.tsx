@@ -29,12 +29,7 @@ export interface StatisticsChartsProps {
   trendData: readonly StatisticsTrendDatum[];
   categoryData: readonly StatisticsChartDatum[];
   paymentData: readonly StatisticsChartDatum[];
-  budgetChartData: readonly StatisticsChartDatum[];
   defaultCurrency: string;
-  monthlyBudget: string;
-  monthlyBudgetAmount: number;
-  totalMonthly: number;
-  budgetRemaining: number;
   onViewSubscriptionDetails: (subscriptionId: string) => void;
 }
 
@@ -58,12 +53,7 @@ export function StatisticsCharts({
   trendData,
   categoryData,
   paymentData,
-  budgetChartData,
   defaultCurrency,
-  monthlyBudget,
-  monthlyBudgetAmount,
-  totalMonthly,
-  budgetRemaining,
   onViewSubscriptionDetails,
 }: StatisticsChartsProps) {
   const { t, formatCurrency, formatNumber } = useI18n();
@@ -184,27 +174,6 @@ export function StatisticsCharts({
               : renderEmptyChart()}
           </div>
 
-          <div className="min-w-0 rounded-xl border border-border bg-card p-6 md:col-span-2">
-            <h3 className="text-base font-semibold text-foreground text-center mb-1">{t("statistics.costBudget")}</h3>
-            <p className="text-xs text-muted-foreground text-center mb-3">
-              {t("statistics.monthlyBudgetHint", { amount: formatCurrency(monthlyBudget, defaultCurrency) })}
-            </p>
-            {renderDonutChart(budgetChartData, "currency", t("statistics.costBudget"))}
-            <div className="mt-4 flex flex-col justify-center gap-4 min-[380px]:flex-row min-[380px]:gap-8">
-              <div className="text-center">
-                <p className="text-2xl font-bold text-foreground">
-                  {formatCurrency(Math.min(totalMonthly, monthlyBudgetAmount), defaultCurrency)}
-                </p>
-                <p className="text-xs text-muted-foreground">{t("statistics.budgetUsed")}</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-emerald-500">
-                  {formatCurrency(Math.max(budgetRemaining, 0), defaultCurrency)}
-                </p>
-                <p className="text-xs text-muted-foreground">{t("statistics.budgetRemaining")}</p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
     </>

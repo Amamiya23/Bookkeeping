@@ -13,6 +13,12 @@ function subscription(overrides: Partial<Pick<Subscription, "status" | "nextBill
 }
 
 describe("effective subscription status", () => {
+  it("keeps recurring services active while accounting payments await confirmation", () => {
+    const today = assertDateOnly("2026-05-18");
+    expect(getEffectiveSubscriptionStatus({ ...subscription({}), billingCycle: "monthly", paymentConfirmationRequired: true }, today)).toBe("active");
+    expect(getEffectiveSubscriptionStatus({ ...subscription({ status: "paused" }), billingCycle: "monthly", paymentConfirmationRequired: true }, today)).toBe("paused");
+    expect(getEffectiveSubscriptionStatus({ ...subscription({}), billingCycle: "one-time", oneTimeTermCount: 1, oneTimeTermUnit: "month", paymentConfirmationRequired: true }, today)).toBe("expired");
+  });
   it("treats overdue active and trial subscriptions as expired without changing stored status", () => {
     const today = assertDateOnly("2026-05-18");
 

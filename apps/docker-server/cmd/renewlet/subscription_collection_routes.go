@@ -193,7 +193,7 @@ func handleSubscriptionsFacets(app core.App, e *core.RequestEvent) error {
 	err := app.DB().NewQuery(`SELECT COUNT(*) AS total,
 		COALESCE(SUM(CASE WHEN public_hidden = 0 THEN 1 ELSE 0 END), 0) AS visible_count,
 		COALESCE(SUM(CASE WHEN public_hidden = 1 THEN 1 ELSE 0 END), 0) AS hidden_count,
-		COALESCE(SUM(CASE WHEN status = 'expired' OR (status IN ('active', 'trial') AND next_billing_date < {:today}) THEN 1 ELSE 0 END), 0) AS expired_count,
+		COALESCE(SUM(CASE WHEN status = 'expired' OR (status IN ('active', 'trial') AND billing_cycle = 'one-time' AND COALESCE(one_time_term_count, 0) > 0 AND next_billing_date < {:today}) THEN 1 ELSE 0 END), 0) AS expired_count,
 		COALESCE(SUM(CASE WHEN billing_cycle = 'one-time' AND COALESCE(one_time_term_count, 0) <= 0 THEN 1 ELSE 0 END), 0) AS lifetime_count
 		FROM subscription_list_index WHERE user_id = {:user}`).Bind(dbx.Params{"user": e.Auth.Id, "today": today}).One(&counts)
 	if err != nil {

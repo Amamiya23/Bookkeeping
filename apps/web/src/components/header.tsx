@@ -11,7 +11,7 @@
 
 import Link, { NavLink } from '@/components/router-link';
 import { useRouter } from '@/lib/router';
-import { LayoutDashboard, List, CalendarDays, BarChart3, Settings, Sun, Moon, LogOut, Wallet } from 'lucide-react';
+import { LayoutDashboard, List, CalendarDays, BarChart3, Settings, Sun, Moon, LogOut, Wallet, Plus } from 'lucide-react';
 import { useFinanceCapabilities } from '@/hooks/use-finance';
 import { useState } from 'react';
 import { useLocation } from 'react-router';
@@ -29,6 +29,7 @@ import { useI18n } from '@/i18n/I18nProvider';
 import type { MessageKey } from '@/i18n/messages';
 import { RouteProgress } from '@/components/route-progress';
 import { cn } from '@/lib/utils';
+import { useCashflow } from '@/components/cashflow-context';
 
 interface HeaderProps {
   /** 新增订阅回调（传入订阅主体数据，不包含 id）。不传则隐藏“新增订阅”按钮。 */
@@ -76,8 +77,15 @@ export function Header({ onAddSubscription, availableTags, subscriptionActions }
   const [systemDialogOpen, setSystemDialogOpen] = useState(false);
   const isAuthenticated = Boolean(sessionData?.user);
   const finance = useFinanceCapabilities();
+  const cashflow = useCashflow();
   const financeActive = ['/transactions', '/accounts', '/finance/statistics'].includes(useLocation().pathname);
-  const visibleNavItems = finance.data?.ledger ? [...navItems.slice(0, 2), { path: '/transactions', labelKey: 'finance.transactions' as const, icon: 'finance' as const }, ...navItems.slice(2)] : navItems;
+  const visibleNavItems = finance.data?.ledger ? [
+    { path: '/', labelKey: 'finance.navOverview' as const, icon: 'dashboard' as const },
+    { path: '/transactions', labelKey: 'finance.navBills' as const, icon: 'finance' as const },
+    { path: '/subscriptions', labelKey: 'finance.navSubscriptions' as const, icon: 'subscriptions' as const },
+    { path: '/statistics', labelKey: 'finance.navAnalysis' as const, icon: 'statistics' as const },
+    navItems[4]!,
+  ] : navItems;
 
   /**
    * Header 是全局快捷开关，只写本机偏好；账户级外观草稿必须从 Settings 页外观控件产生。
@@ -153,7 +161,8 @@ export function Header({ onAddSubscription, availableTags, subscriptionActions }
             <span className="sr-only">{t("header.toggleTheme")}</span>
           </Button>
           
-          {onAddSubscription && (
+          {cashflow?.enabled && <Button onClick={cashflow.add} className="hidden gap-2 lg:inline-flex"><Plus className="size-4" />{t("finance.add")}</Button>}
+          {!finance.data?.ledger && onAddSubscription && (
             <>
               <AddSubscriptionDialog onAdd={onAddSubscription} availableTags={availableTags} />
               {subscriptionActions}

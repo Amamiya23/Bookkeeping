@@ -24,7 +24,8 @@ import { useSubscriptionCrud } from '@/modules/subscriptions/application/use-sub
 const EMPTY_SUBSCRIPTIONS: SubscriptionCollectionItem[] = [];
 
 /** 日历页组件。 */
-const Calendar = () => {
+const Calendar = ({ embedded = false }: { embedded?: boolean }) => {
+  const Container = embedded ? "section" : "main";
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const range = useMemo(() => getSubscriptionCalendarRange(currentMonth), [currentMonth]);
   const subscriptionsQuery = useSubscriptionCalendar(range.from, range.to);
@@ -48,38 +49,38 @@ const Calendar = () => {
 
   if (!hasCalendarData && subscriptionsQuery.isPending) {
     return (
-      <div className="app-page bg-background">
-        <Header onAddSubscription={handleAddSubscription} availableTags={availableTags} />
-        <main className="app-main mx-auto max-w-7xl">
+      <div className={embedded ? "" : "app-page bg-background"}>
+        {!embedded && <Header onAddSubscription={handleAddSubscription} availableTags={availableTags} />}
+        <Container className={embedded ? "space-y-6" : "app-main mx-auto max-w-7xl"}>
           <CalendarPageSkeleton withPageShell={false} />
-        </main>
+        </Container>
       </div>
     );
   }
 
   if (!hasCalendarData && subscriptionsQuery.error) {
     return (
-      <div className="app-page bg-background">
-        <Header onAddSubscription={handleAddSubscription} availableTags={availableTags} />
-        <main className="app-main mx-auto max-w-7xl">
+      <div className={embedded ? "" : "app-page bg-background"}>
+        {!embedded && <Header onAddSubscription={handleAddSubscription} availableTags={availableTags} />}
+        <Container className={embedded ? "space-y-6" : "app-main mx-auto max-w-7xl"}>
           <QueryErrorState error={subscriptionsQuery.error} onRetry={subscriptionsQuery.refetch} />
-        </main>
+        </Container>
       </div>
     );
   }
 
   return (
-    <div className="app-page bg-background">
-      <Header onAddSubscription={handleAddSubscription} availableTags={availableTags} />
+    <div className={embedded ? "" : "app-page bg-background"}>
+      {!embedded && <Header onAddSubscription={handleAddSubscription} availableTags={availableTags} />}
 
-      <main
-        className="app-main mx-auto max-w-7xl"
+      <Container
+        className={embedded ? "space-y-6" : "app-main mx-auto max-w-7xl"}
         aria-busy={subscriptionsQuery.isFetching ? true : undefined}
       >
-        <div className="mb-6">
+        {!embedded && <div className="mb-6">
           <h1 className="text-2xl font-bold text-foreground">{t("calendar.title")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{t("calendar.pageSubtitle")}</p>
-        </div>
+        </div>}
 
         <SubscriptionCalendar 
           subscriptions={subscriptions} 
@@ -87,7 +88,7 @@ const Calendar = () => {
           onCurrentMonthChange={setCurrentMonth}
           onEditSubscription={handleEditSubscription}
         />
-      </main>
+      </Container>
 
       <EditSubscriptionDialog
         subscription={editingSubscription}

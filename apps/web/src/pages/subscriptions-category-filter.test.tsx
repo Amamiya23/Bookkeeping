@@ -20,6 +20,7 @@ import {
   subscriptionIndexQueryFixture,
 } from "./subscriptions.test-fixtures";
 import Subscriptions from "./subscriptions";
+vi.mock("@/components/subscription-workspace", () => ({ SubscriptionWorkspace: () => null }));
 
 type SubscriptionBaseFixture = Omit<Subscription, "billingCycle" | "customDays" | "customCycleUnit" | "oneTimeTermCount" | "oneTimeTermUnit">;
 type SubscriptionOverrides = SubscriptionFixtureOverrides<Subscription>;

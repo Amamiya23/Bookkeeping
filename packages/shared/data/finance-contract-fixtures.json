@@ -12,6 +12,6 @@
     { "ref": "refund", "kind": "refund", "account": "bank", "refundOf": "purchase", "amount": "20", "currency": "CNY", "occurredOn": "2026-10-11" }
   ],
   "expectedBalances": { "cash": "3982", "bank": "1010" },
-  "expectedSummary": { "income": "5000", "grossExpense": "118", "refunds": "20", "netExpense": "98", "netIncome": "4902" },
+  "expectedSummary": { "income": "6020", "grossExpense": "118", "refunds": "0", "netExpense": "118", "netIncome": "5902" },
   "invalidUnsignedAmounts": ["-1", "1e3", "01", "1.0000001", "1000000000.000001", "9223372036854775807", "1.", "+1", " 1"]
 }
