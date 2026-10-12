@@ -1,19 +1,31 @@
+import { ArrowDownLeft, ArrowUpRight, CalendarDays, Wallet } from "lucide-react";
 import { useI18n } from "@/i18n/I18nProvider";
 import type { FinanceSummary, FinanceCategory } from "@renewlet/shared/schemas/finance";
 import { formatFinanceAmount } from "@/lib/finance-format";
 import { DeferredSpendingVisuals as SpendingVisuals } from "@/components/spending-visuals-loader";
-import Link from "@/components/router-link";
+import { FinanceMetric } from "@/components/finance-ui";
+import { cn } from "@/lib/utils";
 
-export function FinanceReport({ summary, categories = [], group = "" }: { summary: FinanceSummary; categories?: FinanceCategory[]; group?: string }) {
-  const { t, locale } = useI18n();
-  const amount = (value: string) => formatFinanceAmount(value, "CNY", locale);
+/** 分析页：任意时段的深入视图，指标和分类都与上一等长周期对比。 */
+export function FinanceReport({ summary, previous, categories = [], group = "" }: { summary: FinanceSummary; previous?: FinanceSummary | undefined; categories?: FinanceCategory[]; group?: string }) {
+  const { t, locale, formatNumber } = useI18n();
+  const amount = (value: string | number) => formatFinanceAmount(String(value), "CNY", locale);
   const totals = summary.cnyTotals ?? summary.byCurrency["CNY"];
   if (!totals) return null;
-  return <section className="space-y-8" aria-label={t("finance.reports")}>
-    <p className="text-sm text-muted-foreground">{t("finance.historyFixed")}</p>
-    {summary.unconvertedCurrencies.length > 0 && <p role="status" className="rounded-lg border p-3 text-sm">{t("finance.missingConversions")}</p>}
-    <dl className="grid grid-cols-2 gap-6 border-y py-6 sm:grid-cols-4">{[[t("finance.income"), totals.income], [t("finance.totalSpend"), totals.grossExpense], [t("finance.netIncome"), totals.netIncome], [t("finance.recurringSpend"), totals.recurringExpense]].map(([label, value]) => <div key={label}><dt className="text-sm text-muted-foreground">{label}</dt><dd className="mt-2 wrap-break-word text-2xl font-semibold tabular-nums">{amount(value!)}</dd></div>)}</dl>
-    <SpendingVisuals totals={totals} from={summary.from} to={summary.to} categories={categories} group={group} />
-    <section className="border-t pt-6"><h2 className="mb-4 text-lg font-semibold">{t("finance.merchants")}</h2><div className="divide-y">{Object.entries(totals.merchants).sort((a, b) => Number(b[1]) - Number(a[1])).map(([merchant, value]) => <Link key={merchant} href={`/transactions?${new URLSearchParams({ from: summary.from, to: summary.to, group, merchant })}`} className="flex justify-between gap-4 py-3 text-sm hover:text-primary"><span>{merchant}</span><span className="tabular-nums">{amount(value)}</span></Link>)}</div></section>
+  const before = previous ? previous.cnyTotals ?? previous.byCurrency["CNY"] : undefined;
+  const days = Math.max(1, Math.round((Date.parse(summary.to) - Date.parse(summary.from)) / 86400000) + 1);
+  const expense = Number(totals.grossExpense);
+  const prior = Number(before?.grossExpense ?? 0);
+  const change = prior > 0 ? (expense - prior) / prior * 100 : null;
+  const delta = before && <span className={cn("tabular-nums", change === null ? "" : change > 0 ? "text-destructive" : "text-success")}>{change === null ? t("finance.noPreviousComparison") : t("finance.vsPreviousPeriod", { percent: (change > 0 ? "+" : "") + formatNumber(change, { maximumFractionDigits: 1 }) })}</span>;
+  return <section className="space-y-4" aria-label={t("finance.reports")}>
+    {summary.unconvertedCurrencies.length > 0 && <p role="status" className="rounded-xl border border-warning/30 bg-warning/5 p-3 text-sm">{t("finance.missingConversions")}</p>}
+    <dl className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <FinanceMetric icon={<ArrowUpRight />} label={t("finance.totalSpend")} value={amount(totals.grossExpense)} hint={delta} />
+      <FinanceMetric icon={<CalendarDays />} label={t("finance.dailyAverage")} value={amount((expense / days).toFixed(2))} hint={t("finance.averageHint")} />
+      <FinanceMetric icon={<ArrowDownLeft />} label={t("finance.income")} value={amount(totals.income)} />
+      <FinanceMetric icon={<Wallet />} label={t("finance.netIncome")} value={amount(totals.netIncome)} tone={Number(totals.netIncome) < 0 ? "negative" : "default"} />
+    </dl>
+    <SpendingVisuals totals={totals} previous={before} from={summary.from} to={summary.to} categories={categories} group={group} />
   </section>;
 }

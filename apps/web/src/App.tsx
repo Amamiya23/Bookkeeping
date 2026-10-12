@@ -48,7 +48,7 @@ export default function App() {
           <Route element={<ProtectedRoute><PrivateAppShell /></ProtectedRoute>}>
             <Route index element={<Dashboard />} />
             <Route path="subscriptions" element={<Subscriptions />} />
-            <Route path="calendar" element={<Navigate to="/subscriptions?view=calendar" replace />} />
+            <Route path="calendar" element={<Navigate to="/subscriptions" replace />} />
             <Route path="statistics" element={<Statistics />} />
             <Route path="transactions" element={<Finance />} />
             <Route path="accounts" element={<Navigate to="/transactions" replace />} />

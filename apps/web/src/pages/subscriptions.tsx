@@ -340,14 +340,15 @@ const Subscriptions = () => {
         "app-main mx-auto max-w-7xl",
         hasPublicVisibilitySelection && "pb-[calc(9rem+env(safe-area-inset-bottom))] sm:pb-[calc(6rem+env(safe-area-inset-bottom))]",
       )}>
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-6 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">{t("finance.navSubscriptions")}</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{t("finance.navSubscriptions")}</h1>
+            {/* 总数已在指标卡中展示；只有筛选或批量管理时才需要额外的上下文说明。 */}
+            {(unfilteredTotal !== undefined || publicVisibilitySelectionMode) && <p className="mt-1 text-sm text-muted-foreground">
               {t("subscriptions.count", { count: displayedTotal })}
               {unfilteredTotal !== undefined && ` ${t("subscriptions.filteredCount", { count: unfilteredTotal })}`}
               {publicVisibilitySelectionMode ? ` · ${t("subscriptions.publicVisibilityManagementDescription")}` : null}
-            </p>
+            </p>}
           </div>
           <div className="flex items-center gap-2">
             {aiRecognitionAction}
@@ -421,8 +422,8 @@ const Subscriptions = () => {
           </div>
         </div>
         <Suspense fallback={<p role="status" className="py-6 text-sm text-muted-foreground">{t("common.loading")}</p>}><SubscriptionWorkspace onCategorySelect={(category) => setSelectedCategories([category])} /></Suspense>
-        <div hidden={["calendar", "analysis", "payments"].includes(searchParams.get("view") || "")}>
-        <div className={cn("mb-6 rounded-xl border border-border bg-card p-5", isMobileTagFilter ? "grid gap-3" : "grid gap-4")}>
+        <div>
+        <div className={cn("mb-6 rounded-2xl border border-border/80 bg-card p-4 shadow-card sm:p-5", isMobileTagFilter ? "grid gap-3" : "grid gap-4")}>
           {isMobileTagFilter ? (
             <>
               <div className="relative w-full">

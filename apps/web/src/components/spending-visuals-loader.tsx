@@ -10,7 +10,7 @@ const LazySpendingVisuals = lazy(() =>
 /** Load the chart bundle once summary data is ready, keeping page controls responsive. */
 export function DeferredSpendingVisuals(props: SpendingVisualsProps) {
   const { t } = useI18n();
-  return <Suspense fallback={<div role="status" aria-label={t("common.loading")} className="grid gap-10 lg:grid-cols-[1.5fr_1fr]"><Skeleton className="h-80 w-full rounded-lg" /><Skeleton className="h-80 w-full rounded-lg" /></div>}>
+  return <Suspense fallback={<div role="status" aria-label={t("common.loading")} className="space-y-4"><Skeleton className="h-80 w-full rounded-2xl" /><div className="grid gap-4 lg:grid-cols-2"><Skeleton className="h-80 w-full rounded-2xl" /><Skeleton className="h-80 w-full rounded-2xl" /></div></div>}>
     <LazySpendingVisuals {...props} />
   </Suspense>;
 }

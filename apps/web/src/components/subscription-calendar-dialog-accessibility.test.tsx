@@ -256,7 +256,7 @@ describe("SubscriptionCalendar dialogs", () => {
       subscription({ id: "sub-3", name: "OpenAI" }),
     ]);
 
-    fireEvent.click(screen.getByRole("button", { name: "+1 更多" }));
+    fireEvent.click(screen.getByRole("button", { name: "+2 更多" }));
 
     expect(screen.getByRole("dialog", { name: "5月14日 续费/到期" })).toHaveAccessibleDescription(
       "选择 5月14日 要查看的订阅。",
@@ -273,7 +273,7 @@ describe("SubscriptionCalendar dialogs", () => {
       subscription({ id: "sub-3", name: "OpenAI" }),
     ]);
 
-    fireEvent.click(screen.getByRole("button", { name: "+1 更多" }));
+    fireEvent.click(screen.getByRole("button", { name: "+2 更多" }));
 
     const logo = screen.getByAltText("Better Stack Uptime Team");
     const logoTile = logo.closest(".subscription-logo-tile");

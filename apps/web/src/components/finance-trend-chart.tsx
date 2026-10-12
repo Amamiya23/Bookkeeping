@@ -4,7 +4,7 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { formatFinanceAmount } from "@/lib/finance-format";
 
 type TrendDatum = { date: string; expense: number; income: number };
-export const cashflowChartColors = { expense: "#a45cdd", income: "#3499e6" };
+export const cashflowChartColors = { expense: "var(--viz-expense)", income: "var(--viz-income)" };
 
 export function FinanceTrendChart({ data, monthly, label }: { data: TrendDatum[]; monthly: boolean; label: string }) {
   const { t, locale, formatNumber, formatDateOnly } = useI18n();
@@ -20,14 +20,14 @@ export function FinanceTrendChart({ data, monthly, label }: { data: TrendDatum[]
     </div>;
   };
   return <div role="img" aria-label={label} className="min-w-0">
-    <RechartsFrame height={240} testId="finance-trend-chart-frame">
-      <BarChart data={data} accessibilityLayer title={label} margin={{ top: 12, right: 4, bottom: 0, left: 0 }} barCategoryGap="24%" barGap={2}>
-        <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
+    <RechartsFrame height={280} testId="finance-trend-chart-frame">
+      <BarChart data={data} accessibilityLayer title={label} margin={{ top: 12, right: 4, bottom: 0, left: 0 }} barCategoryGap="20%" barGap={2}>
+        <CartesianGrid vertical={false} stroke="hsl(var(--border))" />
         <XAxis dataKey="date" axisLine={false} tickLine={false} minTickGap={24} tickMargin={10} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} tickFormatter={(date: string) => monthly ? date.slice(0, 7) : date.slice(5)} />
         <YAxis width={56} axisLine={false} tickLine={false} tickMargin={8} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} tickFormatter={(value: number) => formatNumber(value, { notation: "compact", maximumFractionDigits: 1 })} domain={[0, (max: number) => max > 0 ? max : 1]} />
-        <Tooltip content={tooltip} cursor={{ fill: "hsl(var(--muted))", fillOpacity: .5 }} isAnimationActive={false} offset={12} wrapperStyle={{ pointerEvents: "none", zIndex: 10 }} />
-        <Bar dataKey="expense" name={t("finance.expense")} fill={cashflowChartColors.expense} radius={[4, 4, 0, 0]} maxBarSize={28} isAnimationActive={false} />
-        <Bar dataKey="income" name={t("finance.income")} fill={cashflowChartColors.income} radius={[4, 4, 0, 0]} maxBarSize={28} isAnimationActive={false} />
+        <Tooltip content={tooltip} cursor={{ fill: "hsl(var(--muted))", fillOpacity: .6, radius: 6 }} isAnimationActive={false} offset={12} wrapperStyle={{ pointerEvents: "none", zIndex: 10 }} />
+        <Bar dataKey="expense" name={t("finance.expense")} fill={cashflowChartColors.expense} radius={[4, 4, 0, 0]} maxBarSize={24} isAnimationActive={false} />
+        <Bar dataKey="income" name={t("finance.income")} fill={cashflowChartColors.income} radius={[4, 4, 0, 0]} maxBarSize={24} isAnimationActive={false} />
       </BarChart>
     </RechartsFrame>
   </div>;

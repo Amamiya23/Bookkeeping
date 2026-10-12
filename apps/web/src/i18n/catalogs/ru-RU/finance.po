@@ -61,7 +61,7 @@ msgstr "Показать суммы по дням"
 
 #. js-lingui-explicit-id
 msgid "finance.spendingStructure"
-msgstr "Куда уходят деньги"
+msgstr "Анализ расходов"
 
 #. js-lingui-explicit-id
 msgid "finance.emptySpending"
@@ -960,3 +960,19 @@ msgstr "Сначала обработайте предыдущий платёж"
 #. js-lingui-explicit-id
 msgid "finance.plannedVsActual"
 msgstr "Факт и план"
+
+#. js-lingui-explicit-id
+msgid "finance.topCategories"
+msgstr "Основные категории"
+
+#. js-lingui-explicit-id
+msgid "finance.recentTransactions"
+msgstr "Последние операции"
+
+#. js-lingui-explicit-id
+msgid "finance.vsPreviousPeriod"
+msgstr "{percent}% к предыдущему периоду"
+
+#. js-lingui-explicit-id
+msgid "finance.noPreviousComparison"
+msgstr "Нет расходов за предыдущий период для сравнения"

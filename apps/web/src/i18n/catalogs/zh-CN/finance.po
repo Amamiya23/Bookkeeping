@@ -61,7 +61,7 @@ msgstr "查看每日明细"
 
 #. js-lingui-explicit-id
 msgid "finance.spendingStructure"
-msgstr "钱花在哪里"
+msgstr "支出分析"
 
 #. js-lingui-explicit-id
 msgid "finance.emptySpending"
@@ -960,3 +960,19 @@ msgstr "先处理前一期付款"
 #. js-lingui-explicit-id
 msgid "finance.plannedVsActual"
 msgstr "实际与计划"
+
+#. js-lingui-explicit-id
+msgid "finance.topCategories"
+msgstr "支出排行"
+
+#. js-lingui-explicit-id
+msgid "finance.recentTransactions"
+msgstr "最近账单"
+
+#. js-lingui-explicit-id
+msgid "finance.vsPreviousPeriod"
+msgstr "较上一周期 {percent}%"
+
+#. js-lingui-explicit-id
+msgid "finance.noPreviousComparison"
+msgstr "上一周期暂无可比较支出"

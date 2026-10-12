@@ -97,8 +97,8 @@ test("record unified income and spending, review consumption, correct, void and 
     await expect(dialog).not.toBeVisible();
     await page.goto("/");
     await expect(page.getByRole("heading", { name: "消费总览", exact: true })).toBeVisible();
-    await expect(page.getByRole("img", { name: "每日收支", exact: true })).toBeVisible();
-    await expect(page.getByRole("img", { name: "钱花在哪里", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "支出排行", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "最近账单", exact: true })).toBeVisible();
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
     await page.screenshot({ path: testInfo.outputPath("consumption-overview.png"), fullPage: true });
     await page.getByRole("heading", { name: "付款安排", exact: true }).scrollIntoViewIfNeeded();

@@ -61,7 +61,7 @@ msgstr "View daily amounts"
 
 #. js-lingui-explicit-id
 msgid "finance.spendingStructure"
-msgstr "Where your money goes"
+msgstr "Spending analysis"
 
 #. js-lingui-explicit-id
 msgid "finance.emptySpending"
@@ -960,3 +960,19 @@ msgstr "Resolve the earlier payment first"
 #. js-lingui-explicit-id
 msgid "finance.plannedVsActual"
 msgstr "Actual and planned"
+
+#. js-lingui-explicit-id
+msgid "finance.topCategories"
+msgstr "Top categories"
+
+#. js-lingui-explicit-id
+msgid "finance.recentTransactions"
+msgstr "Recent transactions"
+
+#. js-lingui-explicit-id
+msgid "finance.vsPreviousPeriod"
+msgstr "{percent}% vs previous period"
+
+#. js-lingui-explicit-id
+msgid "finance.noPreviousComparison"
+msgstr "No spending in the previous period to compare"

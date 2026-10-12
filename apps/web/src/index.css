@@ -16,7 +16,7 @@
 
 /* CSS-first token 桥：组件写 bg-primary 这类语义 class，真实色值仍由 theme-tokens.css 的运行时变量接管。 */
 @theme inline {
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Noto Sans CJK SC", system-ui, sans-serif;
 
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));

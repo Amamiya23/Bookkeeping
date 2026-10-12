@@ -186,12 +186,12 @@ export const SubscriptionCalendar = ({
 
   return (
     <>
-      <div className="min-w-0 rounded-xl border border-border bg-card p-4 shadow-card sm:p-6">
+      <div className="min-w-0 rounded-2xl border border-border/80 bg-card p-4 shadow-card sm:p-5">
         {/* 顶部栏 */}
-        <div className="mb-5 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
-            <CalendarDays className="h-5 w-5 text-primary" />
-            <h3 className="text-lg font-semibold text-foreground">{t("calendar.title")}</h3>
+            <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary"><CalendarDays className="size-4" /></span>
+            <h3 className="text-base font-semibold text-foreground">{t("calendar.title")}</h3>
           </div>
           <div className="flex flex-wrap items-center justify-between gap-2 sm:justify-end">
             <Button
@@ -351,11 +351,11 @@ export const SubscriptionCalendar = ({
         </div>
 
         {/* 星期标题 */}
-        <div className="mb-2 grid grid-cols-7">
+        <div className="mb-1 grid grid-cols-7 gap-1">
           {weekdayLabels.map((day) => (
             <div
               key={day}
-              className="py-2 text-center text-[11px] font-medium text-muted-foreground sm:text-xs"
+              className="py-1.5 text-center text-[11px] font-medium text-muted-foreground"
             >
               {day}
             </div>
@@ -493,74 +493,69 @@ export const SubscriptionCalendar = ({
             </div>
           </>
         ) : (
-          /* 日历网格 */
-          <div className="grid grid-cols-7 gap-px overflow-hidden rounded-lg bg-border/50">
+          /* 日历网格：留白分隔代替网格线，每格只放 1 个事件胶囊，其余折叠为 +N。 */
+          <div className="grid grid-cols-7 gap-1">
             {calendarDays.map((day) => {
               const dateKey = format(day, 'yyyy-MM-dd');
               const daySubs = subscriptionsByDate.get(dateKey) || [];
               const isCurrentMonth = isSameMonth(day, currentMonth);
               const isDayToday = isToday(day);
+              const first = daySubs[0];
 
               return (
                 <div
                   key={dateKey}
                   className={cn(
-                    "min-h-20 bg-card p-1.5 transition-colors",
-                    !isCurrentMonth && "bg-muted/30"
+                    "flex min-h-14 min-w-0 flex-col gap-1 rounded-lg p-1.5 transition-colors",
+                    isCurrentMonth ? "bg-secondary/40" : "bg-transparent",
+                    daySubs.length > 0 && isCurrentMonth && "bg-primary/5",
+                    isDayToday && "ring-1 ring-primary/60",
                   )}
                 >
-                  {/* 日期数字 */}
-                  <div className="mb-1 flex justify-end">
-                    <span
-                      className={cn(
-                        "flex h-6 w-6 items-center justify-center rounded-full text-xs",
-                        isDayToday && "bg-primary text-primary-foreground font-semibold",
-                        !isDayToday && isCurrentMonth && "text-foreground",
-                        !isDayToday && !isCurrentMonth && "text-muted-foreground/50"
-                      )}
-                    >
-                      {format(day, 'd')}
-                    </span>
-                  </div>
+                  <span
+                    className={cn(
+                      "text-xs leading-4 tabular-nums",
+                      isDayToday ? "font-semibold text-primary" : isCurrentMonth ? "text-foreground" : "text-muted-foreground/40",
+                    )}
+                  >
+                    {format(day, 'd')}
+                  </span>
 
-                  {/* 订阅项 */}
-                  <div className="grid gap-0.5">
+                  {first && (
                     <TooltipProvider delayDuration={200}>
-                      {daySubs.slice(0, 2).map((sub) => (
-                        <Tooltip key={sub.id}>
+                      <div className="flex min-w-0 items-center gap-1">
+                        <Tooltip>
                           <TooltipTrigger asChild>
                             <button
-                              onClick={() => handleSubscriptionClick(sub)}
-                              onPointerEnter={() => handlePrefetchDetails(sub.id)}
-                              onFocus={() => handlePrefetchDetails(sub.id)}
-                              className={cn(
-                                "w-full truncate rounded border px-1.5 py-0.5 text-left text-xs transition-colors",
-                                "border-border bg-background text-foreground hover:bg-secondary/60",
-                                "cursor-pointer hover:border-border"
-                              )}
+                              onClick={() => handleSubscriptionClick(first)}
+                              onPointerEnter={() => handlePrefetchDetails(first.id)}
+                              onFocus={() => handlePrefetchDetails(first.id)}
+                              className="flex min-w-0 flex-1 cursor-pointer items-center gap-1 rounded-md bg-card px-1.5 py-0.5 text-left text-[11px] leading-4 text-foreground shadow-xs ring-1 ring-border/70 transition-colors hover:ring-primary/50"
                             >
-                              {sub.name}
+                              <span className="size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                              <span className="truncate">{first.name}</span>
                             </button>
                           </TooltipTrigger>
                           <TooltipContent side="top" className="text-xs">
-                            <p className="font-medium">{sub.name}</p>
+                            <p className="font-medium">{first.name}</p>
                             <p className="text-muted-foreground">
-                              {formatCurrency(sub.price, sub.currency)}
+                              {formatCurrency(first.price, first.currency)}
                             </p>
                             <p className="text-muted-foreground/70">{t("calendar.viewDetails")}</p>
                           </TooltipContent>
                         </Tooltip>
-                      ))}
-                      {daySubs.length > 2 && (
-                        <button
-                          onClick={() => handleShowDayList(day, daySubs)}
-                          className="w-full cursor-pointer text-center text-xs text-primary hover:text-primary-glow hover:underline"
-                        >
-                          {t("calendar.more", { count: daySubs.length - 2 })}
-                        </button>
-                      )}
+                        {daySubs.length > 1 && (
+                          <button
+                            onClick={() => handleShowDayList(day, daySubs)}
+                            aria-label={t("calendar.more", { count: daySubs.length - 1 })}
+                            className="shrink-0 cursor-pointer rounded-md px-1 text-[11px] leading-4 font-medium text-primary hover:bg-primary/10"
+                          >
+                            +{daySubs.length - 1}
+                          </button>
+                        )}
+                      </div>
                     </TooltipProvider>
-                  </div>
+                  )}
                 </div>
               );
             })}
@@ -568,21 +563,9 @@ export const SubscriptionCalendar = ({
         )}
 
         {/* 月度汇总 */}
-        <div className="mt-4 border-t border-border pt-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-sm">
-              <span className="text-muted-foreground">{t("calendar.monthlyRenewals")}</span>
-              <p className="font-semibold text-foreground mt-1">
-                {t("calendar.renewalCount", { count: monthlySummary.renewalsCount })}
-              </p>
-            </div>
-            <div className="text-sm text-right">
-              <span className="text-muted-foreground">{t("calendar.estimatedSpend")}</span>
-              <p className="font-semibold text-foreground mt-1">
-                {formatCurrency(monthlySummary.estimatedSpending, defaultCurrency)}
-              </p>
-            </div>
-          </div>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border/70 pt-3 text-xs text-muted-foreground">
+          <span>{t("calendar.monthlyRenewals")} <span className="ml-1 font-semibold text-foreground">{t("calendar.renewalCount", { count: monthlySummary.renewalsCount })}</span></span>
+          <span>{t("calendar.estimatedSpend")} <span className="ml-1 font-semibold text-foreground tabular-nums">{formatCurrency(monthlySummary.estimatedSpending, defaultCurrency)}</span></span>
         </div>
       </div>
 

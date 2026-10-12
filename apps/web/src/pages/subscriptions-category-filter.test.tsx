@@ -382,7 +382,8 @@ describe("Subscriptions page category filters", () => {
     mockMobileTagFilterMatch(false);
     renderSubscriptionsPage();
 
-    expect(screen.getByText("共 120 个订阅")).toBeInTheDocument();
+    // 未筛选时总数只在指标卡中展示，不再重复为标题副文案。
+    expect(screen.queryByText("共 120 个订阅")).not.toBeInTheDocument();
     await user.type(screen.getByRole("searchbox"), "Docs");
     expect(await screen.findByText("共 1 个订阅 （从 120 个中筛选）")).toBeInTheDocument();
   });

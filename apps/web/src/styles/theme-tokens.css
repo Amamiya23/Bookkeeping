@@ -66,6 +66,24 @@
     --sidebar-accent-foreground: 220 25% 12%;
     --sidebar-border: 220 20% 91%;
     --sidebar-ring: 160 84% 39%;
+
+    /* 图表色板：分类色按固定顺序分配，不随排名循环；深浅模式各自校准，不是自动翻转。 */
+    --viz-1: #2a78d6;
+    --viz-2: #eb6834;
+    --viz-3: #1baf7a;
+    --viz-4: #eda100;
+    --viz-5: #e87ba4;
+    --viz-6: #008300;
+    --viz-7: #6250d6;
+    --viz-8: #e34948;
+    --viz-other: #a3a3a0;
+    --viz-income: var(--viz-1);
+    --viz-expense: var(--viz-2);
+  }
+
+  /* 原生日期/下拉控件跟随主题，否则深色下日历图标几乎不可见。 */
+  .dark {
+    color-scheme: dark;
   }
 
   .dark,
@@ -118,6 +136,16 @@
     --sidebar-accent-foreground: 210 20% 95%;
     --sidebar-border: 220 13% 14%;
     --sidebar-ring: 160 84% 39%;
+
+    --viz-1: #3987e5;
+    --viz-2: #d95926;
+    --viz-3: #199e70;
+    --viz-4: #c98500;
+    --viz-5: #d55181;
+    --viz-6: #008300;
+    --viz-7: #9085e9;
+    --viz-8: #e66767;
+    --viz-other: #5f5e5a;
   }
 
   /* 主题变体只替换语义 token，组件结构不能跟着主题换 CSS 分支。 */

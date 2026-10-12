@@ -38,15 +38,11 @@ test("unified subscription and rent payments, CNY reporting and embedded service
     const records = financeTransactionsResponseSchema.parse((await productApiFetch(page, "/api/app/finance/transactions")).json).data.items;
     expect(records[0]?.currency).toBe("USD"); expect(records[0]?.amount).toBe("20"); expect(records[0]?.cnyAmount).toBe("146.8");
     expect(records[0]?.category).toBe("subscription:design");
-    await page.getByRole("button", { name: "续费日历", exact: true }).click();
+    // 续费日历直接作为订阅页的卡片展示；付款历史在周期计划的编辑弹窗中查看。
     await expect(page.getByRole("heading", { name: "续费/到期日历", exact: true })).toBeVisible();
-    await page.screenshot({ path: testInfo.outputPath("subscription-calendar.png"), fullPage: true });
-    await page.getByRole("button", { name: "订阅分析", exact: true }).click();
-    await expect(page.getByRole("heading", { name: "统计分析", exact: true })).toBeVisible();
-    await expect(page.getByText("月均支出 (CNY)", { exact: true })).toBeVisible();
     await expect(page.getByTestId("app-header")).toHaveCount(1);
-    await page.screenshot({ path: testInfo.outputPath("subscription-analysis.png"), fullPage: true });
-    await page.getByRole("button", { name: "付款历史", exact: true }).click();
+    await page.screenshot({ path: testInfo.outputPath("subscription-calendar.png"), fullPage: true });
+    await page.goto("/transactions?view=plans");
     await page.getByRole("article").filter({ hasText: "Design tool" }).getByRole("button", { name: "编辑", exact: true }).click();
     dialog = page.getByRole("dialog");
     await expect(dialog.getByText("已付款", { exact: false })).toBeVisible();
@@ -75,7 +71,7 @@ test("unified subscription and rent payments, CNY reporting and embedded service
     await page.screenshot({ path: testInfo.outputPath("unified-overview-light.png"), fullPage: true });
     await page.goto("/statistics");
     await expect(page.getByRole("heading", { name: "分析", exact: true })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "商家支出", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "支出分析", exact: true })).toBeVisible();
     await page.getByText("查看订阅分类", { exact: true }).click();
     const subscriptionCategoryLink = page.getByRole("link", { name: /订阅-设计创意/ });
     await expect(subscriptionCategoryLink).toBeVisible();
