@@ -13,7 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormField } from "@/components/ui/form-field";
 import { PaymentSchedule } from "@/components/payment-schedule";
-import { DeferredSpendingVisuals as SpendingVisuals } from "@/components/spending-visuals-loader";
+import { SpendingVisuals } from "@/components/spending-visuals";
+import { MonthPicker } from "@/components/month-picker";
 import Link from "@/components/router-link";
 import { useI18n } from "@/i18n/I18nProvider";
 import { formatFinanceAmount } from "@/lib/finance-format";
@@ -56,7 +57,28 @@ export function FinanceDashboard() {
   const pending = capabilities.isPending || enabled && (ledger.isPending || summary.isPending);
   useRouteReady(pending);
   return <div className="space-y-8 pb-16" data-testid={pending ? undefined : "consumption-overview"}>
-    <div className="flex flex-wrap items-center justify-between gap-4"><div><p className="mb-1 text-sm text-muted-foreground">{t("finance.overviewEyebrow")}</p><h1 className="text-2xl font-semibold tracking-tight">{t("finance.overview")}</h1></div>{enabled && <FormField id="overview-month" label={t("finance.month")}>{({ id }) => <Input id={id} type="month" value={month} max={today.slice(0, 7)} className="w-44 scheme-light dark:scheme-dark" onChange={(event) => { if (/^\d{4}-(0[1-9]|1[0-2])$/.test(event.target.value) && event.target.value <= today.slice(0, 7)) setMonth(event.target.value); }} />}</FormField>}</div>
+    <div className="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <p className="mb-1 text-sm text-muted-foreground">{t("finance.overviewEyebrow")}</p>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("finance.overview")}</h1>
+      </div>
+      {enabled && (
+        <FormField id="overview-month" label={t("finance.month")}>
+          {({ id }) => (
+            <MonthPicker
+              id={id}
+              value={month}
+              max={today.slice(0, 7)}
+              onChange={(nextMonth) => {
+                if (/^\d{4}-(0[1-9]|1[0-2])$/.test(nextMonth) && nextMonth <= today.slice(0, 7)) {
+                  setMonth(nextMonth);
+                }
+              }}
+            />
+          )}
+        </FormField>
+      )}
+    </div>
     {pending && <div role="status" className="min-h-48 animate-pulse rounded-xl bg-muted p-6">{t("common.loading")}</div>}
     {failure && <div role="alert" className="space-y-3 border p-6"><p>{t("error.generic")}</p><Button variant="outline" onClick={() => { void capabilities.refetch(); if (enabled) { void ledger.refetch(); void summary.refetch(); } }}>{t("finance.retry")}</Button></div>}
     {!enabled && !capabilities.isPending && <div className="space-y-4 py-12"><p>{t("finance.unsupported")}</p><Button asChild><Link href="/subscriptions">{t("finance.manageSubscriptions")}</Link></Button></div>}
