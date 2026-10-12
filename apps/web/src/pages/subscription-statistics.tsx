@@ -68,10 +68,10 @@ const StatBox = ({ value, label, icon, variant = 'default', description }: StatB
   }[variant];
 
   return (
-    <div className="min-w-0 rounded-xl border border-border bg-card p-5 flex flex-col items-center justify-center text-center transition-all hover:bg-card-hover hover:shadow-lg">
-      <p className={cn("max-w-full wrap-break-word text-2xl sm:text-3xl font-bold", valueColor)}>{value}</p>
-      <div className="mt-1 flex max-w-full items-center justify-center gap-1 text-sm text-muted-foreground">
-        <span className="min-w-0 wrap-break-word">{label}</span>
+    <div className="min-w-0 rounded-2xl border border-border/80 bg-card p-5 sm:p-6 flex flex-col items-center justify-center text-center shadow-card transition-all duration-300 hover:bg-card-hover hover:border-border hover:shadow-md">
+      <p className={cn("max-w-full wrap-break-word text-2xl sm:text-3xl font-extrabold tracking-tight", valueColor)}>{value}</p>
+      <div className="mt-1.5 flex max-w-full items-center justify-center gap-1.5 text-sm text-muted-foreground">
+        <span className="min-w-0 wrap-break-word font-medium">{label}</span>
         {description ? (
           <Tooltip>
             <TooltipTrigger asChild>
@@ -89,7 +89,7 @@ const StatBox = ({ value, label, icon, variant = 'default', description }: StatB
           </Tooltip>
         ) : null}
       </div>
-      {icon && <div className="mt-2 text-muted-foreground/50">{icon}</div>}
+      {icon && <div className="mt-2.5 text-muted-foreground/40">{icon}</div>}
     </div>
   );
 };

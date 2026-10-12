@@ -93,7 +93,7 @@ function FinanceScreen() {
   const rows = transactions.data?.pages.flatMap((page) => page.items) ?? [];
   const queryError = capabilities.error || ledger.error || (view === "transactions" ? transactions.error : summary.error);
   return <div className="app-page bg-background"><Header />
-    <main className="app-main mx-auto max-w-5xl space-y-6 pb-24">
+    <main className="app-main mx-auto max-w-7xl space-y-6 pb-24">
       <div className="flex flex-wrap items-center justify-between gap-3"><h1 className="text-2xl font-semibold">{t(view === "reports" ? "finance.navAnalysis" : "finance.navBills")}</h1>{enabled && <Button disabled={!ready || busy} onClick={add}>{t("finance.add")}</Button>}</div>
       {capabilities.isPending && <p role="status">{t("common.loading")}</p>}
       {capabilities.data && !enabled && <p>{t("finance.unsupported")}</p>}

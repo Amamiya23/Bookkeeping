@@ -372,11 +372,11 @@ function SubscriptionCardComponent({
       onPointerEnter={() => onPrefetchDetails?.(subscription.id)}
       onFocusCapture={() => onPrefetchDetails?.(subscription.id)}
       className={cn(
-        "group relative h-full overflow-hidden rounded-xl border border-border bg-card p-5 shadow-card transition-all duration-300 hover:bg-card-hover",
+        "group relative h-full overflow-hidden rounded-2xl border border-border/80 bg-card p-5 shadow-card transition-all duration-300 hover:bg-card-hover hover:border-border hover:shadow-md",
         onViewDetails && "cursor-pointer",
         selectionMode && "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         selectionMode && selected && "border-primary/50 bg-primary/5 ring-1 ring-primary/30",
-        isInactive && "border-muted bg-muted/20 hover:bg-muted/30",
+        isInactive && "border-muted bg-muted/20 hover:bg-muted/30 opacity-75",
         isRenewingSoon && "border-warning/40",
         isTrialEndingSoon && "animate-pulse-glow"
       )}
@@ -556,8 +556,8 @@ function SubscriptionCardComponent({
           </div>
 
           {isTrialEndingSoon && subscription.trialEndDate && (
-            <div className="flex items-center gap-2 rounded-md bg-warning/10 px-3 py-2 text-sm text-warning">
-              <span className="font-medium">
+            <div className="flex items-center gap-2 rounded-lg bg-warning/10 px-3 py-2 text-sm text-warning font-medium">
+              <span>
                 {t("subscription.card.trialEnds", { date: formatDateOnly(subscription.trialEndDate, "monthDay") })}
               </span>
             </div>

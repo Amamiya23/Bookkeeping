@@ -35,38 +35,37 @@ export function StatCard({
     <div
       data-testid={dataTestId}
       className={cn(
-        "relative overflow-hidden rounded-xl border border-border bg-card shadow-card transition-all duration-300 hover:bg-card-hover",
-        compact ? "p-4 lg:p-6" : "p-6",
+        "relative overflow-hidden rounded-2xl border border-border/80 bg-card shadow-card transition-all duration-300 hover:bg-card-hover hover:border-primary/20 hover:shadow-md",
+        compact ? "p-4 lg:p-5" : "p-5 sm:p-6",
         className,
       )}
     >
       <div className={cn("flex items-start justify-between", compact && "gap-3 lg:gap-4")}>
-        <div className={cn("grid min-w-0", compact ? "gap-1.5 lg:gap-2" : "gap-2")}>
+        <div className={cn("grid min-w-0", compact ? "gap-1 lg:gap-1.5" : "gap-1.5")}>
           <p className={cn("font-medium text-muted-foreground", compact ? "truncate text-xs lg:text-sm" : "text-sm")}>
             {title}
           </p>
           <p
             className={cn(
-              "font-bold tracking-tight",
+              "font-bold tracking-tight text-foreground",
               compact ? "truncate text-2xl lg:text-3xl" : "text-3xl",
-              variant === 'primary' && "text-foreground",
               variant === 'warning' && "text-warning",
             )}
           >
             {value}
           </p>
           {subtitle && (
-            <p className={cn("text-muted-foreground", compact ? "truncate text-[11px] leading-4 lg:text-xs" : "text-xs")}>
+            <p className={cn("text-muted-foreground font-normal", compact ? "truncate text-[11px] leading-4 lg:text-xs" : "text-xs")}>
               {subtitle}
             </p>
           )}
         </div>
         <div
           className={cn(
-            "flex shrink-0 items-center justify-center rounded-lg",
-            compact ? "h-10 w-10 [&_svg]:h-5 [&_svg]:w-5 lg:h-12 lg:w-12 lg:[&_svg]:h-6 lg:[&_svg]:w-6" : "h-12 w-12",
-            variant === 'default' && "bg-secondary text-muted-foreground",
-            variant === 'primary' && "bg-secondary text-primary",
+            "flex shrink-0 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-105",
+            compact ? "h-10 w-10 [&_svg]:h-5 [&_svg]:w-5 lg:h-11 lg:w-11 lg:[&_svg]:h-5.5 lg:[&_svg]:w-5.5" : "h-11 w-11 sm:h-12 sm:w-12",
+            variant === 'default' && "bg-secondary/80 text-muted-foreground",
+            variant === 'primary' && "bg-primary/10 text-primary",
             variant === 'warning' && "bg-warning/10 text-warning",
           )}
         >

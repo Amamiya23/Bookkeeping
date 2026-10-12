@@ -16,7 +16,7 @@ export const settingsLayout = {
   mobileHeaderSubtitle: "text-sm leading-5 text-muted-foreground",
   mobileHeaderTrigger:
     "h-10 w-10 shrink-0 rounded-lg border border-border bg-card/80 text-muted-foreground hover:border-primary/40 hover:bg-secondary/80 hover:text-foreground",
-  sectionCard: "min-w-0 w-full rounded-xl border border-border bg-card p-4 sm:p-6",
+  sectionCard: "min-w-0 w-full rounded-xl border border-border bg-card p-4 sm:p-6 shadow-card transition-all duration-200",
 } as const;
 
 export const SETTINGS_SECTION_SCROLL_CLASS = "scroll-mt-(--settings-section-scroll-offset)";
