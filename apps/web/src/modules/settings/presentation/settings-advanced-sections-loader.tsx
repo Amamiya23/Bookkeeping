@@ -7,7 +7,6 @@ import type { SettingsSectionId } from "./settings-section-navigation";
 
 type SettingsAdvancedSectionsProps = {
   controller: SettingsFormController;
-  activeSectionId: SettingsSectionId;
   onReady: () => void;
 };
 
@@ -31,18 +30,14 @@ export function preloadSettingsAdvancedSections(sectionId?: SettingsSectionId): 
   if (sectionId) {
     const group = getSettingsAdvancedGroup(sectionId);
     if (group) void groupPreloaders[group]().catch(() => undefined);
+  } else {
+    for (const preload of Object.values(groupPreloaders)) void preload().catch(() => undefined);
   }
 }
 
 function SettingsAdvancedSectionsLoading() {
   const groups = Object.keys(SETTINGS_ADVANCED_GROUPS) as SettingsAdvancedGroup[];
   return <>{groups.map((group) => <SettingsAdvancedGroupPlaceholder key={group} group={group} />)}</>;
-}
-
-function hashTargetsAdvancedSection(): boolean {
-  if (typeof window === "undefined") return false;
-  const id = window.location.hash.startsWith("#") ? window.location.hash.slice(1) : window.location.hash;
-  return getSettingsAdvancedGroup(id as SettingsSectionId) !== null;
 }
 
 class SettingsAdvancedSectionsErrorBoundary extends Component<
@@ -66,18 +61,15 @@ class SettingsAdvancedSectionsErrorBoundary extends Component<
 
 export function DeferredSettingsAdvancedSections({
   controller,
-  activeSectionId,
   onReady,
 }: SettingsAdvancedSectionsProps) {
-  const [activated, setActivated] = useState(hashTargetsAdvancedSection);
   const [retryVersion, setRetryVersion] = useState(0);
 
   useEffect(() => {
-    // 显示区块是高级设置前的预取哨兵；目录 intent 会更早下载分组，组内数据 hook 只在分组挂载后启动。
-    if (activeSectionId === "settings-display" || getSettingsAdvancedGroup(activeSectionId)) setActivated(true);
-  }, [activeSectionId]);
-
-  if (!activated) return <SettingsAdvancedSectionsLoading />;
+    // 进入设置页即并行下载所有分组，消除外层模块到分组模块的串行等待。
+    // 分组仍独立拆包，其他页面不会下载设置表单；弹窗仍按打开意图加载。
+    preloadSettingsAdvancedSections();
+  }, []);
 
   const retry = () => {
     resetLazySettingsAdvancedSections();
@@ -86,7 +78,7 @@ export function DeferredSettingsAdvancedSections({
   return (
     <SettingsAdvancedSectionsErrorBoundary key={retryVersion} onRetry={retry}>
       <Suspense fallback={<SettingsAdvancedSectionsLoading />}>
-        <LazySettingsAdvancedSections controller={controller} activeSectionId={activeSectionId} onReady={onReady} />
+        <LazySettingsAdvancedSections controller={controller} onReady={onReady} />
       </Suspense>
     </SettingsAdvancedSectionsErrorBoundary>
   );

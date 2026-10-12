@@ -358,6 +358,9 @@ export function useSettingsSectionNavigation(
     const navigation = programmaticNavigationRef.current;
     if (!navigation) return;
     if (deferredSectionIds && !deferredSectionIds.includes(navigation.targetId)) return;
+    // 分组并行提交时，其他分组的 ready 不能提前结束当前目标的骨架等待。
+    const targetElement = getSectionElement(navigation.targetId);
+    if (!targetElement || targetElement.getAttribute("aria-busy") === "true") return;
     navigation.phase = "moduleCommitted";
     navigation.awaitingDeferredCommit = false;
     navigation.needsCorrection = true;

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { FormField, FormFieldRow } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
@@ -55,7 +55,8 @@ export function SettingsAdvancedPublicNotificationsGroup({
   const [selectedNotificationChannel, setSelectedNotificationChannel] = useState<NotificationChannel | null>(null);
   const [notificationReminderDaysInput, setNotificationReminderDaysInput] = useState(String(settings.notificationReminderDays));
   const readyRef = useRef(false);
-  const timezoneOptions = createTimeZoneSelectOptions(getSupportedTimeZones());
+  // 400 多个时区的 Intl 格式化只在进入设置页时执行，滚动和输入不重新生成选项。
+  const timezoneOptions = useMemo(() => createTimeZoneSelectOptions(getSupportedTimeZones()), []);
   const explicitPublicStatusCurrency = settings.publicStatusCurrency === "inherit" ? null : settings.publicStatusCurrency;
   const managedPublicStatusCurrencyOptions = useManagedCurrencyOptions({
     currencies: customConfig.currencies,

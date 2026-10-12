@@ -28,6 +28,36 @@ test("desktop passkey fields and add action share stable form tracks", async ({ 
   await expectFormFieldRowAlignment(row, "desktop passkey registration", { action: true });
 });
 
+test("settings prepares every section before the first scroll", async ({ page }, testInfo) => {
+  const groupRequests: string[] = [];
+  page.on("request", (request) => {
+    const url = new URL(request.url());
+    if (/\/settings-advanced-group-(resources-ai|budget-data|cloud-calendar|public-notifications)\.tsx$/.test(url.pathname)) groupRequests.push(url.pathname);
+  });
+  await gotoSettingsAfterHydration(page);
+  await expect(page.getByTestId("settings-section-content")).toBeVisible();
+  await expect(page.locator("#settings-notifications")).toBeAttached();
+  const startedAt = await page.evaluate(() => performance.now());
+  const deferredSections = page.locator('[data-testid="settings-section-content"] section[aria-busy="true"]');
+  await expect(deferredSections).toHaveCount(0);
+  const sample = await page.evaluate((start) => ({
+    preparationMs: performance.now() - start,
+    scrollTop: document.getElementById("root")?.scrollTop,
+    sectionCount: document.querySelectorAll('[data-testid="settings-section-content"] section[id^="settings-"]').length,
+  }), startedAt);
+  expect(sample.scrollTop).toBe(0);
+  expect(sample.sectionCount).toBe(15);
+  expect(new Set(groupRequests).size).toBe(4);
+  console.info(`[perf] settings ${JSON.stringify(sample)}`);
+  await testInfo.attach("settings-preparation", { body: JSON.stringify(sample), contentType: "application/json" });
+
+  // Scroll directly to the last section without clicking the directory: no new module requests or skeletons.
+  await page.locator("#settings-notifications").scrollIntoViewIfNeeded();
+  await expect(page.locator("#settings-notifications")).toBeInViewport();
+  await expect(deferredSections).toHaveCount(0);
+  expect(new Set(groupRequests).size).toBe(4);
+});
+
 test("settings directory locates the skeleton before deferred content commits", async ({ page }) => {
   const advancedModule = await deferAdvancedSettingsModule(page);
   await gotoSettingsAfterHydration(page);

@@ -43,7 +43,7 @@ import {
 } from "./settings-layout";
 import { CheckboxSettingRow, LoadingButtonContent } from "./settings-shared-controls";
 
-/** 设置页同步层只保留首屏区块、目录和统一保存状态；低频高级区块按滚动/导航 intent 装载。 */
+/** 设置页同步层保留首屏区块、目录和统一保存状态；高级区块进入页面即并行装载。 */
 export function SettingsScreen() {
   const { t, previewLocalePreference } = useI18n();
   const lunarCalendar = useLunarCalendar();
@@ -227,7 +227,6 @@ export function SettingsScreen() {
 
               <DeferredSettingsAdvancedSections
                 controller={controller}
-                activeSectionId={activeSectionId}
                 onReady={markDeferredSectionsReady}
               />
             </div>

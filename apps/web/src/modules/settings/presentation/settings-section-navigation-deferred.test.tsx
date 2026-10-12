@@ -114,6 +114,10 @@ function renderNavigation(initialEntry = "/settings") {
       return spy;
     },
     markReady() {
+      for (const id of DEFERRED_SECTION_IDS) document.getElementById(id)?.removeAttribute("aria-busy");
+      act(() => readyRef.current?.markDeferredSectionsReady());
+    },
+    markOtherGroupReady() {
       act(() => readyRef.current?.markDeferredSectionsReady());
     },
   };
@@ -174,6 +178,21 @@ describe("deferred settings section navigation", () => {
 
     expect(screen.getByRole("link", { name: "settings-calendar-feed" })).toHaveAttribute("aria-current", "location");
     expect(screen.getByRole("link", { name: "settings-cloud-backup" })).not.toHaveAttribute("aria-current");
+  });
+
+  it("keeps waiting for the target when another parallel group commits", async () => {
+    const user = userEvent.setup();
+    const navigation = renderNavigation();
+    await user.click(screen.getByRole("link", { name: "settings-calendar-feed" }));
+    navigation.scrollSpy("settings-calendar-feed").mockClear();
+    setCloudBackupAtAnchor();
+
+    navigation.markOtherGroupReady();
+    await act(async () => { await new Promise((resolve) => window.setTimeout(resolve, 20)); });
+    expect(navigation.scrollSpy("settings-calendar-feed")).not.toHaveBeenCalled();
+
+    navigation.markReady();
+    await waitFor(() => expect(navigation.scrollSpy("settings-calendar-feed")).toHaveBeenCalled());
   });
 
   it("does not resume deferred navigation after user scroll input cancels it", async () => {
