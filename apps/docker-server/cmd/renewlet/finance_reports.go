@@ -16,45 +16,61 @@ type financeTotals struct {
 	Categories              map[string]*big.Int
 	Daily                   map[string]*financeTotals
 	Recurring               *big.Int
+	Subscription            *big.Int
 	Merchants               map[string]*big.Int
 }
 
 func newFinanceTotals() *financeTotals {
-	return &financeTotals{Income: new(big.Int), Expense: new(big.Int), Refund: new(big.Int), Recurring: new(big.Int), Categories: map[string]*big.Int{}, Merchants: map[string]*big.Int{}, Daily: map[string]*financeTotals{}}
+	return &financeTotals{Income: new(big.Int), Expense: new(big.Int), Refund: new(big.Int), Recurring: new(big.Int), Subscription: new(big.Int), Categories: map[string]*big.Int{}, Merchants: map[string]*big.Int{}, Daily: map[string]*financeTotals{}}
 }
 func (t *financeTotals) add(r *core.Record) error {
 	return t.addAmount(r, r.GetString("amount"))
 }
-func (t *financeTotals) addAmount(r *core.Record, value string) error {
+func (t *financeTotals) addAmount(r *core.Record, value string, subscription ...bool) error {
 	amount, err := financeUnits(value, false)
 	if err != nil {
 		return err
 	}
-	switch r.GetString("kind") {
-	case "income", "transfer", "refund":
+	kind := r.GetString("kind")
+	// Older accountless refunds used an income category. Keep their original
+	// records, but distinguish the returned money from earned income.
+	refund := kind == "refund" || kind == "income" && r.GetString("category") == "builtin:refund"
+	if refund {
+		t.Refund.Add(t.Refund, amount)
+	} else if kind == "income" || kind == "transfer" {
 		t.Income.Add(t.Income, amount)
-	case "expense":
-		if r.GetString("planId") != "" {
-			t.Recurring.Add(t.Recurring, amount)
-		}
-		merchant := r.GetString("merchant")
-		if merchant != "" {
-			if t.Merchants[merchant] == nil {
-				t.Merchants[merchant] = new(big.Int)
-			}
-			t.Merchants[merchant].Add(t.Merchants[merchant], amount)
-		}
-		category := r.GetString("category")
-		if t.Categories[category] == nil {
-			t.Categories[category] = new(big.Int)
-		}
+		return nil
+	} else if kind == "expense" {
 		t.Expense.Add(t.Expense, amount)
-		t.Categories[category].Add(t.Categories[category], amount)
+	} else {
+		return nil
 	}
+	change := new(big.Int).Set(amount)
+	if refund {
+		change.Neg(change)
+	}
+	if r.GetString("planId") != "" {
+		t.Recurring.Add(t.Recurring, change)
+	}
+	if len(subscription) > 0 && subscription[0] {
+		t.Subscription.Add(t.Subscription, change)
+	}
+	merchant := r.GetString("merchant")
+	if merchant != "" {
+		if t.Merchants[merchant] == nil {
+			t.Merchants[merchant] = new(big.Int)
+		}
+		t.Merchants[merchant].Add(t.Merchants[merchant], change)
+	}
+	category := r.GetString("category")
+	if t.Categories[category] == nil {
+		t.Categories[category] = new(big.Int)
+	}
+	t.Categories[category].Add(t.Categories[category], change)
 	return nil
 }
 func (t *financeTotals) data() map[string]any {
-	net := new(big.Int).Set(t.Expense)
+	net := new(big.Int).Sub(t.Expense, t.Refund)
 	balance := new(big.Int).Sub(t.Income, net)
 	categories := map[string]string{}
 	for k, v := range t.Categories {
@@ -66,9 +82,9 @@ func (t *financeTotals) data() map[string]any {
 		merchants[k] = financeDecimal(v)
 	}
 	for date, totals := range t.Daily {
-		daily[date] = map[string]string{"income": financeDecimal(totals.Income), "expense": financeDecimal(totals.Expense)}
+		daily[date] = map[string]string{"income": financeDecimal(totals.Income), "expense": financeDecimal(new(big.Int).Sub(totals.Expense, totals.Refund))}
 	}
-	return map[string]any{"income": financeDecimal(t.Income), "grossExpense": financeDecimal(t.Expense), "refunds": "0", "netExpense": financeDecimal(net), "netIncome": financeDecimal(balance), "categories": categories, "daily": daily, "recurringExpense": financeDecimal(t.Recurring), "merchants": merchants}
+	return map[string]any{"income": financeDecimal(t.Income), "grossExpense": financeDecimal(t.Expense), "refunds": financeDecimal(t.Refund), "netExpense": financeDecimal(net), "netIncome": financeDecimal(balance), "categories": categories, "daily": daily, "recurringExpense": financeDecimal(t.Recurring), "subscriptionExpense": financeDecimal(t.Subscription), "merchants": merchants}
 }
 
 func financeDefaultDateRange(instant time.Time, timeZone string) (string, string, error) {
@@ -103,13 +119,32 @@ func handleFinanceSummary(app core.App, e *core.RequestEvent, a financeActor, l 
 	cny := newFinanceTotals()
 	missing := map[string]bool{}
 	filter := "status = 'posted' && occurredOn >= {:from} && occurredOn <= {:to}"
-	if group := e.Request.URL.Query().Get("group"); group == "recurring" {
-		filter += " && planId != ''"
-	} else if group == "daily" {
-		filter += " && planId = ''"
-	}
+	group := e.Request.URL.Query().Get("group")
+	subscriptionPlans := map[string]bool{}
+
 	err = app.RunInTransaction(func(tx core.App) error {
 		return financeScan(tx, a.User, l.Id, filter, dbx.Params{"from": from, "to": to}, func(r *core.Record) error {
+			// Resolve the original payment only for reporting; never persist a plan
+			// association on the refund or reopen the subscription payment.
+			if r.GetString("kind") == "refund" {
+				original, err := financeOwned(tx, "transactions", a.User, l.Id, r.GetString("refundOf"))
+				if err != nil {
+					return err
+				}
+				r.Set("planId", original.GetString("planId"))
+				r.Set("merchant", original.GetString("merchant"))
+			}
+			if group == "recurring" && r.GetString("planId") == "" || group == "daily" && r.GetString("planId") != "" {
+				return nil
+			}
+			planID := r.GetString("planId")
+			if planID != "" {
+				if _, loaded := subscriptionPlans[planID]; !loaded {
+					plan, err := financeOwned(tx, "finance_plans", a.User, l.Id, planID)
+					subscriptionPlans[planID] = err == nil && plan.GetString("type") == "subscription"
+				}
+			}
+			subscription := subscriptionPlans[planID]
 			currency := r.GetString("currency")
 			if totals[currency] == nil {
 				totals[currency] = newFinanceTotals()
@@ -123,10 +158,10 @@ func handleFinanceSummary(app core.App, e *core.RequestEvent, a financeActor, l 
 				if cny.Daily[date] == nil {
 					cny.Daily[date] = newFinanceTotals()
 				}
-				if err := cny.Daily[date].addAmount(r, value); err != nil {
+				if err := cny.Daily[date].addAmount(r, value, subscription); err != nil {
 					return err
 				}
-				if err := cny.addAmount(r, value); err != nil {
+				if err := cny.addAmount(r, value, subscription); err != nil {
 					return err
 				}
 			} else {
@@ -135,10 +170,10 @@ func handleFinanceSummary(app core.App, e *core.RequestEvent, a financeActor, l 
 			if totals[currency].Daily[date] == nil {
 				totals[currency].Daily[date] = newFinanceTotals()
 			}
-			if err := totals[currency].Daily[date].add(r); err != nil {
+			if err := totals[currency].Daily[date].addAmount(r, r.GetString("amount"), subscription); err != nil {
 				return err
 			}
-			return totals[currency].add(r)
+			return totals[currency].addAmount(r, r.GetString("amount"), subscription)
 		})
 	})
 	if err != nil {

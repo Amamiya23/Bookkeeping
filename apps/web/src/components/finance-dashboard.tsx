@@ -47,8 +47,8 @@ export function FinanceDashboard() {
   const rates = useExchangeRates(settings.data?.exchangeRateProvider);
   const totals = summary.data?.cnyTotals ?? summary.data?.byCurrency["CNY"];
   const amount = (value: string | number) => formatFinanceAmount(String(value), "CNY", locale);
-  const prior = Number(previous.data?.cnyTotals?.grossExpense ?? previous.data?.byCurrency["CNY"]?.grossExpense ?? 0);
-  const change = prior > 0 ? (Number(totals?.grossExpense ?? 0) - prior) / prior * 100 : null;
+  const prior = Number(previous.data?.cnyTotals?.netExpense ?? previous.data?.byCurrency["CNY"]?.netExpense ?? 0);
+  const change = prior > 0 ? (Number(totals?.netExpense ?? 0) - prior) / prior * 100 : null;
   const planned = plans.data?.schedule.filter((item) => item.dueOn >= from && item.dueOn <= end) ?? [];
   let estimate = 0; let missingEstimate = false;
   for (const item of planned) {
@@ -62,7 +62,7 @@ export function FinanceDashboard() {
   const pending = capabilities.isPending || enabled && (ledger.isPending || summary.isPending);
   useRouteReady(pending);
   const balance = Number(totals?.netIncome ?? 0);
-  const expenseTotal = Number(totals?.grossExpense ?? 0);
+  const expenseTotal = groupSpendingCategories(totals?.categories ?? {}).reduce((sum, [, value]) => sum + value, 0);
   const topCategories = groupSpendingCategories(totals?.categories ?? {}).slice(0, 6);
   // 累计支出走势：从月初累加到截止日，给主数字一个“花得快不快”的直觉参照。
   const cumulative: number[] = [];
@@ -97,8 +97,9 @@ export function FinanceDashboard() {
         <div className="relative flex min-w-0 flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-card p-6 shadow-card sm:p-8">
           <div aria-hidden="true" className="pointer-events-none absolute -top-24 -right-16 size-64 rounded-full bg-primary/10 blur-3xl" />
           <div className="relative">
-            <p className="text-sm font-medium text-muted-foreground">{t("finance.totalSpend")} · {month}</p>
-            <p className="mt-3 text-4xl font-bold tracking-tight wrap-break-word sm:text-5xl">{amount(totals.grossExpense)}</p>
+            <p className="text-sm font-medium text-muted-foreground">{t("finance.netSpending")} · {month}</p>
+            <p className="mt-3 text-4xl font-bold tracking-tight wrap-break-word sm:text-5xl">{amount(totals.netExpense)}</p>
+            <p className="mt-2 text-xs text-muted-foreground">{t("finance.expenseBreakdown", { gross: amount(totals.grossExpense), refunds: amount(totals.refunds) })}</p>
             <p className={cn("mt-4 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium tabular-nums", change === null ? "bg-secondary text-muted-foreground" : change > 0 ? "bg-destructive/10 text-destructive" : "bg-success/10 text-success")}>
               {change !== null && (change > 0 ? <TrendingUp className="size-3.5" aria-hidden="true" /> : <TrendingDown className="size-3.5" aria-hidden="true" />)}
               {change === null ? t("finance.noComparison") : t("finance.comparison", { percent: (change > 0 ? "+" : "") + formatNumber(change, { maximumFractionDigits: 1 }) })}
@@ -125,17 +126,18 @@ export function FinanceDashboard() {
           {recent.isPending && <p role="status" className="text-sm text-muted-foreground">{t("common.loading")}</p>}
           {recent.data && recent.data.items.length === 0 && <div className="flex h-full min-h-32 items-center justify-center text-sm text-muted-foreground">{t("common.noData")}</div>}
           {recent.data && recent.data.items.length > 0 && <ul className="-mx-2 divide-y divide-border/70">{recent.data.items.map((record) => {
-            const detail = catalog.details(record.kind === "refund" ? "builtin:refund" : record.kind === "transfer" ? "builtin:transfer" : record.category, record.kind === "expense" ? "expense" : "income");
+            const detail = catalog.details(record.kind === "transfer" ? "builtin:transfer" : record.category, record.kind === "expense" || record.kind === "refund" ? "expense" : "income");
             const incoming = record.kind !== "expense";
             return <li key={record.id} className="flex items-center gap-3 px-2 py-2.5">
               <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-xl", incoming ? "bg-success/10 text-success" : "bg-secondary text-muted-foreground")}><FinanceCategoryIcon name={detail.icon} className="size-4" /></span>
-              <span className="min-w-0 flex-1"><span className="block truncate text-sm font-medium">{record.merchant || detail.label}</span><span className="block text-xs text-muted-foreground tabular-nums">{formatDateOnly(record.occurredOn)}{record.merchant && record.merchant !== detail.label ? ` · ${detail.label}` : ""}</span></span>
+              <span className="min-w-0 flex-1"><span className="block truncate text-sm font-medium">{record.merchant || detail.label}</span><span className="block text-xs text-muted-foreground tabular-nums">{formatDateOnly(record.occurredOn)}{record.kind === "refund" || record.category === "builtin:refund" ? ` · ${t("finance.refund")}` : ""}{record.merchant && record.merchant !== detail.label ? ` · ${detail.label}` : ""}</span></span>
               <span className={cn("shrink-0 text-sm font-semibold tabular-nums", incoming && "text-success")}>{incoming && "+"}{formatFinanceAmount(record.cnyAmount || record.amount, record.cnyAmount ? "CNY" : record.currency, locale)}</span>
             </li>;
           })}</ul>}
         </FinancePanel>
       </div>
       <FinancePanel title={t("finance.topCategories")} action={<Link href={`/statistics?from=${from}&to=${to}`} className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline underline-offset-4">{t("finance.navAnalysis")}<ChevronRight className="size-4" /></Link>}>
+        {Object.values(totals.categories).some((value) => Number(value) < 0) && <p className="mb-3 text-xs text-muted-foreground">{t("finance.refundShareHint")}</p>}
         {topCategories.length === 0 ? <p className="py-8 text-center text-sm text-muted-foreground">{t("finance.emptySpending")}</p> : <ol className="grid gap-x-10 gap-y-1 md:grid-cols-2 xl:grid-cols-3">{topCategories.map(([category, value], index) => {
           const detail = catalog.details(category, "expense");
           const share = expenseTotal > 0 ? value / expenseTotal * 100 : 0;

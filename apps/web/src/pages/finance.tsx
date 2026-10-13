@@ -16,7 +16,7 @@ import { useFinanceCategoryCatalog } from "@/hooks/use-finance-category-catalog"
 import { FormField } from "@/components/ui/form-field";
 import { FinanceEmpty, FinancePageHeader, FinanceSegmented } from "@/components/finance-ui";
 import { cn } from "@/lib/utils";
-import { Ban, ChevronDown, Download, History, Pencil, Plus, Search, Settings2 } from "lucide-react";
+import { Ban, ChevronDown, Download, History, Pencil, Plus, Search, Settings2, Undo2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { downloadFile } from "@/shared/browser/download-file";
 import { useI18n } from "@/i18n/I18nProvider";
@@ -31,7 +31,7 @@ import { financeSnapshotSchema, type FinanceSnapshot, type FinanceTransaction, t
 import type { FinanceLedger, FinanceCategory } from "@renewlet/shared/schemas/finance";
 
 function transactionInput(record: FinanceTransaction): FinanceTransactionInput {
-  return { kind: record.kind === "expense" ? "expense" : "income", amount: record.amount, currency: record.currency, cnyAmount: record.cnyAmount, account: "", counterAccount: "", occurredOn: record.occurredOn, category: record.kind === "refund" ? "builtin:refund" : record.kind === "transfer" ? "builtin:transfer" : record.category, merchant: record.merchant, tags: record.tags, notes: record.notes, refundOf: "", externalSource: record.externalSource, externalId: record.externalId, version: record.version };
+  return { kind: record.kind === "transfer" ? "income" : record.kind, amount: record.amount, currency: record.currency, cnyAmount: record.cnyAmount, account: record.kind === "transfer" ? "" : record.account, counterAccount: "", occurredOn: record.occurredOn, category: record.kind === "transfer" ? "builtin:transfer" : record.category, merchant: record.merchant, tags: record.tags, notes: record.notes, refundOf: record.refundOf, externalSource: record.externalSource, externalId: record.externalId, version: record.version };
 }
 
 export default function Finance() {
@@ -74,9 +74,9 @@ function FinanceScreen() {
 
   const failure = (cause: unknown) => financeErrorMessage(cause, t);
   const run = async (action: () => Promise<unknown>, close?: () => void) => {
-    if (busy) return; setBusy(true); setError("");
-    try { await action(); close?.(); toast.success(t("finance.saved")); await Promise.all([queryClient.invalidateQueries({ queryKey: ["finance", user] }), queryClient.invalidateQueries({ queryKey: ["subscriptions"] })]); }
-    catch (cause) { setError(failure(cause)); }
+    if (busy) return false; setBusy(true); setError("");
+    try { await action(); close?.(); toast.success(t("finance.saved")); await Promise.all([queryClient.invalidateQueries({ queryKey: ["finance", user] }), queryClient.invalidateQueries({ queryKey: ["subscriptions"] })]); return true; }
+    catch (cause) { setError(failure(cause)); return false; }
     finally { setBusy(false); }
   };
   const add = () => {
@@ -87,7 +87,7 @@ function FinanceScreen() {
   const ready = ledger.data;
   const customCategories = ledger.data?.categories ?? [];
   const categoryCatalog = useFinanceCategoryCatalog(customCategories);
-  const categoryDetails = (value: string, kind: string) => categoryCatalog.details(kind === "refund" ? "builtin:refund" : kind === "transfer" ? "builtin:transfer" : value, kind === "expense" ? "expense" : "income");
+  const categoryDetails = (value: string, kind: string) => categoryCatalog.details(kind === "transfer" ? "builtin:transfer" : value, kind === "expense" || kind === "refund" ? "expense" : "income");
   const addCategory = async (item: FinanceCategory) => {
     if (!ledger.data || busy) throw new Error(t("finance.retry"));
     setBusy(true);
@@ -131,7 +131,7 @@ function FinanceScreen() {
               {(["expense", "income"] as const).map((kind) => <optgroup key={kind} label={t(financeKindLabels[kind])}>{categoryCatalog.options(kind).map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</optgroup>)}
               {[...new Set([...rows.map((row) => row.category), category])].filter((value) => value && value !== "subscription:" && ![...categoryCatalog.options("expense"), ...categoryCatalog.options("income")].some((item) => item.value === value)).map((value) => <option key={value} value={value}>{categoryDetails(value, "expense").label}</option>)}
             </select>}</FormField>
-            <FormField id="finance-filter-kind" label={t("finance.kind")}>{({ id }) => <select id={id} className={financeSelectClass} value={filters.kind} onChange={(event) => setFilters({ ...filters, kind: event.target.value })}><option value="">{t("common.none")}</option>{(["expense", "income"] as const).map((kind) => <option key={kind} value={kind}>{t(financeKindLabels[kind])}</option>)}</select>}</FormField>
+            <FormField id="finance-filter-kind" label={t("finance.kind")}>{({ id }) => <select id={id} className={financeSelectClass} value={filters.kind} onChange={(event) => setFilters({ ...filters, kind: event.target.value })}><option value="">{t("common.none")}</option>{(["expense", "income", "refund"] as const).map((kind) => <option key={kind} value={kind}>{t(financeKindLabels[kind])}</option>)}</select>}</FormField>
             <FormField id="finance-filter-merchant" label={t("finance.merchant")} className="col-span-2 lg:col-span-1">{({ id }) => <div className="relative"><Search aria-hidden="true" className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" /><Input id={id} type="search" className="pl-9" value={filters.merchant} onChange={(event) => setFilters({ ...filters, merchant: event.target.value })} /></div>}</FormField>
           </>}
           {view === "reports" && <div className="col-span-2 flex items-end lg:col-span-1"><FinanceSegmented label={t("finance.month")} value={rangePreset} onChange={(preset) => { setFrom(preset === "year" ? yearStart : monthStart); setTo(today); }} options={[{ value: "month", label: t("finance.month") }, { value: "year", label: t("finance.unitYear") }]} /></div>}
@@ -148,7 +148,7 @@ function FinanceScreen() {
               const detail = categoryDetails(record.category, record.kind);
               const incoming = record.kind === "income" || record.kind === "refund";
               const voided = record.status === "void";
-              const meta = [record.merchant && record.category && record.merchant !== detail.label ? detail.label : "", record.kind === "refund" || record.kind === "transfer" ? t(financeKindLabels[record.kind]) : "", ...record.tags].filter(Boolean);
+              const meta = [record.merchant && record.category && record.merchant !== detail.label ? detail.label : "", record.kind === "refund" || record.kind === "transfer" || record.category === "builtin:refund" ? t(record.category === "builtin:refund" ? "finance.refund" : financeKindLabels[record.kind]) : "", ...record.tags].filter(Boolean);
               return <article key={record.id} className={cn("group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-secondary/40 sm:gap-4 sm:px-5", voided && "opacity-60")}>
                 <span className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl", incoming ? "bg-success/10 text-success" : "bg-secondary text-muted-foreground")}><FinanceCategoryIcon name={detail.icon} className="size-4.5" /></span>
                 <div className="min-w-0 flex-1">
@@ -163,6 +163,7 @@ function FinanceScreen() {
                 </div>
                 {record.status === "posted" && <div className="flex shrink-0 gap-0.5 transition-opacity sm:opacity-0 sm:group-focus-within:opacity-100 sm:group-hover:opacity-100">
                   <Button size="icon" variant="ghost" className="size-8 rounded-lg text-muted-foreground" aria-label={t("common.edit")} title={t("common.edit")} disabled={busy} onClick={() => { setError(""); setTransactionForm({ id: record.id, input: transactionInput(record) }); }}><Pencil /></Button>
+                  {record.kind === "expense" && <Button size="icon" variant="ghost" className="size-8 rounded-lg text-muted-foreground" aria-label={t("finance.refund")} title={t("finance.refund")} disabled={busy} onClick={() => { setError(""); setTransactionForm({ input: { ...transactionInput(record), kind: "refund", amount: "", cnyAmount: "", account: "", refundOf: record.id, occurredOn: today, notes: "", externalSource: "", externalId: "", version: 0 } }); }}><Undo2 /></Button>}
                   <Button size="icon" variant="ghost" className="size-8 rounded-lg text-muted-foreground hover:text-destructive" aria-label={t("finance.void")} title={t("finance.void")} disabled={busy} onClick={() => { setError(""); setVoidReason(""); setVoiding(record); }}><Ban /></Button>
                 </div>}
               </article>;
@@ -196,7 +197,7 @@ function FinanceScreen() {
         </div>
       </details>}
     </main>
-    {transactionForm && <FinanceTransactionDialog initial={transactionForm.input} categories={customCategories} onAddCategory={addCategory} busy={busy} error={error} onClose={() => setTransactionForm(null)} onSave={(input) => run(() => financeService.saveTransaction(input, transactionForm.id), () => setTransactionForm(null))} />}
+    {transactionForm && <FinanceTransactionDialog key={transactionForm.id || transactionForm.input.refundOf || "new"} draftId={transactionForm.id ? `edit:${transactionForm.id}:${transactionForm.input.version}` : transactionForm.input.refundOf ? `refund:${transactionForm.input.refundOf}` : "new"} initial={transactionForm.input} categories={customCategories} onAddCategory={addCategory} busy={busy} error={error} onClose={() => setTransactionForm(null)} onSave={(input) => run(() => financeService.saveTransaction(input, transactionForm.id), () => setTransactionForm(null))} />}
     {restorePreview && <Dialog open onOpenChange={(open) => { if (!open && !busy) setRestorePreview(null); }}><DialogContent aria-describedby={undefined}><DialogHeader><DialogTitle>{t("finance.restore")}</DialogTitle></DialogHeader>
       <p>{restorePreview.ledger.name} · {restorePreview.ledger.baseCurrency}</p><p>{t("finance.transactions")} · {restorePreview.transactions.length}</p>
       <p className="text-sm text-muted-foreground">{t("finance.restoreEmpty")}</p>

@@ -276,43 +276,43 @@ func validateFinanceTransaction(app core.App, user, ledger, id string, input *fi
 	// New cash-flow records have no funding account. Account-backed records
 	// remain valid for older clients and backups.
 	if input.Account == "" {
-		if (input.Kind != "income" && input.Kind != "expense") || input.CounterAccount != "" || input.RefundOf != "" {
+		if (input.Kind != "income" && input.Kind != "expense" && input.Kind != "refund") || input.CounterAccount != "" {
 			return financeFail("INVALID_TRANSACTION", 400)
 		}
-		return nil
-	}
-	account, err := financeOwned(app, "accounts", user, ledger, input.Account)
-	if err != nil {
-		return err
-	}
-	if account.GetBool("archived") {
-		return financeFail("ACCOUNT_ARCHIVED", 409)
-	}
-	if account.GetString("currency") != input.Currency {
-		return financeFail("CURRENCY_MISMATCH", 400)
-	}
-	if input.OccurredOn < account.GetString("openingDate") {
-		return financeFail("BEFORE_OPENING_DATE", 400)
-	}
-	if input.Kind == "transfer" {
-		if input.CounterAccount == input.Account || input.CounterAccount == "" {
-			return financeFail("INVALID_TRANSFER", 400)
-		}
-		counter, err := financeOwned(app, "accounts", user, ledger, input.CounterAccount)
+	} else {
+		account, err := financeOwned(app, "accounts", user, ledger, input.Account)
 		if err != nil {
 			return err
 		}
-		if counter.GetBool("archived") {
+		if account.GetBool("archived") {
 			return financeFail("ACCOUNT_ARCHIVED", 409)
 		}
-		if counter.GetString("currency") != input.Currency {
+		if account.GetString("currency") != input.Currency {
 			return financeFail("CURRENCY_MISMATCH", 400)
 		}
-		if input.OccurredOn < counter.GetString("openingDate") {
+		if input.OccurredOn < account.GetString("openingDate") {
 			return financeFail("BEFORE_OPENING_DATE", 400)
 		}
-	} else if input.CounterAccount != "" {
-		return financeFail("INVALID_TRANSFER", 400)
+		if input.Kind == "transfer" {
+			if input.CounterAccount == input.Account || input.CounterAccount == "" {
+				return financeFail("INVALID_TRANSFER", 400)
+			}
+			counter, err := financeOwned(app, "accounts", user, ledger, input.CounterAccount)
+			if err != nil {
+				return err
+			}
+			if counter.GetBool("archived") {
+				return financeFail("ACCOUNT_ARCHIVED", 409)
+			}
+			if counter.GetString("currency") != input.Currency {
+				return financeFail("CURRENCY_MISMATCH", 400)
+			}
+			if input.OccurredOn < counter.GetString("openingDate") {
+				return financeFail("BEFORE_OPENING_DATE", 400)
+			}
+		} else if input.CounterAccount != "" {
+			return financeFail("INVALID_TRANSFER", 400)
+		}
 	}
 	if input.Kind == "refund" {
 		original, err := financeOwned(app, "transactions", user, ledger, input.RefundOf)
@@ -327,6 +327,7 @@ func validateFinanceTransaction(app core.App, user, ledger, id string, input *fi
 		}
 		// Refunds can return to another active account in the same currency.
 		input.Category = original.GetString("category")
+		input.Merchant = original.GetString("merchant")
 		total := new(big.Int).Set(amount)
 		if err := financeScan(app, user, ledger, "refundOf = {:original} && status = 'posted' && id != {:id}", dbx.Params{"original": original.Id, "id": id}, func(r *core.Record) error {
 			v, err := financeUnits(r.GetString("amount"), false)

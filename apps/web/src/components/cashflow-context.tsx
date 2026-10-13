@@ -32,10 +32,10 @@ export function CashflowProvider({ children }: { children: ReactNode }) {
   const refresh = useCallback(async () => {
     await Promise.all([client.invalidateQueries({ queryKey: ["finance", user] }), client.invalidateQueries({ queryKey: ["subscriptions"] })]);
   }, [client, user]);
-  const run = async (action: () => Promise<unknown>) => {
-    if (busy) return; setBusy(true); setError("");
-    try { await action(); setAdding(false); setPlan(null); await refresh(); toast.success(t("finance.saved")); }
-    catch (cause) { setError(financeErrorMessage(cause, t)); }
+  const run = async (action: () => Promise<unknown>, keepOpen = false) => {
+    if (busy) return false; setBusy(true); setError("");
+    try { await action(); if (!keepOpen) setAdding(false); setPlan(null); await refresh(); toast.success(t("finance.saved")); return true; }
+    catch (cause) { setError(financeErrorMessage(cause, t)); return false; }
     finally { setBusy(false); }
   };
   const paySubscription = useCallback((id: string) => {
@@ -55,8 +55,8 @@ export function CashflowProvider({ children }: { children: ReactNode }) {
     {children}
     {enabled && <Button className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] left-1/2 z-40 -translate-x-1/2 gap-2 shadow-lg lg:hidden" onClick={() => { setError(""); setAdding(true); }} aria-label={t("finance.add")}><Plus className="size-4" />{t("finance.add")}</Button>}
     <Suspense fallback={<p role="status" className="fixed right-4 bottom-20 z-50 rounded-lg border bg-background p-3 text-sm">{t("common.loading")}</p>}>
-      {adding && ledger.data && <FinanceTransactionDialog initial={emptyTransaction(today)} categories={ledger.data.categories} onAddCategory={addCategory} busy={busy} error={error} onClose={() => setAdding(false)} onSave={(input) => run(() => financeService.saveTransaction(input))} />}
-      {plan && ledger.data && <PlanPaymentDialog plan={plan} today={today} categories={ledger.data.categories} onAddCategory={addCategory} busy={busy} error={error} onClose={() => setPlan(null)} onSettle={(input) => run(() => financeService.settlePlan(plan.id, input))} />}
+      {adding && ledger.data && <FinanceTransactionDialog allowContinue initial={emptyTransaction(today)} categories={ledger.data.categories} onAddCategory={addCategory} busy={busy} error={error} onClose={() => setAdding(false)} onSave={(input, keepOpen) => run(() => financeService.saveTransaction(input), keepOpen)} />}
+      {plan && ledger.data && <PlanPaymentDialog key={`${plan.id}:${plan.nextDue}:${plan.version}`} plan={plan} today={today} categories={ledger.data.categories} onAddCategory={addCategory} busy={busy} error={error} onClose={() => setPlan(null)} onSettle={(input) => run(() => financeService.settlePlan(plan.id, input))} />}
     </Suspense>
   </CashflowContext.Provider>;
 }

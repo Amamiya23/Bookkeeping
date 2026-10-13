@@ -41,6 +41,7 @@ import { useSubscriptionDetailDialog } from '@/hooks/use-subscription-detail-dia
 
 interface SubscriptionCalendarProps {
   className?: string;
+  compact?: boolean;
   /** 订阅列表（前端 domain 类型）。 */
   subscriptions: SubscriptionCollectionItem[];
   currentMonth: Date;
@@ -63,6 +64,7 @@ const WEEKDAY_REFERENCE_DATES = [
 /** 续费/到期日历组件。 */
 export const SubscriptionCalendar = ({
   className,
+  compact = false,
   subscriptions,
   currentMonth,
   onCurrentMonthChange,
@@ -190,12 +192,12 @@ export const SubscriptionCalendar = ({
     <>
       <div className={cn("flex min-w-0 flex-col rounded-2xl border border-border/80 bg-card p-4 shadow-card sm:p-5", className)}>
         {/* 顶部栏 */}
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className={cn("mb-4 flex flex-col gap-3", !compact && "sm:flex-row sm:items-center sm:justify-between")}>
           <div className="flex items-center gap-2">
             <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary"><CalendarDays className="size-4" /></span>
             <h3 className="text-base font-semibold text-foreground">{t("calendar.title")}</h3>
           </div>
-          <div className="flex flex-wrap items-center justify-between gap-2 sm:justify-end">
+          <div className={cn("flex flex-wrap items-center justify-between gap-2", !compact && "sm:justify-end")}>
             <Button
               variant="ghost"
               size="sm"
@@ -364,9 +366,9 @@ export const SubscriptionCalendar = ({
           ))}
         </div>
 
-        {isMobileCalendar ? (
+        {compact || isMobileCalendar ? (
           <>
-            {/* 移动端月历概览：只展示事件指示，完整信息放到下方列表。 */}
+            {/* 紧凑月历通过日期打开详情，独立移动端日历另附月度列表。 */}
             <div className="grid min-w-0 grid-cols-7 gap-1">
               {calendarDays.map((day) => {
                 const dateKey = format(day, 'yyyy-MM-dd');
@@ -431,7 +433,7 @@ export const SubscriptionCalendar = ({
               })}
             </div>
 
-            <div className="mt-5 min-w-0 max-w-full border-t border-border pt-4" data-testid="calendar-mobile-agenda">
+            {!compact && <div className="mt-5 min-w-0 max-w-full border-t border-border pt-4" data-testid="calendar-mobile-agenda">
               <div className="mb-3 flex min-w-0 items-center justify-between gap-3">
                 <h4 className="min-w-0 truncate text-sm font-semibold text-foreground">{t("calendar.mobileAgendaTitle")}</h4>
                 <span className="shrink-0 text-xs text-muted-foreground">
@@ -492,7 +494,7 @@ export const SubscriptionCalendar = ({
                   <p className="text-sm text-muted-foreground">{t("calendar.mobileAgendaEmpty")}</p>
                 </div>
               )}
-            </div>
+            </div>}
           </>
         ) : (
           /* 日历网格：留白分隔代替网格线，每格只放 1 个事件胶囊，其余折叠为 +N。 */

@@ -27,7 +27,7 @@ describe("unified cash-flow overview", () => {
     mocks.summary.mockReset().mockImplementation(async (from: string, to: string) => {
       if (mocks.fail) throw new Error("offline");
       const expense = mocks.empty ? "0" : from.startsWith("2026-09") ? "200" : "446.8";
-      return { from, to, unconvertedCurrencies: [], cnyTotals: { income: "1000", grossExpense: expense, netIncome: String(1000 - Number(expense)), recurringExpense: mocks.empty ? "0" : "146.8", categories: mocks.empty ? {} : { "builtin:meals": "300", "builtin:work": "146.8" }, daily: { "2026-10-03": { income: "1000", expense } }, merchants: {} } };
+      return { from, to, unconvertedCurrencies: [], cnyTotals: { income: "1000", grossExpense: expense, netExpense: expense, refunds: "0", netIncome: String(1000 - Number(expense)), recurringExpense: mocks.empty ? "0" : "146.8", categories: mocks.empty ? {} : { "builtin:meals": "300", "builtin:work": "146.8" }, daily: { "2026-10-03": { income: "1000", expense } }, merchants: {} } };
     });
   });
   it("shows fixed CNY actual totals and future estimates separately", async () => {

@@ -151,6 +151,7 @@ const Subscriptions = () => {
   });
   const { convert, loading: ratesLoading, sourceDate: ratesSourceDate } = useExchangeRates(exchangeRateProvider);
   const currencyRatesReady = Boolean(ratesSourceDate) && !ratesLoading;
+  const [workspaceView, setWorkspaceView] = useState<"list" | "overview">(() => searchParams.get("view") === "overview" ? "overview" : "list");
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [aiRecognitionDialogOpen, setAIRecognitionDialogOpen] = useState(false);
@@ -421,8 +422,12 @@ const Subscriptions = () => {
             </Button>
           </div>
         </div>
-        <Suspense fallback={<p role="status" className="py-6 text-sm text-muted-foreground">{t("common.loading")}</p>}><SubscriptionWorkspace onCategorySelect={(category) => setSelectedCategories([category])} /></Suspense>
-        <div>
+        <div role="group" aria-label={t("finance.navSubscriptions")} className="mb-4 flex gap-2">
+          <Button variant={workspaceView === "list" ? "secondary" : "ghost"} aria-pressed={workspaceView === "list"} onClick={() => setWorkspaceView("list")}>{t("finance.subscriptionList")}</Button>
+          <Button variant={workspaceView === "overview" ? "secondary" : "ghost"} aria-pressed={workspaceView === "overview"} onClick={() => setWorkspaceView("overview")}>{t("finance.subscriptionInsights")}</Button>
+        </div>
+        {workspaceView === "overview" && <Suspense fallback={<p role="status" className="py-6 text-sm text-muted-foreground">{t("common.loading")}</p>}><SubscriptionWorkspace onCategorySelect={(category) => { setSelectedCategories([category]); setWorkspaceView("list"); }} /></Suspense>}
+        <div hidden={workspaceView !== "list"}>
         <div className={cn("mb-6 rounded-2xl border border-border/80 bg-card p-4 shadow-card sm:p-5", isMobileTagFilter ? "grid gap-3" : "grid gap-4")}>
           {isMobileTagFilter ? (
             <>

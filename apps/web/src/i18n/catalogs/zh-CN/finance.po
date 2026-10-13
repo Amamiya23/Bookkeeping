@@ -37,7 +37,7 @@ msgstr "按所选期间的天数计算"
 
 #. js-lingui-explicit-id
 msgid "finance.incomeHint"
-msgstr "包含收到的转账和退款"
+msgstr "包含收到的转账，不含消费退款"
 
 #. js-lingui-explicit-id
 msgid "finance.balanceHint"
@@ -69,7 +69,7 @@ msgstr "这段时间还没有支出，记一笔后即可查看消费分布。"
 
 #. js-lingui-explicit-id
 msgid "finance.overviewBasis"
-msgstr "按已入账流水统计，退款与收到的转账计入收入。不同币种分别展示。"
+msgstr "按已入账流水统计；退款冲减支出，收到的转账计入收入，金额统一折算人民币。"
 
 #. js-lingui-explicit-id
 msgid "finance.subscriptionRole"
@@ -89,7 +89,7 @@ msgstr "管理订阅"
 
 #. js-lingui-explicit-id
 msgid "finance.forecastHint"
-msgstr "预估月成本按订阅周期折算，不计入实际支出。订阅付款记入「订阅服务」分类后，会进入消费总览。"
+msgstr "预估月成本按订阅周期折算，不计入实际支出。确认订阅付款或关联已有账单后，才计入订阅实付。"
 
 #. js-lingui-explicit-id
 msgid "finance.category.refund"
@@ -298,7 +298,7 @@ msgstr "结余"
 
 #. js-lingui-explicit-id
 msgid "finance.basis"
-msgstr "按已入账流水统计；退款与收到的转账计入收入。"
+msgstr "按已入账流水统计；退款冲减支出，收到的转账计入收入。"
 
 #. js-lingui-explicit-id
 msgid "finance.unconverted"
@@ -883,7 +883,7 @@ msgstr "累计实际付款"
 
 #. js-lingui-explicit-id
 msgid "finance.recurringSpend"
-msgstr "已付周期支出"
+msgstr "已付周期净支出"
 
 #. js-lingui-explicit-id
 msgid "finance.remainingPayments"
@@ -1032,3 +1032,111 @@ msgstr "下一年"
 #. js-lingui-explicit-id
 msgid "finance.backToCurrentMonth"
 msgstr "回到本月"
+
+#. js-lingui-explicit-id
+msgid "finance.draftRestored"
+msgstr "已恢复未保存的记账草稿。"
+
+#. js-lingui-explicit-id
+msgid "finance.unsavedEntry"
+msgstr "这笔账还未保存。要保留草稿还是放弃修改？"
+
+#. js-lingui-explicit-id
+msgid "finance.discardDraft"
+msgstr "放弃修改"
+
+#. js-lingui-explicit-id
+msgid "finance.continueEditing"
+msgstr "继续编辑"
+
+#. js-lingui-explicit-id
+msgid "finance.keepDraft"
+msgstr "保留草稿并关闭"
+
+#. js-lingui-explicit-id
+msgid "finance.saveAndContinue"
+msgstr "保存并再记一笔"
+
+#. js-lingui-explicit-id
+msgid "finance.allCategories"
+msgstr "全部分类"
+
+#. js-lingui-explicit-id
+msgid "finance.fewerCategories"
+msgstr "收起分类"
+
+#. js-lingui-explicit-id
+msgid "finance.refundEntryHint"
+msgstr "消费退款请在「账单」中找到原支出，点击「退款」，以免误计为收入。"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionInsights"
+msgstr "日历与统计"
+
+#. js-lingui-explicit-id
+msgid "finance.checkingPayments"
+msgstr "正在查找可能已记过的账单…"
+
+#. js-lingui-explicit-id
+msgid "finance.possiblePayments"
+msgstr "找到可能已记过的支出。关联已有账单可避免重复记账。"
+
+#. js-lingui-explicit-id
+msgid "finance.paymentCheckFailed"
+msgstr "暂时无法检查已有账单，请确认这笔付款尚未入账。"
+
+#. js-lingui-explicit-id
+msgid "finance.confirmNewPayment"
+msgstr "我确认这是另一笔尚未入账的付款"
+
+#. js-lingui-explicit-id
+msgid "finance.morePaymentCandidates"
+msgstr "检查更多候选账单"
+
+#. js-lingui-explicit-id
+msgid "finance.searchPayments"
+msgstr "搜索已加载账单的商家、日期、金额或备注"
+
+#. js-lingui-explicit-id
+msgid "finance.recommendedPayment"
+msgstr "可能匹配本次付款"
+
+#. js-lingui-explicit-id
+msgid "finance.estimatedMonthlyCost"
+msgstr "预估月成本"
+
+#. js-lingui-explicit-id
+msgid "finance.actualSubscriptionSpend"
+msgstr "本月订阅实付净额"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionCostHint"
+msgstr "预估月成本按周期摊算，例如年付 1200 元折合每月 100 元；实际扣款在确认付款后入账，退款从实际支出中扣除。"
+
+#. js-lingui-explicit-id
+msgid "finance.netSpending"
+msgstr "净支出"
+
+#. js-lingui-explicit-id
+msgid "finance.expenseBreakdown"
+msgstr "原始支出 {gross} · 退款 {refunds}"
+
+#. js-lingui-explicit-id
+msgid "finance.refundBasis"
+msgstr "退款按实际到账日期冲减支出，不计入收入。"
+
+#. js-lingui-explicit-id
+msgid "finance.refundOffsets"
+msgstr "退款抵扣"
+
+#. js-lingui-explicit-id
+msgid "finance.refundShareHint"
+msgstr "部分分类本期退款超过支出。负值单独展示，消费占比按净支出为正的分类计算。"
+
+#. js-lingui-explicit-id
+msgid "finance.unlinkedRefunds"
+msgstr "未关联原消费的历史退款"
+
+#. js-lingui-explicit-id
+msgid "finance.refundLimitHint"
+msgstr "支持部分退款；累计退款不能超过原消费金额。"

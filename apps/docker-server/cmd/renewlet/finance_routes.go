@@ -162,12 +162,12 @@ func handleFinanceTransactionsList(app core.App, e *core.RequestEvent, a finance
 	}
 	filter := "user = {:user} && ledger = {:ledger}"
 	if group := q.Get("group"); group == "recurring" {
-		filter += " && planId != ''"
+		filter += " && (planId != '' || (kind = 'refund' && refundOf.planId != ''))"
 	} else if group == "daily" {
-		filter += " && planId = ''"
+		filter += " && planId = '' && (kind != 'refund' || refundOf.planId = '')"
 	}
 	if plan := q.Get("planId"); plan != "" {
-		filter += " && planId = {:plan}"
+		filter += " && (planId = {:plan} || (kind = 'refund' && refundOf.planId = {:plan}))"
 	}
 	params := dbx.Params{"user": a.User, "ledger": l.Id}
 	params["plan"] = q.Get("planId")
@@ -179,7 +179,9 @@ func handleFinanceTransactionsList(app core.App, e *core.RequestEvent, a finance
 			} else if key == "account" {
 				filter += " && (account = {:account} || counterAccount = {:account})"
 			} else if key == "kind" && value == "income" {
-				filter += " && (kind = 'income' || kind = 'refund' || kind = 'transfer')"
+				filter += " && ((kind = 'income' && category != 'builtin:refund') || kind = 'transfer')"
+			} else if key == "kind" && value == "refund" {
+				filter += " && (kind = 'refund' || (kind = 'income' && category = 'builtin:refund'))"
 			} else {
 				filter += " && " + key + " = {:" + key + "}"
 			}

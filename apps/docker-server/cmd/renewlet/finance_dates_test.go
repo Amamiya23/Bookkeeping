@@ -33,7 +33,7 @@ func TestFinanceDateBoundariesAndRefundMonth(t *testing.T) {
 	if err := financeScan(app, a.User, l, "status = 'posted' && occurredOn >= {:from} && occurredOn <= {:to}", dbx.Params{"from": "2026-10-01", "to": "2026-10-31"}, total.add); err != nil {
 		t.Fatal(err)
 	}
-	if total.data()["income"] != "20" || total.data()["netExpense"] != "0" || total.data()["grossExpense"] != "0" {
+	if total.data()["income"] != "0" || total.data()["refunds"] != "20" || total.data()["netExpense"] != "-20" || total.data()["grossExpense"] != "0" {
 		t.Fatal(total.data())
 	}
 	other, _ := createRouteTestUser(t, app, "finance-other-ledger")

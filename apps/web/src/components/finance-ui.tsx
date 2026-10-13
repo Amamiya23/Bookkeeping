@@ -85,7 +85,8 @@ export function FinanceSparkline({ values, className }: { values: number[]; clas
   if (values.length < 2) return null;
   const width = 300, height = 64, pad = 3;
   const max = Math.max(...values, 1);
-  const points = values.map((value, index) => [index / (values.length - 1) * width, height - pad - value / max * (height - pad * 2)] as const);
+  const min = Math.min(...values, 0);
+  const points = values.map((value, index) => [index / (values.length - 1) * width, height - pad - (value - min) / (max - min) * (height - pad * 2)] as const);
   const line = points.map(([x, y], index) => `${index ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
   const last = points[points.length - 1]!;
   // SVG 非等比拉伸会把圆点压扁，终点圆点用 HTML 定位绘制。

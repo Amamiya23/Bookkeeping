@@ -37,7 +37,7 @@ msgstr "Across days in the selected period"
 
 #. js-lingui-explicit-id
 msgid "finance.incomeHint"
-msgstr "Includes received transfers and refunds"
+msgstr "Includes received transfers, excluding purchase refunds"
 
 #. js-lingui-explicit-id
 msgid "finance.balanceHint"
@@ -69,7 +69,7 @@ msgstr "No spending in this period. Record an expense to see your breakdown."
 
 #. js-lingui-explicit-id
 msgid "finance.overviewBasis"
-msgstr "Posted records only. Refunds and received transfers count as income. Currencies are shown separately."
+msgstr "Based on posted transactions in CNY. Refunds reduce spending; received transfers count as income."
 
 #. js-lingui-explicit-id
 msgid "finance.subscriptionRole"
@@ -89,7 +89,7 @@ msgstr "Manage subscriptions"
 
 #. js-lingui-explicit-id
 msgid "finance.forecastHint"
-msgstr "Estimated monthly cost is normalized by billing cycle and excluded from actual spending. Record payments under Subscriptions to include them in the overview."
+msgstr "Estimated monthly cost is normalized by billing cycle. Confirm a payment or link an existing transaction to record actual subscription spending."
 
 #. js-lingui-explicit-id
 msgid "finance.category.refund"
@@ -298,7 +298,7 @@ msgstr "Net cash flow"
 
 #. js-lingui-explicit-id
 msgid "finance.basis"
-msgstr "Based on posted transactions; refunds and received transfers count as income."
+msgstr "Based on posted transactions; refunds reduce spending and received transfers count as income."
 
 #. js-lingui-explicit-id
 msgid "finance.unconverted"
@@ -883,7 +883,7 @@ msgstr "Total paid"
 
 #. js-lingui-explicit-id
 msgid "finance.recurringSpend"
-msgstr "Recurring payments made"
+msgstr "Net recurring spending"
 
 #. js-lingui-explicit-id
 msgid "finance.remainingPayments"
@@ -1032,3 +1032,111 @@ msgstr "Next year"
 #. js-lingui-explicit-id
 msgid "finance.backToCurrentMonth"
 msgstr "Back to this month"
+
+#. js-lingui-explicit-id
+msgid "finance.draftRestored"
+msgstr "Your unsaved transaction draft has been restored."
+
+#. js-lingui-explicit-id
+msgid "finance.unsavedEntry"
+msgstr "This transaction is not saved. Keep the draft or discard your changes?"
+
+#. js-lingui-explicit-id
+msgid "finance.discardDraft"
+msgstr "Discard changes"
+
+#. js-lingui-explicit-id
+msgid "finance.continueEditing"
+msgstr "Keep editing"
+
+#. js-lingui-explicit-id
+msgid "finance.keepDraft"
+msgstr "Keep draft and close"
+
+#. js-lingui-explicit-id
+msgid "finance.saveAndContinue"
+msgstr "Save and add another"
+
+#. js-lingui-explicit-id
+msgid "finance.allCategories"
+msgstr "All categories"
+
+#. js-lingui-explicit-id
+msgid "finance.fewerCategories"
+msgstr "Fewer categories"
+
+#. js-lingui-explicit-id
+msgid "finance.refundEntryHint"
+msgstr "For a purchase refund, find the original expense in Bills and choose Refund."
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionInsights"
+msgstr "Calendar and insights"
+
+#. js-lingui-explicit-id
+msgid "finance.checkingPayments"
+msgstr "Checking for existing transactions…"
+
+#. js-lingui-explicit-id
+msgid "finance.possiblePayments"
+msgstr "These expenses may already cover this payment. Link one to avoid recording it twice."
+
+#. js-lingui-explicit-id
+msgid "finance.paymentCheckFailed"
+msgstr "Could not check existing transactions. Please confirm this payment has not been recorded."
+
+#. js-lingui-explicit-id
+msgid "finance.confirmNewPayment"
+msgstr "I confirm this is a separate, unrecorded payment"
+
+#. js-lingui-explicit-id
+msgid "finance.morePaymentCandidates"
+msgstr "Check more candidates"
+
+#. js-lingui-explicit-id
+msgid "finance.searchPayments"
+msgstr "Search loaded transactions by merchant, date, amount or notes"
+
+#. js-lingui-explicit-id
+msgid "finance.recommendedPayment"
+msgstr "Possible match for this payment"
+
+#. js-lingui-explicit-id
+msgid "finance.estimatedMonthlyCost"
+msgstr "Estimated monthly cost"
+
+#. js-lingui-explicit-id
+msgid "finance.actualSubscriptionSpend"
+msgstr "Subscriptions paid this month, net"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionCostHint"
+msgstr "Monthly cost spreads payments across their billing cycle: 1,200 per year equals 100 per month. Actual payments are recorded when confirmed, minus refunds."
+
+#. js-lingui-explicit-id
+msgid "finance.netSpending"
+msgstr "Net spending"
+
+#. js-lingui-explicit-id
+msgid "finance.expenseBreakdown"
+msgstr "Gross spending {gross} · Refunds {refunds}"
+
+#. js-lingui-explicit-id
+msgid "finance.refundBasis"
+msgstr "Refunds reduce spending on the date received; they are not income."
+
+#. js-lingui-explicit-id
+msgid "finance.refundOffsets"
+msgstr "Refund offsets"
+
+#. js-lingui-explicit-id
+msgid "finance.refundShareHint"
+msgstr "Some categories have more refunds than spending in this period. Negative totals are shown separately; shares use positive category totals."
+
+#. js-lingui-explicit-id
+msgid "finance.unlinkedRefunds"
+msgstr "Historical refunds without an original expense"
+
+#. js-lingui-explicit-id
+msgid "finance.refundLimitHint"
+msgstr "Partial refunds are supported; total refunds cannot exceed the original expense."

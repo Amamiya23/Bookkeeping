@@ -9,6 +9,7 @@ import { builtInFinanceCategories } from "@/lib/finance-categories";
 import { useFinanceCategoryCatalog } from "@/hooks/use-finance-category-catalog";
 import { useI18n } from "@/i18n/I18nProvider";
 import type { MessageKey } from "@/i18n/messages";
+import { readFinancePreferences } from "@/lib/finance-entry-storage";
 import { cn } from "@/lib/utils";
 
 const iconLabels = Object.fromEntries(financeCategoryIcons.map((icon) => [icon, `finance.icon.${icon}`])) as Record<typeof financeCategoryIcons[number], MessageKey>;
@@ -20,15 +21,22 @@ export function FinanceCategoryPicker({ kind, value, categories, disabled, onCha
   const { t } = useI18n();
   const catalog = useFinanceCategoryCatalog(categories);
   const [search, setSearch] = useState("");
+  const [expanded, setExpanded] = useState(false);
+  const [recent] = useState(() => readFinancePreferences()[kind]);
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState("");
   const [icon, setIcon] = useState<FinanceCategory["icon"]>("grid-2x2");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const options = catalog.options(kind);
+  const options = catalog.options(kind).filter((option) => option.value !== "builtin:refund" || value === "builtin:refund");
   // Keep historical free-text categories available when editing, including blank.
   if (!options.some((option) => option.value === value)) options.unshift({ value, ...catalog.details(value, kind) });
-  const filtered = options.filter((option) => option.label.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
+  const ordered = [...options].sort((a, b) => {
+    const rank = (key: string) => key === value ? -1 : recent.includes(key) ? recent.indexOf(key) : 100;
+    return rank(a.value) - rank(b.value);
+  });
+  const matching = ordered.filter((option) => option.label.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
+  const filtered = search.trim() || expanded ? matching : matching.slice(0, 10);
   const save = async () => {
     if (disabled || saving) return;
     const parsed = financeCategorySchema.safeParse({ kind, name: name.trim(), icon });
@@ -64,6 +72,7 @@ export function FinanceCategoryPicker({ kind, value, categories, disabled, onCha
           <span className="w-full text-center text-xs leading-4 wrap-break-word">{option.label}</span>
         </button>)}
       </div>
+      {!search.trim() && matching.length > 10 && <Button type="button" variant="ghost" size="sm" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>{t(expanded ? "finance.fewerCategories" : "finance.allCategories")}</Button>}
       {filtered.length === 0 && <p className="py-4 text-center text-sm text-muted-foreground">{t("finance.noCategories")}</p>}
     </>}
   </fieldset>;

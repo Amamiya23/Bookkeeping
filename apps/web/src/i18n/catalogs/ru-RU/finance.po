@@ -37,7 +37,7 @@ msgstr "За дни выбранного периода"
 
 #. js-lingui-explicit-id
 msgid "finance.incomeHint"
-msgstr "Включая переводы и возвраты"
+msgstr "Включает полученные переводы, но не возвраты покупок"
 
 #. js-lingui-explicit-id
 msgid "finance.balanceHint"
@@ -69,7 +69,7 @@ msgstr "За этот период нет расходов. Добавьте з�
 
 #. js-lingui-explicit-id
 msgid "finance.overviewBasis"
-msgstr "Только проведённые записи. Возвраты и переводы учитываются как доход. Валюты показаны отдельно."
+msgstr "По проведённым операциям в CNY. Возвраты уменьшают расходы; полученные переводы считаются доходом."
 
 #. js-lingui-explicit-id
 msgid "finance.subscriptionRole"
@@ -89,7 +89,7 @@ msgstr "Управление подписками"
 
 #. js-lingui-explicit-id
 msgid "finance.forecastHint"
-msgstr "Оценка по периодам оплаты не включена в фактические расходы. Запишите оплату в категории «Подписки», чтобы учесть её в обзоре."
+msgstr "Месячная стоимость рассчитывается по циклу оплаты. Подтвердите платёж или свяжите операцию для учёта фактических расходов на подписку."
 
 #. js-lingui-explicit-id
 msgid "finance.category.refund"
@@ -298,7 +298,7 @@ msgstr "Остаток"
 
 #. js-lingui-explicit-id
 msgid "finance.basis"
-msgstr "По проведённым операциям; возвраты и полученные переводы учитываются как доход."
+msgstr "По проведённым операциям; возвраты уменьшают расходы, полученные переводы считаются доходом."
 
 #. js-lingui-explicit-id
 msgid "finance.unconverted"
@@ -883,7 +883,7 @@ msgstr "Всего оплачено"
 
 #. js-lingui-explicit-id
 msgid "finance.recurringSpend"
-msgstr "Регулярные расходы"
+msgstr "Расходы по регулярным платежам за вычетом возвратов"
 
 #. js-lingui-explicit-id
 msgid "finance.remainingPayments"
@@ -1032,3 +1032,111 @@ msgstr "Следующий год"
 #. js-lingui-explicit-id
 msgid "finance.backToCurrentMonth"
 msgstr "Вернуться к текущему месяцу"
+
+#. js-lingui-explicit-id
+msgid "finance.draftRestored"
+msgstr "Восстановлен несохранённый черновик операции."
+
+#. js-lingui-explicit-id
+msgid "finance.unsavedEntry"
+msgstr "Операция не сохранена. Сохранить черновик или отменить изменения?"
+
+#. js-lingui-explicit-id
+msgid "finance.discardDraft"
+msgstr "Отменить изменения"
+
+#. js-lingui-explicit-id
+msgid "finance.continueEditing"
+msgstr "Продолжить редактирование"
+
+#. js-lingui-explicit-id
+msgid "finance.keepDraft"
+msgstr "Сохранить черновик и закрыть"
+
+#. js-lingui-explicit-id
+msgid "finance.saveAndContinue"
+msgstr "Сохранить и добавить ещё"
+
+#. js-lingui-explicit-id
+msgid "finance.allCategories"
+msgstr "Все категории"
+
+#. js-lingui-explicit-id
+msgid "finance.fewerCategories"
+msgstr "Свернуть категории"
+
+#. js-lingui-explicit-id
+msgid "finance.refundEntryHint"
+msgstr "Для возврата найдите исходный расход в операциях и выберите «Возврат»."
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionInsights"
+msgstr "Календарь и статистика"
+
+#. js-lingui-explicit-id
+msgid "finance.checkingPayments"
+msgstr "Поиск ранее записанных операций…"
+
+#. js-lingui-explicit-id
+msgid "finance.possiblePayments"
+msgstr "Найдены похожие расходы. Свяжите операцию, чтобы избежать дублирования."
+
+#. js-lingui-explicit-id
+msgid "finance.paymentCheckFailed"
+msgstr "Не удалось проверить операции. Убедитесь, что этот платёж ещё не записан."
+
+#. js-lingui-explicit-id
+msgid "finance.confirmNewPayment"
+msgstr "Подтверждаю: это отдельный, ещё не записанный платёж"
+
+#. js-lingui-explicit-id
+msgid "finance.morePaymentCandidates"
+msgstr "Проверить другие операции"
+
+#. js-lingui-explicit-id
+msgid "finance.searchPayments"
+msgstr "Поиск среди загруженных операций по продавцу, дате, сумме или заметкам"
+
+#. js-lingui-explicit-id
+msgid "finance.recommendedPayment"
+msgstr "Возможно, это нужный платёж"
+
+#. js-lingui-explicit-id
+msgid "finance.estimatedMonthlyCost"
+msgstr "Ожидаемая стоимость в месяц"
+
+#. js-lingui-explicit-id
+msgid "finance.actualSubscriptionSpend"
+msgstr "Подписки: оплачено за месяц за вычетом возвратов"
+
+#. js-lingui-explicit-id
+msgid "finance.subscriptionCostHint"
+msgstr "Месячная стоимость распределяется по циклу: 1200 в год — это 100 в месяц. Фактические платежи учитываются после подтверждения, за вычетом возвратов."
+
+#. js-lingui-explicit-id
+msgid "finance.netSpending"
+msgstr "Расходы за вычетом возвратов"
+
+#. js-lingui-explicit-id
+msgid "finance.expenseBreakdown"
+msgstr "Расходы {gross} · Возвраты {refunds}"
+
+#. js-lingui-explicit-id
+msgid "finance.refundBasis"
+msgstr "Возвраты уменьшают расходы на дату получения и не считаются доходом."
+
+#. js-lingui-explicit-id
+msgid "finance.refundOffsets"
+msgstr "Уменьшение расходов за счёт возвратов"
+
+#. js-lingui-explicit-id
+msgid "finance.refundShareHint"
+msgstr "В некоторых категориях возвраты превышают расходы. Отрицательные суммы показаны отдельно; доли рассчитаны по положительным итогам."
+
+#. js-lingui-explicit-id
+msgid "finance.unlinkedRefunds"
+msgstr "Старые возвраты без связи с исходным расходом"
+
+#. js-lingui-explicit-id
+msgid "finance.refundLimitHint"
+msgstr "Можно оформить частичный возврат; общая сумма возвратов не может превышать исходный расход."

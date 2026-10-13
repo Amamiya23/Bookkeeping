@@ -24,7 +24,7 @@ import { useSubscriptionCrud } from '@/modules/subscriptions/application/use-sub
 const EMPTY_SUBSCRIPTIONS: SubscriptionCollectionItem[] = [];
 
 /** 日历页组件。 */
-const Calendar = ({ embedded = false }: { embedded?: boolean }) => {
+const Calendar = ({ embedded = false, compact = false }: { embedded?: boolean; compact?: boolean }) => {
   const Container = embedded ? "section" : "main";
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const range = useMemo(() => getSubscriptionCalendarRange(currentMonth), [currentMonth]);
@@ -52,7 +52,7 @@ const Calendar = ({ embedded = false }: { embedded?: boolean }) => {
       <div className={embedded ? "" : "app-page bg-background"}>
         {!embedded && <Header onAddSubscription={handleAddSubscription} availableTags={availableTags} />}
         <Container className={embedded ? "space-y-6" : "app-main mx-auto max-w-7xl"}>
-          <CalendarPageSkeleton withPageShell={false} />
+          {compact ? <div role="status" className="h-108 animate-pulse rounded-2xl bg-muted"><span className="sr-only">{t("common.loading")}</span></div> : <CalendarPageSkeleton withPageShell={false} />}
         </Container>
       </div>
     );
@@ -83,7 +83,8 @@ const Calendar = ({ embedded = false }: { embedded?: boolean }) => {
         </div>}
 
         <SubscriptionCalendar 
-          className={embedded ? "lg:flex-1" : ""}
+          className={embedded && !compact ? "lg:flex-1" : ""}
+          compact={compact}
           subscriptions={subscriptions} 
           currentMonth={currentMonth}
           onCurrentMonthChange={setCurrentMonth}

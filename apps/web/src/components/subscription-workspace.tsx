@@ -1,3 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+import { financeService } from "@/services/finance-service";
+import { useFinanceCapabilities } from "@/hooks/use-finance";
+import { getProductCurrentUserId } from "@/services/product-session";
+import Link from "@/components/router-link";
 import { lazy, Suspense } from "react";
 import { useSubscriptionAnalytics } from "@/hooks/use-subscriptions";
 import { useSettings } from "@/hooks/use-settings";
@@ -21,6 +26,12 @@ export function SubscriptionWorkspace({ onCategorySelect }: { onCategorySelect: 
   const subscriptions = useSubscriptionAnalytics();
   const settings = useSettings();
   const today = useZonedToday(settings.data?.timezone ?? "UTC");
+  const capabilities = useFinanceCapabilities();
+  const user = getProductCurrentUserId();
+  const from = today.slice(0, 7) + "-01";
+  const actual = useQuery({ queryKey: ["finance", user, "summary", from, today, "recurring"], queryFn: () => financeService.summary(from, today, "recurring"), enabled: capabilities.data?.ledger === true });
+  const actualTotals = actual.data?.cnyTotals;
+  const subscriptionPaid = actualTotals?.subscriptionExpense !== undefined ? Number(actualTotals.subscriptionExpense) : null;
   const rates = useExchangeRates(settings.data?.exchangeRateProvider);
   const plans = useRecurringPlans();
   const { config } = useCustomConfigState();
@@ -49,65 +60,69 @@ export function SubscriptionWorkspace({ onCategorySelect }: { onCategorySelect: 
 
   return (
     <section className="mb-6 space-y-4" aria-label={t("finance.subscriptionOverview")}>
-      <dl className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <FinanceMetric icon={<Wallet />} label={t("dashboard.monthlySpend")} value={costReady ? formatCurrency(stats.totalMonthly, "CNY") : "—"} />
+      <dl className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+        <FinanceMetric icon={<Wallet />} label={t("finance.estimatedMonthlyCost")} value={costReady ? formatCurrency(stats.totalMonthly, "CNY") : "—"} />
+        {capabilities.data?.ledger && <FinanceMetric icon={<Wallet />} label={t("finance.actualSubscriptionSpend")} value={actual.isError || subscriptionPaid === null || actual.data?.unconvertedCurrencies.length ? "—" : formatCurrency(subscriptionPaid, "CNY")} hint={<Link href={`/transactions?${new URLSearchParams({ from, to: today, group: "recurring" })}`} className="text-primary hover:underline">{t("finance.navBills")}</Link>} />}
         <FinanceMetric icon={<CircleCheck />} label={t("dashboard.activeSubscriptions")} value={String(stats.activeSubscriptions.length)} />
         <FinanceMetric icon={<CalendarClock />} label={t("dashboard.upcomingRenewals")} value={String(upcomingCount)} />
         <FinanceMetric icon={<FlaskConical />} label={t("dashboard.trials")} value={String(stats.trialCount)} />
       </dl>
+      <p className="text-sm text-muted-foreground">{t("finance.subscriptionCostHint")}</p>
 
-      {/* 桌面端两列等高，日历网格和支出分布面板填充剩余空间。 */}
-      <div className="grid items-stretch gap-4 lg:grid-cols-3">
-        <div className="min-w-0 lg:col-span-2 lg:flex lg:flex-col">
-          <Suspense fallback={<div role="status" className="h-128 animate-pulse rounded-2xl bg-muted"><span className="sr-only">{t("common.loading")}</span></div>}>
-            <Calendar embedded />
+      {/* 日历保持紧凑，主要空间用于展示消费构成。 */}
+      <div className="grid items-stretch gap-4 lg:grid-cols-[20rem_minmax(0,1fr)]">
+        <div className="min-w-0">
+          <Suspense fallback={<div role="status" className="h-108 animate-pulse rounded-2xl bg-muted"><span className="sr-only">{t("common.loading")}</span></div>}>
+            <Calendar embedded compact />
           </Suspense>
         </div>
-        <div className="flex min-w-0 flex-col gap-4">
-          <FinancePanel title={t("dashboard.upcomingRenewals")}>
-            {plans.data && <PaymentSchedule data={plans.data} subscriptionOnly limit={4} />}
-            {plans.error && <p role="alert" className="text-sm text-destructive">{t("error.generic")}</p>}
-          </FinancePanel>
-          <FinancePanel className="lg:flex-1" bodyClassName="lg:flex lg:flex-col lg:justify-center" title={t("dashboard.spendingDistribution")} action={costReady && total > 0 && <span className="text-xs font-semibold text-muted-foreground tabular-nums">{formatCurrency(total, "CNY")} {t("statistics.perMonth")}</span>}>
-            {costReady && chartData.length > 0 ? (
-              <div className="grid items-center gap-5 sm:grid-cols-[7.5rem_minmax(0,1fr)]">
-                <div className="flex justify-center">
-                  <RechartsFrame height={120} className="w-30">
-                    <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
-                      <Pie data={chartData} cx="50%" cy="50%" innerRadius={40} outerRadius={58} paddingAngle={chartData.length > 1 ? 2 : 0} cornerRadius={4} dataKey="value" isAnimationActive={false} strokeWidth={0}>
-                        {chartData.map((entry) => <Cell key={entry.category} fill={entry.color} />)}
-                      </Pie>
-                      <Tooltip
-                        formatter={(val: unknown) => [formatCurrency(Number(val), "CNY"), t("dashboard.monthlySpend")]}
-                        contentStyle={{ backgroundColor: "hsl(var(--popover))", borderRadius: "0.75rem", border: "1px solid hsl(var(--border))", color: "hsl(var(--popover-foreground))", fontSize: "0.75rem" }}
-                      />
-                    </PieChart>
-                  </RechartsFrame>
-                </div>
-                <div className="max-h-48 space-y-1 overflow-y-auto pr-1">
-                  {chartData.map((item) => {
-                    const percent = total > 0 ? Math.round((item.value / total) * 100) : 0;
-                    return (
-                      <button key={item.category} type="button" className="group -mx-1.5 block w-full rounded-lg p-1.5 text-left transition-colors hover:bg-secondary/60" onClick={() => onCategorySelect(item.category)}>
-                        <span className="mb-1.5 flex items-center justify-between gap-2 text-xs">
-                          <span className="flex min-w-0 items-center gap-1.5 font-medium text-foreground">
-                            <span className="size-2.5 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
-                            <span className="truncate group-hover:text-primary">{item.name}</span>
-                          </span>
-                          <span className="shrink-0 text-muted-foreground tabular-nums group-hover:text-foreground">{formatCurrency(item.value, "CNY")} · {percent}%</span>
-                        </span>
-                        <FinanceShareBar percent={percent} color={item.color} />
-                      </button>
-                    );
-                  })}
+        <FinancePanel className="min-h-108" bodyClassName="flex flex-col justify-center" title={t("dashboard.spendingDistribution")} action={costReady && total > 0 && <span className="text-xs font-semibold text-muted-foreground tabular-nums">{formatCurrency(total, "CNY")} {t("statistics.perMonth")}</span>}>
+          {costReady && chartData.length > 0 ? (
+            <div className="flex flex-wrap items-center justify-center gap-6 py-2">
+              <div className="relative flex shrink-0 justify-center">
+                <RechartsFrame height={240} className="w-60 max-w-full">
+                  <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+                    <Pie data={chartData} cx="50%" cy="50%" innerRadius={82} outerRadius={112} paddingAngle={chartData.length > 1 ? 2 : 0} cornerRadius={4} dataKey="value" isAnimationActive={false} strokeWidth={0}>
+                      {chartData.map((entry) => <Cell key={entry.category} fill={entry.color} />)}
+                    </Pie>
+                    <Tooltip
+                      formatter={(val: unknown) => [formatCurrency(Number(val), "CNY"), t("finance.estimatedMonthlyCost")]}
+                      contentStyle={{ backgroundColor: "hsl(var(--popover))", borderRadius: "0.75rem", border: "1px solid hsl(var(--border))", color: "hsl(var(--popover-foreground))", fontSize: "0.75rem" }}
+                    />
+                  </PieChart>
+                </RechartsFrame>
+                <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1 px-12 text-center">
+                  <span className="text-xs text-muted-foreground">{t("finance.estimatedMonthlyCost")}</span>
+                  <span className="max-w-full break-words text-lg font-semibold text-foreground tabular-nums">{formatCurrency(total, "CNY")}</span>
                 </div>
               </div>
-            ) : (
-              <p className="py-8 text-center text-sm text-muted-foreground">{!costReady ? rates.error || t("common.loading") : t("statistics.noSubscriptionData")}</p>
-            )}
-          </FinancePanel>
-        </div>
+              <div className="max-h-80 min-w-0 flex-1 basis-60 space-y-3 overflow-y-auto p-1">
+                {chartData.map((item) => {
+                  const percent = total > 0 ? Math.round((item.value / total) * 100) : 0;
+                  return (
+                    <button key={item.category} type="button" className="group block w-full rounded-lg p-2 text-left transition-colors hover:bg-secondary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" onClick={() => onCategorySelect(item.category)}>
+                      <span className="mb-2 flex flex-wrap items-center justify-between gap-2 text-sm">
+                        <span className="flex min-w-0 items-center gap-1.5 font-medium text-foreground">
+                          <span className="size-2.5 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
+                          <span className="truncate group-hover:text-primary">{item.name}</span>
+                        </span>
+                        <span className="shrink-0 text-muted-foreground tabular-nums group-hover:text-foreground">{formatCurrency(item.value, "CNY")} · {percent}%</span>
+                      </span>
+                      <FinanceShareBar percent={percent} color={item.color} />
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <p className="py-8 text-center text-sm text-muted-foreground">{!costReady ? rates.error || t("common.loading") : t("statistics.noSubscriptionData")}</p>
+          )}
+        </FinancePanel>
       </div>
+      <FinancePanel title={t("dashboard.upcomingRenewals")}>
+        {plans.data && <PaymentSchedule data={plans.data} subscriptionOnly limit={4} />}
+        {plans.error && <p role="alert" className="text-sm text-destructive">{t("error.generic")}</p>}
+      </FinancePanel>
     </section>
   );
 }

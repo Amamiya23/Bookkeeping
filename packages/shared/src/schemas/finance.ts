@@ -49,7 +49,7 @@ export const financeTransactionSchema = financeTransactionInputSchema.extend({
 });
 export const financeTransactionResponseSchema = apiSuccessResponseSchema(financeTransactionSchema);
 export const financeTransactionsResponseSchema = apiSuccessResponseSchema(z.object({ items: z.array(financeTransactionSchema).max(100), nextCursor: z.string() }).strict());
-const totals = z.object({ income: decimal, grossExpense: decimal, refunds: decimal, netExpense: decimal, netIncome: decimal, categories: z.record(z.string(), decimal), daily: z.record(z.string(), z.object({ income: decimal, expense: decimal }).strict()).default({}), recurringExpense: decimal.default("0"), merchants: z.record(z.string(), decimal).default({}) }).strict();
+const totals = z.object({ income: decimal, grossExpense: decimal, refunds: decimal, netExpense: decimal, netIncome: decimal, categories: z.record(z.string(), decimal), daily: z.record(z.string(), z.object({ income: decimal, expense: decimal }).strict()).default({}), recurringExpense: decimal.default("0"), subscriptionExpense: decimal.optional(), merchants: z.record(z.string(), decimal).default({}) }).strict();
 export const financeSummarySchema = z.object({
   from: date, to: date, timeZone: z.string(), basis: z.literal("posted-cash-flow"), baseCurrency: currency,
   byCurrency: z.record(currency, totals), unconvertedCurrencies: z.array(currency),

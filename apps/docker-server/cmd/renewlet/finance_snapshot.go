@@ -174,7 +174,7 @@ func validateFinanceSnapshot(s *financeSnapshot) error {
 			return invalid()
 		}
 		a := accounts[t.Account]
-		if !financeCurrencyPattern.MatchString(t.Currency) || (t.Account != "" && (a.ID == "" || a.Currency != t.Currency || t.OccurredOn < a.OpeningDate)) || (t.Account == "" && t.Kind != "income" && t.Kind != "expense") {
+		if !financeCurrencyPattern.MatchString(t.Currency) || (t.Account != "" && (a.ID == "" || a.Currency != t.Currency || t.OccurredOn < a.OpeningDate)) || (t.Account == "" && t.Kind != "income" && t.Kind != "expense" && t.Kind != "refund") {
 			return invalid()
 		}
 		if !financeCategoryValueFits(t.Category) || !financeTextFits(t.Merchant, 120) || !financeTextFits(t.Notes, 5000) || len(t.Tags) > 50 || !financeTextFits(t.VoidReason, 500) || !financeTextFits(t.Source, 32) || !financeTextFits(t.ExternalID, 120) || !financeTextFits(t.ExternalSource, 120) {
