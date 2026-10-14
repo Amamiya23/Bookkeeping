@@ -19,7 +19,7 @@ import { Header } from '@/components/header';
 import { BackToTopFloatButton } from '@/components/back-to-top-float-button';
 import { SubscriptionGrid } from '@/components/subscription-grid';
 import { SubscriptionDetailDialog } from '@/components/subscription-detail-dialog';
-import { AddToCalendarDialog } from '@/components/add-to-calendar-dialog';
+import { AddToCalendarDialog } from '@/components/add-to-calendar-dialog-loader';
 import { subscriptionFilterLayout } from '@/components/subscription-filter-layout';
 import { AddSubscriptionDialog } from '@/components/add-subscription-dialog';
 import { EditSubscriptionDialog } from '@/components/edit-subscription-dialog';

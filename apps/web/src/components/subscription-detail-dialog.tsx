@@ -12,7 +12,7 @@ import {
   DISABLED_REMINDER_DAYS,
   INHERIT_REMINDER_DAYS,
 } from "@/types/subscription";
-import { AddToCalendarDialog } from "@/components/add-to-calendar-dialog";
+import { AddToCalendarDialog } from "@/components/add-to-calendar-dialog-loader";
 import { preloadRenewSubscriptionDialog } from "@/components/renew-subscription-dialog-loader";
 import { SubscriptionLogo } from "@/components/subscription-logo";
 import {

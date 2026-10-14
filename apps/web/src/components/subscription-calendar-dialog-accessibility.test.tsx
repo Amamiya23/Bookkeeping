@@ -224,7 +224,7 @@ describe("SubscriptionCalendar dialogs", () => {
   });
 
   it("opens add-to-calendar actions from the detail dialog", async () => {
-    vi.useFakeTimers();
+    vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(new Date("2026-05-14T12:00:00Z"));
 
     renderCalendar([subscription({ name: "Fastmail", website: "https://fastmail.example" })]);
@@ -232,7 +232,7 @@ describe("SubscriptionCalendar dialogs", () => {
     fireEvent.click(screen.getByRole("button", { name: "Fastmail" }));
     fireEvent.click(screen.getByRole("button", { name: "添加到日历" }));
 
-    expect(screen.getByRole("dialog", { name: "添加到日历" })).toBeInTheDocument();
+    expect(await screen.findByRole("dialog", { name: "添加到日历" })).toBeInTheDocument();
     expect(screen.getByText("为「Fastmail」选择持续同步，或单次添加到日历。")).toBeInTheDocument();
     const generateButton = screen.getByRole("button", { name: "生成订阅链接" });
     expect(generateButton).toHaveClass("bg-primary");
