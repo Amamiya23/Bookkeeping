@@ -1140,3 +1140,79 @@ msgstr "Старые возвраты без связи с исходным ра
 #. js-lingui-explicit-id
 msgid "finance.refundLimitHint"
 msgstr "Можно оформить частичный возврат; общая сумма возвратов не может превышать исходный расход."
+
+#. js-lingui-explicit-id
+msgid "finance.confirmAndRecord"
+msgstr "Подтвердить и записать платёж"
+
+#. js-lingui-explicit-id
+msgid "finance.linkAndComplete"
+msgstr "Связать и завершить платёж"
+
+#. js-lingui-explicit-id
+msgid "finance.entrySaved"
+msgstr "Запись сохранена за {date}"
+
+#. js-lingui-explicit-id
+msgid "finance.savedOutsideMonth"
+msgstr "Эта запись относится к другому месяцу. Нажмите «Открыть запись», чтобы увидеть её."
+
+#. js-lingui-explicit-id
+msgid "finance.viewEntry"
+msgstr "Открыть запись"
+
+#. js-lingui-explicit-id
+msgid "finance.paymentCompleted"
+msgstr "{name} · Платёж за {date} завершён"
+
+#. js-lingui-explicit-id
+msgid "finance.periodSkipped"
+msgstr "{name} · Платёж за {date} пропущен"
+
+#. js-lingui-explicit-id
+msgid "finance.nextPaymentOn"
+msgstr "Следующий платёж: {date}"
+
+#. js-lingui-explicit-id
+msgid "finance.planCompleted"
+msgstr "План завершён. Следующих платежей нет."
+
+#. js-lingui-explicit-id
+msgid "finance.paymentRecorded"
+msgstr "Результат сохранён. Его можно посмотреть в планах платежей."
+
+#. js-lingui-explicit-id
+msgid "finance.viewHistory"
+msgstr "Связанные записи"
+
+#. js-lingui-explicit-id
+msgid "finance.allDates"
+msgstr "Все даты"
+
+#. js-lingui-explicit-id
+msgid "finance.filters"
+msgstr "Фильтры"
+
+#. js-lingui-explicit-id
+msgid "finance.clearFilters"
+msgstr "Сбросить фильтры"
+
+#. js-lingui-explicit-id
+msgid "finance.selectedEntry"
+msgstr "Просмотр выбранной записи"
+
+#. js-lingui-explicit-id
+msgid "finance.entryActions"
+msgstr "Действия с записью"
+
+#. js-lingui-explicit-id
+msgid "finance.welcomeTitle"
+msgstr "Начните с одной записи, чтобы понять свои расходы"
+
+#. js-lingui-explicit-id
+msgid "finance.welcomeHelp"
+msgstr "Записывайте повседневные расходы. Для подписок и аренды создайте планы и подтверждайте фактические платежи. На главной странице видны записанные расходы и предстоящие платежи."
+
+#. js-lingui-explicit-id
+msgid "finance.firstEntry"
+msgstr "Добавить первую запись"

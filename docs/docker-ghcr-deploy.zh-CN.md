@@ -12,16 +12,16 @@
 
 ## 二开版本管理
 
-本仓库采用独立版本进度，当前版本定义为 **V1.0**，`package.json` 中使用标准版本号 `1.0.0`。`main` 镜像内显示 `1.0.0`，并发布 `:1.0.0` 和 `:1.0` 标签；`dev` 镜像显示 `1.0.0-dev+<短提交 SHA>`，不会更新正式版本标签。
+本仓库采用独立版本进度，当前版本定义为 **V1.1**，`package.json` 中使用标准版本号 `1.1.0`。`main` 镜像内显示 `1.1.0`，并发布 `:1.1.0` 和 `:1.1` 标签；`dev` 镜像显示 `1.1.0-dev+<短提交 SHA>`，不会更新正式版本标签。
 
-后续发布 V1.1 时，在本地同步产品 workspace 的版本号：
+后续发布 V1.2 时，在本地同步产品 workspace 的版本号：
 
 ```bash
-node scripts/set-fork-version.mjs 1.1.0
-# 已安装项目要求的 Node.js / pnpm 时，也可以使用 pnpm version:sync 1.1.0
+node scripts/set-fork-version.mjs 1.2.0
+# 已安装项目要求的 Node.js / pnpm 时，也可以使用 pnpm version:sync 1.2.0
 ```
 
-修复版本可以使用 `1.0.1`。提交并推送到 `main` 后，Actions 按新的版本号发布镜像。版本号不随推送自动递增，也不读取上游 release tag。
+修复版本可以使用 `1.1.1`。提交并推送到 `main` 后，Actions 按新的版本号发布镜像。版本号不随推送自动递增，也不读取上游 release tag。
 
 同一版本号下继续推送会更新对应版本镜像；需要锁定某次构建时，使用 `sha-<完整提交 SHA>` 或镜像 digest。仓库原有的 Maintainer Release / Release Publish 属于上游发布链路，本仓库通过 **Docker Publish** 和 `version:sync` 管理二开镜像。
 

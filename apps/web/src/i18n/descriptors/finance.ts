@@ -1,6 +1,26 @@
 import { msg } from "@lingui/core/macro";
 
 export const messages = [
+  msg({ id: "finance.confirmAndRecord", message: "确认付款并记账" }),
+  msg({ id: "finance.linkAndComplete", message: "关联并完成本期付款" }),
+  msg({ id: "finance.entrySaved", message: "已记入 {date} 的账单" }),
+  msg({ id: "finance.savedOutsideMonth", message: "这笔账属于其他月份，不会出现在本月列表中。可直接查看这笔账单。" }),
+  msg({ id: "finance.viewEntry", message: "查看这笔" }),
+  msg({ id: "finance.paymentCompleted", message: "{name} · {date} 本期付款已完成" }),
+  msg({ id: "finance.periodSkipped", message: "{name} · 已跳过 {date} 本期付款" }),
+  msg({ id: "finance.nextPaymentOn", message: "下次待付款：{date}" }),
+  msg({ id: "finance.planCompleted", message: "计划已完成，没有下一期待付款。" }),
+  msg({ id: "finance.paymentRecorded", message: "处理结果已保存，可在付款计划中查看。" }),
+  msg({ id: "finance.viewHistory", message: "查看相关账单" }),
+  msg({ id: "finance.allDates", message: "全部日期" }),
+  msg({ id: "finance.filters", message: "筛选" }),
+  msg({ id: "finance.clearFilters", message: "清除筛选" }),
+  msg({ id: "finance.selectedEntry", message: "正在查看这笔账单" }),
+  msg({ id: "finance.entryActions", message: "账单操作" }),
+  msg({ id: "finance.welcomeTitle", message: "先记一笔，开始看清支出" }),
+  msg({ id: "finance.welcomeHelp", message: "日常消费直接记账；订阅和房租等周期费用先建计划，实际付款后再确认入账。首页会汇总已记支出和待付款。" }),
+  msg({ id: "finance.firstEntry", message: "记第一笔" }),
+
   msg({ id: "finance.draftRestored", message: "已恢复未保存的记账草稿。" }),
   msg({ id: "finance.unsavedEntry", message: "这笔账还未保存。要保留草稿还是放弃修改？" }),
   msg({ id: "finance.discardDraft", message: "放弃修改" }),

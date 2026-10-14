@@ -222,6 +222,7 @@ export function SubscriptionDialogContent(props: SubscriptionDialogContentProps)
       data-testid={props.loading ? "subscription-form-data-loading" : undefined}
       fields={loadingSlots?.fields ?? (
         <SubscriptionFormFields
+          compact={props.mode === "create"}
           idPrefix={idPrefix}
           config={config}
           formData={formData}

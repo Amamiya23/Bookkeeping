@@ -62,7 +62,7 @@ export function SubscriptionWorkspace({ onCategorySelect }: { onCategorySelect: 
     <section className="mb-6 space-y-4" aria-label={t("finance.subscriptionOverview")}>
       <dl className="grid grid-cols-2 gap-3 lg:grid-cols-5">
         <FinanceMetric icon={<Wallet />} label={t("finance.estimatedMonthlyCost")} value={costReady ? formatCurrency(stats.totalMonthly, "CNY") : "—"} />
-        {capabilities.data?.ledger && <FinanceMetric icon={<Wallet />} label={t("finance.actualSubscriptionSpend")} value={actual.isError || subscriptionPaid === null || actual.data?.unconvertedCurrencies.length ? "—" : formatCurrency(subscriptionPaid, "CNY")} hint={<Link href={`/transactions?${new URLSearchParams({ from, to: today, group: "recurring" })}`} className="text-primary hover:underline">{t("finance.navBills")}</Link>} />}
+        {capabilities.data?.ledger && <FinanceMetric icon={<Wallet />} label={t("finance.actualSubscriptionSpend")} value={actual.isError || subscriptionPaid === null || actual.data?.unconvertedCurrencies.length ? "—" : formatCurrency(subscriptionPaid, "CNY")} hint={<Link href={`/transactions?${new URLSearchParams({ from, to: today, group: "subscription", status: "posted" })}`} className="text-primary hover:underline">{t("finance.navBills")}</Link>} />}
         <FinanceMetric icon={<CircleCheck />} label={t("dashboard.activeSubscriptions")} value={String(stats.activeSubscriptions.length)} />
         <FinanceMetric icon={<CalendarClock />} label={t("dashboard.upcomingRenewals")} value={String(upcomingCount)} />
         <FinanceMetric icon={<FlaskConical />} label={t("dashboard.trials")} value={String(stats.trialCount)} />
@@ -93,7 +93,7 @@ export function SubscriptionWorkspace({ onCategorySelect }: { onCategorySelect: 
                 </RechartsFrame>
                 <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1 px-12 text-center">
                   <span className="text-xs text-muted-foreground">{t("finance.estimatedMonthlyCost")}</span>
-                  <span className="max-w-full break-words text-lg font-semibold text-foreground tabular-nums">{formatCurrency(total, "CNY")}</span>
+                  <span className="max-w-full wrap-break-word text-lg font-semibold text-foreground tabular-nums">{formatCurrency(total, "CNY")}</span>
                 </div>
               </div>
               <div className="max-h-80 min-w-0 flex-1 basis-60 space-y-3 overflow-y-auto p-1">

@@ -28,6 +28,8 @@ vi.mock("@/hooks/use-settings", () => ({
   }),
 }));
 
+vi.mock("@/hooks/use-exchange-rates", () => ({ useExchangeRates: () => ({ convert: (amount: number) => amount }) }));
+
 vi.mock("@/components/logo-picker", () => ({
   LogoPicker: () => null,
 }));

@@ -1,3 +1,5 @@
+import { useCashflow } from "@/components/cashflow-context";
+import { SubscriptionOptionalFields } from "@/components/subscription-optional-fields";
 import { memo, useCallback } from "react";
 import { FormField, FormFieldRow } from "@/components/ui/form-field";
 import { FieldError } from "@/components/ui/field-error";
@@ -67,6 +69,7 @@ function disableCollectionReminder(costSharing: CostSharing | undefined): CostSh
 
 export const SubscriptionFormFields = memo(function SubscriptionFormFields({
   idPrefix,
+  compact = false,
   config,
   formData,
   setFormData,
@@ -82,6 +85,7 @@ export const SubscriptionFormFields = memo(function SubscriptionFormFields({
   onNestedDialogOpenChange,
 }: SubscriptionFormFieldsProps) {
   const { t, locale, label } = useI18n();
+  const cashflow = useCashflow();
 
   const update = useCallback(<K extends keyof SubscriptionFormState>(key: K, value: SubscriptionFormState[K]) => {
     setFormData((prev) => {
@@ -186,15 +190,6 @@ export const SubscriptionFormFields = memo(function SubscriptionFormFields({
         )}
       </FormField>
 
-      {showLogoField ? (
-        <LogoPicker
-          value={formData.logo}
-          onChange={(logo) => update("logo", logo)}
-          onUploadStatusChange={onLogoUploadStatusChange}
-          serviceName={formData.name}
-          website={formData.website}
-        />
-      ) : null}
 
       <FormFieldRow
         alignAt="sm"
@@ -256,41 +251,6 @@ export const SubscriptionFormFields = memo(function SubscriptionFormFields({
         </FormField>
       </FormFieldRow>
 
-      <FormFieldRow alignAt="sm" rowClassName="sm:grid-cols-2">
-        <FormField id={id("status")} label={t("subscription.field.status")}>
-          {({ id: fieldId }) => (
-            <Select value={formData.status} onValueChange={(value) => update("status", value as SubscriptionStatus)}>
-              <SelectTrigger id={fieldId} className="border-border bg-secondary" tooltipContent={statusLabel ? label(statusLabel) : formData.status}>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {config.statuses.map((status) => (
-                  <SelectItem key={status.id} value={status.value}>
-                    {label(status.labels)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-        </FormField>
-
-        <FormField id={categoryId} label={t("subscription.field.category")}>
-          {({ id: fieldId }) => (
-            <Select value={formData.category} onValueChange={(value) => update("category", value)}>
-              <SelectTrigger id={fieldId} className="border-border bg-secondary" tooltipContent={categoryLabel ? label(categoryLabel) : formData.category}>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {config.categories.map((category) => (
-                  <SelectItem key={category.id} value={category.value}>
-                    {label(category.labels)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-        </FormField>
-      </FormFieldRow>
 
       <FormFieldRow
         alignAt="sm"
@@ -414,21 +374,7 @@ export const SubscriptionFormFields = memo(function SubscriptionFormFields({
               </div>
             )}
           </FormField>
-        ) : (
-          <FormField id={id("paymentMethod")} label={t("subscription.field.paymentMethod")}>
-            {({ id: fieldId }) => (
-              <SubscriptionPaymentMethodSelect
-                id={fieldId}
-                value={formData.paymentMethod}
-                methods={config.paymentMethods}
-                labelFor={label}
-                placeholder={t("subscription.placeholder.paymentMethod")}
-                tooltipContent={paymentMethodLabel ? label(paymentMethodLabel) : undefined}
-                onValueChange={(value) => update("paymentMethod", value)}
-              />
-            )}
-          </FormField>
-        )}
+        ) : null}
       </FormFieldRow>
 
       {formData.billingCycle === "one-time" && formData.oneTimeMode === "term" ? (
@@ -478,40 +424,26 @@ export const SubscriptionFormFields = memo(function SubscriptionFormFields({
         </FormField>
       ) : null}
 
-      {(formData.billingCycle === "custom" || formData.billingCycle === "one-time") && (
-        <div className="grid gap-2">
-          <Label htmlFor={id("paymentMethod")}>{t("subscription.field.paymentMethod")}</Label>
-          <SubscriptionPaymentMethodSelect
-            id={id("paymentMethod")}
-            value={formData.paymentMethod}
-            methods={config.paymentMethods}
-            labelFor={label}
-            placeholder={t("subscription.placeholder.paymentMethod")}
-            tooltipContent={paymentMethodLabel ? label(paymentMethodLabel) : undefined}
-            onValueChange={(value) => update("paymentMethod", value)}
-          />
-        </div>
-      )}
+      <SubscriptionFormDateFields id={id} formData={formData} update={update} errors={errors} />
 
       {formData.billingCycle !== "one-time" ? (
         <div className="flex items-center justify-between gap-4 rounded-lg border border-border bg-secondary/30 p-3">
           <div className="min-w-0">
             <Label htmlFor={id("autoRenew")} className="cursor-pointer text-sm font-medium">
-              {t("subscription.autoRenew")}
+              {t(cashflow?.enabled ? "subscription.providerAutoRenew" : "subscription.autoRenew")}
             </Label>
-            <p className="mt-1 text-xs leading-5 text-muted-foreground">{t("subscription.autoRenewHelp")}</p>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">{t(cashflow?.enabled ? "subscription.providerAutoRenewHelp" : "subscription.autoRenewHelp")}</p>
           </div>
           <Switch
             id={id("autoRenew")}
             checked={formData.autoRenew}
             onCheckedChange={(checked) => update("autoRenew", checked)}
-            aria-label={t("subscription.autoRenew")}
+            aria-label={t(cashflow?.enabled ? "subscription.providerAutoRenew" : "subscription.autoRenew")}
           />
         </div>
       ) : null}
 
-      <SubscriptionFormDateFields id={id} formData={formData} update={update} errors={errors} />
-
+      <SubscriptionOptionalFields compact={compact} summary={t("subscription.reminderOptions")} hasError={Boolean(errors.reminderDays)}>
       {isOneTimeBuyout ? (
         <div className="flex items-center justify-between gap-4 rounded-lg border border-border bg-secondary/30 p-3">
           <div className="min-w-0">
@@ -679,6 +611,67 @@ export const SubscriptionFormFields = memo(function SubscriptionFormFields({
         </div>
       )}
 
+      </SubscriptionOptionalFields>
+      <SubscriptionOptionalFields compact={compact} summary={t("subscription.optionalDetails")} hasError={Boolean(errors.website || errors.tags || errors.costSharing)}>
+      <FormFieldRow alignAt="sm" rowClassName="sm:grid-cols-2">
+        <FormField id={id("status")} label={t("subscription.field.status")}>
+          {({ id: fieldId }) => (
+            <Select value={formData.status} onValueChange={(value) => update("status", value as SubscriptionStatus)}>
+              <SelectTrigger id={fieldId} className="border-border bg-secondary" tooltipContent={statusLabel ? label(statusLabel) : formData.status}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {config.statuses.map((status) => (
+                  <SelectItem key={status.id} value={status.value}>
+                    {label(status.labels)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        </FormField>
+
+        <FormField id={categoryId} label={t("subscription.field.category")}>
+          {({ id: fieldId }) => (
+            <Select value={formData.category} onValueChange={(value) => update("category", value)}>
+              <SelectTrigger id={fieldId} className="border-border bg-secondary" tooltipContent={categoryLabel ? label(categoryLabel) : formData.category}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {config.categories.map((category) => (
+                  <SelectItem key={category.id} value={category.value}>
+                    {label(category.labels)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        </FormField>
+      </FormFieldRow>
+
+          <FormField id={id("paymentMethod")} label={t("subscription.field.paymentMethod")}>
+            {({ id: fieldId }) => (
+              <SubscriptionPaymentMethodSelect
+                id={fieldId}
+                value={formData.paymentMethod}
+                methods={config.paymentMethods}
+                labelFor={label}
+                placeholder={t("subscription.placeholder.paymentMethod")}
+                tooltipContent={paymentMethodLabel ? label(paymentMethodLabel) : undefined}
+                onValueChange={(value) => update("paymentMethod", value)}
+              />
+            )}
+          </FormField>
+      {showLogoField ? (
+        <LogoPicker
+          value={formData.logo}
+          onChange={(logo) => update("logo", logo)}
+          onUploadStatusChange={onLogoUploadStatusChange}
+          serviceName={formData.name}
+          website={formData.website}
+        />
+      ) : null}
+
       <CostSharingFields
         id={id}
         formData={formData}
@@ -743,6 +736,7 @@ export const SubscriptionFormFields = memo(function SubscriptionFormFields({
           onClearError={() => onClearFieldError?.("tags")}
         />
       </div>
+      </SubscriptionOptionalFields>
     </>
   );
 });

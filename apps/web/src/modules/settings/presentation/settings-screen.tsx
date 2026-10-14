@@ -1,3 +1,5 @@
+import { useLocation } from "react-router";
+import "./settings-scope.css";
 import { useMemo, useState } from "react";
 import { Palette } from "lucide-react";
 import { BackToTopFloatButton } from "@/components/back-to-top-float-button";
@@ -43,6 +45,8 @@ import {
 } from "./settings-layout";
 import { CheckboxSettingRow, LoadingButtonContent } from "./settings-shared-controls";
 
+const systemSectionIds = new Set(["settings-access-security", "settings-icon-sources", "settings-uploaded-icons", "settings-ai-recognition", "settings-public-status", "settings-public-api"]);
+
 /** 设置页同步层保留首屏区块、目录和统一保存状态；高级区块进入页面即并行装载。 */
 export function SettingsScreen() {
   const { t, previewLocalePreference } = useI18n();
@@ -82,10 +86,12 @@ export function SettingsScreen() {
     isUpdatingPassword,
     updatePassword,
   } = password;
+  const location = useLocation();
+  const systemScope = systemSectionIds.has(location.hash.slice(1));
   const [mobileSectionNavOpen, setMobileSectionNavOpen] = useState(false);
   const settingsSections = useMemo(
-    () => createSettingsSections({ canManageAccessSecurity: authSecurity.canManage }),
-    [authSecurity.canManage],
+    () => createSettingsSections({ canManageAccessSecurity: authSecurity.canManage }).filter((section) => systemSectionIds.has(section.id) === systemScope),
+    [authSecurity.canManage, systemScope],
   );
   const {
     activeSectionId,
@@ -109,7 +115,11 @@ export function SettingsScreen() {
       <Header />
 
       <main className={cn("flex-1", hasUnsavedChanges && "h5-bottom-bar-space")} data-testid="settings-main">
-        <div className="app-main mx-auto max-w-7xl">
+        <div className="app-main mx-auto max-w-7xl" data-settings-scope={systemScope ? "system" : "personal"}>
+          <div role="group" aria-label={t("settings.scopeLabel")} className="mb-6 flex flex-wrap gap-2">
+            <Button variant={systemScope ? "outline" : "default"} aria-pressed={!systemScope} onClick={() => handleSectionClick("settings-account")}>{t("settings.personalScope")}</Button>
+            <Button variant={systemScope ? "default" : "outline"} aria-pressed={systemScope} onClick={() => handleSectionClick(authSecurity.canManage ? "settings-access-security" : "settings-icon-sources")}>{t("settings.systemScope")}</Button>
+          </div>
           <div className={settingsLayout.pageGrid} data-testid="settings-page-layout">
             <aside className="hidden lg:block" data-testid="settings-section-nav-aside">
               <DesktopSettingsSectionNav

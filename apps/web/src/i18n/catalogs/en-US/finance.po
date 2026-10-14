@@ -1140,3 +1140,79 @@ msgstr "Historical refunds without an original expense"
 #. js-lingui-explicit-id
 msgid "finance.refundLimitHint"
 msgstr "Partial refunds are supported; total refunds cannot exceed the original expense."
+
+#. js-lingui-explicit-id
+msgid "finance.confirmAndRecord"
+msgstr "Confirm and record payment"
+
+#. js-lingui-explicit-id
+msgid "finance.linkAndComplete"
+msgstr "Link and complete this payment"
+
+#. js-lingui-explicit-id
+msgid "finance.entrySaved"
+msgstr "Saved to bills for {date}"
+
+#. js-lingui-explicit-id
+msgid "finance.savedOutsideMonth"
+msgstr "This entry belongs to another month. Open it directly using View entry."
+
+#. js-lingui-explicit-id
+msgid "finance.viewEntry"
+msgstr "View entry"
+
+#. js-lingui-explicit-id
+msgid "finance.paymentCompleted"
+msgstr "{name} · Payment for {date} completed"
+
+#. js-lingui-explicit-id
+msgid "finance.periodSkipped"
+msgstr "{name} · Payment for {date} skipped"
+
+#. js-lingui-explicit-id
+msgid "finance.nextPaymentOn"
+msgstr "Next payment due: {date}"
+
+#. js-lingui-explicit-id
+msgid "finance.planCompleted"
+msgstr "Plan completed. No further payments are due."
+
+#. js-lingui-explicit-id
+msgid "finance.paymentRecorded"
+msgstr "The result is saved. View it in payment plans."
+
+#. js-lingui-explicit-id
+msgid "finance.viewHistory"
+msgstr "View related bills"
+
+#. js-lingui-explicit-id
+msgid "finance.allDates"
+msgstr "All dates"
+
+#. js-lingui-explicit-id
+msgid "finance.filters"
+msgstr "Filters"
+
+#. js-lingui-explicit-id
+msgid "finance.clearFilters"
+msgstr "Clear filters"
+
+#. js-lingui-explicit-id
+msgid "finance.selectedEntry"
+msgstr "Viewing this entry"
+
+#. js-lingui-explicit-id
+msgid "finance.entryActions"
+msgstr "Entry actions"
+
+#. js-lingui-explicit-id
+msgid "finance.welcomeTitle"
+msgstr "Start with one entry to understand your spending"
+
+#. js-lingui-explicit-id
+msgid "finance.welcomeHelp"
+msgstr "Record everyday expenses directly. Create plans for subscriptions and rent, then confirm payments when paid. Your overview shows recorded spending and upcoming payments."
+
+#. js-lingui-explicit-id
+msgid "finance.firstEntry"
+msgstr "Record first entry"

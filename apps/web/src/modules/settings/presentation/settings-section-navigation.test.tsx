@@ -46,7 +46,8 @@ describe("SettingsScreen section navigation", () => {
     window.history.replaceState(null, "", "/");
   });
 
-  it("renders section navigation links that target every settings section", () => {
+  it("separates everyday and advanced navigation while keeping sections mounted", async () => {
+    const user = userEvent.setup();
     const { container } = renderSettingsScreen();
     const sections = [
       ["settings-account", "账户"],
@@ -81,14 +82,14 @@ describe("SettingsScreen section navigation", () => {
     expect(screen.queryByTestId("settings-section-content-scroll")).not.toBeInTheDocument();
     const content = screen.getByTestId("settings-section-content");
     expect(content).not.toHaveClass("lg:overflow-y-auto");
-    const headings = within(content).getAllByRole("heading", { name: "系统配置" });
+    const headings = within(content).getAllByRole("heading", { name: "设置" });
     expect(headings).toHaveLength(2);
     const [mobileHeading, desktopHeading] = headings;
     expect(mobileHeading).toBeDefined();
     expect(desktopHeading).toBeDefined();
     expect(mobileHeading?.closest("[data-testid='settings-mobile-page-header']")).not.toBeNull();
     expect(desktopHeading?.closest(".hidden.lg\\:block")).not.toBeNull();
-    const subtitles = within(content).getAllByText("管理您的账户、显示和通知设置");
+    const subtitles = within(content).getAllByText("管理日常偏好；系统能力与外部服务位于「高级与集成」。");
     expect(subtitles).toHaveLength(2);
     const [mobileSubtitle, desktopSubtitle] = subtitles;
     expect(mobileSubtitle).toBeDefined();
@@ -117,25 +118,20 @@ describe("SettingsScreen section navigation", () => {
     expect(mobileTrigger).toHaveClass("h-10", "w-10", "shrink-0", "rounded-lg", "border", "border-border", "bg-card/80");
     expect(mobileTrigger).not.toHaveTextContent("目录");
     expect(mobileTrigger).not.toHaveTextContent("时区");
-    expect(within(mobileHeader).getByTestId("settings-mobile-page-subtitle")).toHaveTextContent("管理您的账户、显示和通知设置");
+    expect(within(mobileHeader).getByTestId("settings-mobile-page-subtitle")).toHaveTextContent("管理日常偏好；系统能力与外部服务位于「高级与集成」。");
     const sectionNav = within(desktopNav);
 
-    sections.forEach(([id, label]) => {
-      expect(container.querySelector(`section#${id}`)).toHaveClass(
-        "min-w-0",
-        "w-full",
-        "rounded-xl",
-        "border",
-        "bg-card",
-        "p-4",
-        "sm:p-6",
-        "scroll-mt-(--settings-section-scroll-offset)",
-      );
-      expect(container.querySelector(`section#${id}`)).not.toHaveClass("lg:scroll-mt-24");
-      const links = sectionNav.getAllByRole("link", { name: label });
-      expect(links).toHaveLength(1);
-      links.forEach((link) => expect(link).toHaveAttribute("href", `#${id}`));
-    });
+    const advancedIds = new Set(["settings-access-security", "settings-icon-sources", "settings-uploaded-icons", "settings-ai-recognition", "settings-public-status", "settings-public-api"]);
+    for (const [id, label] of sections) {
+      expect(container.querySelector(`section#${id}`)).not.toBeNull();
+      if (advancedIds.has(id)) expect(sectionNav.queryByRole("link", { name: label })).not.toBeInTheDocument();
+      else expect(sectionNav.getByRole("link", { name: label })).toHaveAttribute("href", `#${id}`);
+    }
+    await user.click(screen.getByRole("button", { name: "高级与集成" }));
+    for (const [id, label] of sections) {
+      if (advancedIds.has(id)) expect(sectionNav.getByRole("link", { name: label })).toHaveAttribute("href", `#${id}`);
+      else expect(sectionNav.queryByRole("link", { name: label })).not.toBeInTheDocument();
+    }
     expect(SETTINGS_SECTION_IDS.map((id) => container.querySelector(`section#${id}`)?.id)).toEqual([...SETTINGS_SECTION_IDS]);
   });
 
@@ -177,6 +173,7 @@ describe("SettingsScreen section navigation", () => {
   it("scrolls to the access security section from the settings directory", async () => {
     const user = userEvent.setup();
     renderSettingsScreen();
+    await user.click(screen.getByRole("button", { name: "高级与集成" }));
 
     const nav = screen.getByTestId("settings-section-nav-desktop");
     const accessSecurityLink = within(nav).getByRole("link", { name: "访问安全" });
@@ -259,9 +256,9 @@ describe("SettingsScreen section navigation", () => {
     expect(within(desktopNav).getByRole("link", { name: "通知" })).toHaveAttribute("aria-current", "location");
   });
 
-  it("keeps icon sources active when the adjacent data configuration section is also visible", async () => {
+  it("restores the advanced scope from a deep link and ignores personal sections", async () => {
     const user = userEvent.setup();
-    renderSettingsScreen();
+    renderSettingsScreen(["/settings#settings-icon-sources"]);
 
     const root = setSectionAnchorGeometry("settings-icon-sources");
     const desktopNav = screen.getByTestId("settings-section-nav-desktop");
@@ -277,7 +274,7 @@ describe("SettingsScreen section navigation", () => {
     await waitFor(() => {
       expect(within(desktopNav).getByRole("link", { name: "图标来源" })).toHaveAttribute("aria-current", "location");
     });
-    expect(within(desktopNav).getByRole("link", { name: "数据配置" })).not.toHaveAttribute("aria-current");
+    expect(within(desktopNav).queryByRole("link", { name: "数据配置" })).not.toBeInTheDocument();
   });
 
   it("hands active state back to root scroll when the user interrupts a menu scroll", async () => {

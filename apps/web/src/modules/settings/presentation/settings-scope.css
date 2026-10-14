@@ -1,0 +1,18 @@
+/* Keep sections mounted: switching scopes preserves unsaved form values. */
+[data-settings-scope="personal"] #settings-access-security,
+[data-settings-scope="personal"] #settings-icon-sources,
+[data-settings-scope="personal"] #settings-uploaded-icons,
+[data-settings-scope="personal"] #settings-ai-recognition,
+[data-settings-scope="personal"] #settings-public-status,
+[data-settings-scope="personal"] #settings-public-api,
+[data-settings-scope="system"] #settings-account,
+[data-settings-scope="system"] #settings-appearance,
+[data-settings-scope="system"] #settings-display,
+[data-settings-scope="system"] #settings-data-config,
+[data-settings-scope="system"] #settings-cloud-backup,
+[data-settings-scope="system"] #settings-exchange,
+[data-settings-scope="system"] #settings-calendar-feed,
+[data-settings-scope="system"] #settings-timezone,
+[data-settings-scope="system"] #settings-notifications {
+  display: none;
+}

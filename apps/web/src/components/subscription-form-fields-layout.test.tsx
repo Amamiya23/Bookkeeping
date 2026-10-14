@@ -27,8 +27,10 @@ beforeAll(() => {
 function Harness({
   errors,
   formOverrides = {},
+  compact = false,
 }: {
   errors: SubscriptionFormErrors;
+  compact?: boolean;
   formOverrides?: Partial<SubscriptionFormState>;
 }) {
   const [formErrors, setFormErrors] = useState(errors);
@@ -47,6 +49,7 @@ function Harness({
   return (
     <TooltipProvider delayDuration={0}>
       <SubscriptionFormFields
+        compact={compact}
         idPrefix=""
         config={config}
         formData={formData}
@@ -70,6 +73,14 @@ function Harness({
 }
 
 describe("SubscriptionFormFields layout", () => {
+  it("opens optional fields when validation requires a correction", () => {
+    render(<Harness compact errors={{ website: "请填写有效网址" }} formOverrides={{ website: "bad-url" }} />);
+    const website = screen.getByRole("textbox", { name: /网站/ });
+    expect(website.closest("details")).toHaveAttribute("open");
+    expect(website).toHaveValue("bad-url");
+    expect(screen.getByText("请填写有效网址")).toBeVisible();
+  });
+
   it("renders price and currency errors at row level instead of inside one column", () => {
     render(<Harness errors={{ price: "请输入价格" }} />);
 

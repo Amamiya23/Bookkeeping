@@ -381,7 +381,7 @@ msgstr "Код аутентификатора"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/auth.ts:39
 msgid "auth.heroTitle"
-msgstr "Легко управляйте всеми подписками"
+msgstr "Следите за расходами и планируйте продления."
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/auth.ts:70
@@ -391,7 +391,7 @@ msgstr "Введите почту, указанную при входе, и мы
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/auth.ts:40
 msgid "auth.heroTrackCosts"
-msgstr "Отслеживайте расходы по всем сервисам подписок"
+msgstr "Управляйте расходами и подписками в одном месте"
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/auth.ts:61

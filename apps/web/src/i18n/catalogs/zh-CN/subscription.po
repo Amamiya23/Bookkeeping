@@ -1141,7 +1141,7 @@ msgstr "基础与账单信息"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/subscription.ts:63
 msgid "subscription.dialogCreateDescription"
-msgstr "填写订阅名称、价格、扣费周期、日期、Logo 和标签等信息后创建订阅。"
+msgstr "先填写名称、价格、扣费周期和日期；提醒、分类及其他信息可稍后补充。"
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/subscription.ts:106
@@ -3522,3 +3522,19 @@ msgstr "默认提醒：提前 {days} 天"
 #: src/i18n/descriptors/subscription.ts:287
 msgid "subscriptions.sort.default"
 msgstr "默认顺序"
+
+#. js-lingui-explicit-id
+msgid "subscription.providerAutoRenew"
+msgstr "服务商自动续费"
+
+#. js-lingui-explicit-id
+msgid "subscription.providerAutoRenewHelp"
+msgstr "仅记录服务商是否自动扣款。实际付款后仍需确认付款，才会入账并推进下次日期；不会自动生成账单。"
+
+#. js-lingui-explicit-id
+msgid "subscription.reminderOptions"
+msgstr "提醒设置（可选）"
+
+#. js-lingui-explicit-id
+msgid "subscription.optionalDetails"
+msgstr "更多信息：分类、支付方式、图标等（可选）"

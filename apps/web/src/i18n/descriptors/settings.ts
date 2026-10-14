@@ -1,7 +1,12 @@
 import { msg } from "@lingui/core/macro";
 export const messages = [
-  msg({ id: "settings.title", message: "系统配置" }),
-  msg({ id: "settings.subtitle", message: "管理您的账户、显示和通知设置" }),
+  msg({ id: "settings.scopeLabel", message: "设置分组" }),
+  msg({ id: "settings.personalScope", message: "常用设置" }),
+  msg({ id: "settings.systemScope", message: "高级与集成" }),
+  msg({ id: "settings.schedulerDetails", message: "高级：提醒调度说明" }),
+
+  msg({ id: "settings.title", message: "设置" }),
+  msg({ id: "settings.subtitle", message: "管理日常偏好；系统能力与外部服务位于「高级与集成」。" }),
   msg({ id: "settings.managerLoadFailed", message: "加载失败" }),
   msg({ id: "settings.managerRefreshFailed", message: "未更新" }),
   msg({ id: "settings.managerRetry", message: "重试" }),

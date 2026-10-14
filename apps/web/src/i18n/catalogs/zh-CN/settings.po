@@ -3524,7 +3524,7 @@ msgstr "管理员账户"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/settings.ts:4
 msgid "settings.subtitle"
-msgstr "管理您的账户、显示和通知设置"
+msgstr "管理日常偏好；系统能力与外部服务位于「高级与集成」。"
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/settings.ts:34
@@ -3554,7 +3554,7 @@ msgstr "管理通行密钥"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/settings.ts:3
 msgid "settings.title"
-msgstr "系统配置"
+msgstr "设置"
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/settings.ts:594
@@ -4260,3 +4260,19 @@ msgstr "默认等价"
 #: src/i18n/descriptors/settings.ts:513
 msgid "settings.subscriptionPriceReferenceDisabledHelp"
 msgstr "默认隐藏；开启后可选择跟随统计货币或固定参考货币。"
+
+#. js-lingui-explicit-id
+msgid "settings.scopeLabel"
+msgstr "设置分组"
+
+#. js-lingui-explicit-id
+msgid "settings.personalScope"
+msgstr "常用设置"
+
+#. js-lingui-explicit-id
+msgid "settings.systemScope"
+msgstr "高级与集成"
+
+#. js-lingui-explicit-id
+msgid "settings.schedulerDetails"
+msgstr "高级：提醒调度说明"

@@ -1,3 +1,4 @@
+import { useCashflow } from "@/components/cashflow-context";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowDownLeft, ArrowUpRight, CalendarClock, ChevronRight, Repeat, TrendingDown, TrendingUp, Wallet } from "lucide-react";
@@ -23,6 +24,7 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { formatFinanceAmount } from "@/lib/finance-format";
 
 export function FinanceDashboard() {
+  const cashflow = useCashflow();
   const capabilities = useFinanceCapabilities();
   const user = getProductCurrentUserId();
   const { t, locale, formatNumber, formatDateOnly } = useI18n();
@@ -41,6 +43,7 @@ export function FinanceDashboard() {
   const previous = useQuery({ queryKey: ["finance", user, "summary", previousFrom, previousTo, ""], queryFn: () => financeService.summary(previousFrom, previousTo), enabled: enabled && Boolean(ledger.data) });
   // 总览只看本月最新几笔；完整筛选和分页留给账单页。
   const recent = useQuery({ queryKey: ["finance", user, "transactions", "recent", from, to], queryFn: () => financeService.transactions({ from, to, status: "posted", limit: "6" }), enabled: enabled && Boolean(ledger.data) });
+  const history = useQuery({ queryKey: ["finance", user, "transactions", "first-use"], queryFn: () => financeService.transactions({ limit: "1" }), enabled: enabled && Boolean(ledger.data) });
   const catalog = useFinanceCategoryCatalog(ledger.data?.categories ?? []);
   const plans = useRecurringPlans(from, end);
   const settings = useSettings();
@@ -92,6 +95,15 @@ export function FinanceDashboard() {
     {pending && <div role="status" className="grid gap-4 lg:grid-cols-[1.25fr_1fr]"><span className="sr-only">{t("common.loading")}</span><div className="h-56 animate-pulse rounded-2xl bg-muted" /><div className="h-56 animate-pulse rounded-2xl bg-muted" /></div>}
     {failure && <div role="alert" className="space-y-3 rounded-2xl border border-destructive/30 bg-destructive/5 p-6"><p>{t("error.generic")}</p><Button variant="outline" onClick={() => { void capabilities.refetch(); if (enabled) { void ledger.refetch(); void summary.refetch(); } }}>{t("finance.retry")}</Button></div>}
     {!enabled && !capabilities.isPending && <FinanceEmpty action={<Button asChild><Link href="/subscriptions">{t("finance.manageSubscriptions")}</Link></Button>}>{t("finance.unsupported")}</FinanceEmpty>}
+    {enabled && history.data?.items.length === 0 && <section className="space-y-4 rounded-2xl border border-primary/20 bg-primary/5 p-5 sm:p-8">
+      <h2 className="text-xl font-semibold">{t("finance.welcomeTitle")}</h2>
+      <p className="max-w-2xl text-sm leading-6 text-muted-foreground">{t("finance.welcomeHelp")}</p>
+      <div className="flex flex-wrap gap-3">
+        <Button onClick={() => cashflow?.add()}>{t("finance.firstEntry")}</Button>
+        <Button asChild variant="outline"><Link href="/subscriptions">{t("finance.manageSubscriptions")}</Link></Button>
+        <Button asChild variant="ghost"><Link href="/transactions?view=plans&action=new">{t("finance.newPlan")}</Link></Button>
+      </div>
+    </section>}
     {enabled && totals && <>
       <section className="grid gap-4 lg:grid-cols-[1.25fr_1fr]" aria-label={t("finance.overview")}>
         <div className="relative flex min-w-0 flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-card p-6 shadow-card sm:p-8">

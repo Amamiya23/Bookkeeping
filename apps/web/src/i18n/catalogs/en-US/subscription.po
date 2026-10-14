@@ -1141,7 +1141,7 @@ msgstr "Basic and billing information"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/subscription.ts:63
 msgid "subscription.dialogCreateDescription"
-msgstr "Create a subscription after filling in its name, price, cycle, dates, logo, and tags."
+msgstr "Start with a name, price, billing cycle and date. Reminders, category and other details can be added later."
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/subscription.ts:106
@@ -3522,3 +3522,19 @@ msgstr "Default reminder: {days} days before"
 #: src/i18n/descriptors/subscription.ts:287
 msgid "subscriptions.sort.default"
 msgstr "Default order"
+
+#. js-lingui-explicit-id
+msgid "subscription.providerAutoRenew"
+msgstr "Provider auto-renewal"
+
+#. js-lingui-explicit-id
+msgid "subscription.providerAutoRenewHelp"
+msgstr "Records whether the provider charges automatically. Confirm each actual payment to record the expense and advance the next date. No bills are created automatically."
+
+#. js-lingui-explicit-id
+msgid "subscription.reminderOptions"
+msgstr "Reminder settings (optional)"
+
+#. js-lingui-explicit-id
+msgid "subscription.optionalDetails"
+msgstr "More details: category, payment method, icon (optional)"

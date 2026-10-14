@@ -3,7 +3,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { FinanceDashboard } from "./finance-dashboard";
 
-const mocks = vi.hoisted(() => ({ enabled: true, empty: false, fail: false, summary: vi.fn(), plans: vi.fn() }));
+const mocks = vi.hoisted(() => ({ enabled: true, empty: false, fail: false, summary: vi.fn(), plans: vi.fn(), transactions: vi.fn(), add: vi.fn() }));
+vi.mock("@/components/cashflow-context", () => ({ useCashflow: () => ({ enabled: true, add: mocks.add }) }));
 vi.mock("@/hooks/use-finance", () => ({ useFinanceCapabilities: () => ({ data: { ledger: mocks.enabled }, isPending: false, refetch: vi.fn() }) }));
 vi.mock("@/hooks/use-zoned-today", () => ({ useZonedToday: () => "2026-10-12" }));
 vi.mock("@/hooks/use-settings", () => ({ useSettings: () => ({ data: {} }) }));
@@ -15,13 +16,15 @@ vi.mock("@/contexts/CustomConfigContext", async () => {
 vi.mock("@/hooks/use-exchange-rates", () => ({ useExchangeRates: () => ({ loading: false, sourceDate: "2026-10-12", rates: { USD: 1, CNY: 7.34 }, convert: (value: string) => Number(value) * 7.34 }) }));
 vi.mock("@/services/product-session", () => ({ getProductCurrentUserId: () => "test-user" }));
 vi.mock("@/components/router-link", () => ({ default: ({ href, children }: { href: string; children: React.ReactNode }) => <a href={href}>{children}</a> }));
-vi.mock("@/services/finance-service", () => ({ financeService: { ledger: async () => ({ baseCurrency: "CNY", timeZone: "Asia/Shanghai", categories: [] }), summary: mocks.summary, plans: mocks.plans, transactions: async () => ({ items: [], nextCursor: "" }) } }));
+vi.mock("@/services/finance-service", () => ({ financeService: { ledger: async () => ({ baseCurrency: "CNY", timeZone: "Asia/Shanghai", categories: [] }), summary: mocks.summary, plans: mocks.plans, transactions: mocks.transactions } }));
 function renderOverview() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(<QueryClientProvider client={client}><FinanceDashboard /></QueryClientProvider>);
 }
 describe("unified cash-flow overview", () => {
   beforeEach(() => {
+    mocks.transactions.mockReset().mockImplementation(async (query: Record<string, string>) => ({ items: query["limit"] === "1" ? [{ id: "historical-entry" }] : [], nextCursor: "" }));
+    mocks.add.mockReset();
     mocks.enabled = true; mocks.empty = false; mocks.fail = false;
     mocks.plans.mockReset().mockResolvedValue({ items: [{ id: "plan", name: "Tool", amount: "20", currency: "USD", type: "subscription", nextDue: "2026-10-15", status: "active", category: "builtin:work" }], schedule: [{ planId: "plan", dueOn: "2026-10-15", status: "scheduled" }], payments: [], today: "2026-10-12" });
     mocks.summary.mockReset().mockImplementation(async (from: string, to: string) => {
@@ -64,6 +67,17 @@ describe("unified cash-flow overview", () => {
   it("handles empty periods and recoverable errors", async () => {
     mocks.empty = true; const view = renderOverview(); expect(await screen.findByText(/这段时间还没有支出/)).toBeInTheDocument(); view.unmount();
     mocks.fail = true; renderOverview(); expect(await screen.findByRole("alert")).toBeInTheDocument(); expect(screen.queryByRole("heading", { name: "支出排行" })).not.toBeInTheDocument();
+  });
+  it("offers a first-entry task only when the whole ledger is empty", async () => {
+    mocks.transactions.mockResolvedValue({ items: [], nextCursor: "" });
+    const view = renderOverview();
+    fireEvent.click(await screen.findByRole("button", { name: "记第一笔" }));
+    expect(mocks.add).toHaveBeenCalledOnce();
+    view.unmount();
+    mocks.transactions.mockImplementation(async (query: Record<string, string>) => ({ items: query["limit"] === "1" ? [{ id: "old-entry" }] : [], nextCursor: "" }));
+    renderOverview();
+    await screen.findByRole("heading", { name: "最近账单" });
+    expect(screen.queryByRole("button", { name: "记第一笔" })).not.toBeInTheDocument();
   });
   it("links unsupported deployments to subscription management", () => {
     mocks.enabled = false; renderOverview(); expect(screen.getByRole("link", { name: "管理订阅" })).toHaveAttribute("href", "/subscriptions");

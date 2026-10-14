@@ -3524,7 +3524,7 @@ msgstr "Аккаунт администратора"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/settings.ts:4
 msgid "settings.subtitle"
-msgstr "Управление аккаунтом, отображением и уведомлениями"
+msgstr "Повседневные предпочтения находятся здесь, системные функции и внешние сервисы — в разделе «Дополнительно и интеграции»."
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/settings.ts:34
@@ -3554,7 +3554,7 @@ msgstr "Управление ключами доступа"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/settings.ts:3
 msgid "settings.title"
-msgstr "Системные настройки"
+msgstr "Настройки"
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/settings.ts:594
@@ -4260,3 +4260,19 @@ msgstr "Как по умолчанию"
 #: src/i18n/descriptors/settings.ts:513
 msgid "settings.subscriptionPriceReferenceDisabledHelp"
 msgstr "По умолчанию скрыто. Включите, чтобы использовать валюту отчётов или закрепить справочную валюту."
+
+#. js-lingui-explicit-id
+msgid "settings.scopeLabel"
+msgstr "Группы настроек"
+
+#. js-lingui-explicit-id
+msgid "settings.personalScope"
+msgstr "Основные настройки"
+
+#. js-lingui-explicit-id
+msgid "settings.systemScope"
+msgstr "Дополнительно и интеграции"
+
+#. js-lingui-explicit-id
+msgid "settings.schedulerDetails"
+msgstr "Дополнительно: расписание напоминаний"

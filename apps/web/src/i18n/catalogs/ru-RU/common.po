@@ -566,7 +566,7 @@ msgstr "Подписки"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/common.ts:5
 msgid "app.tagline"
-msgstr "Менеджер подписок"
+msgstr "Расходы и подписки"
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/common.ts:55

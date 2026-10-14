@@ -332,7 +332,7 @@ describe("SubscriptionDialog", () => {
     );
 
     const dialog = screen.getByRole("dialog", { name: "添加新订阅" });
-    expect(dialog).toHaveAccessibleDescription(/填写订阅名称/);
+    expect(dialog).toHaveAccessibleDescription(/先填写名称、价格/);
     expect(screen.getByLabelText("服务名称")).toBeInTheDocument();
     const priceInput = screen.getByLabelText("价格");
     expect(priceInput).toHaveAttribute("type", "text");

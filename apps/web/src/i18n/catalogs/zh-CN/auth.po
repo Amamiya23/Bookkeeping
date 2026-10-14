@@ -381,7 +381,7 @@ msgstr "身份验证器验证码"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/auth.ts:39
 msgid "auth.heroTitle"
-msgstr "轻松管理你的所有订阅"
+msgstr "看清支出，安排每次续费"
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/auth.ts:70
@@ -391,7 +391,7 @@ msgstr "输入登录邮箱，我们会发送一次性重置链接。"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/auth.ts:40
 msgid "auth.heroTrackCosts"
-msgstr "追踪所有订阅服务的费用"
+msgstr "集中管理费用与订阅"
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/auth.ts:61

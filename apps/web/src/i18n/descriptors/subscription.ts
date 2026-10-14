@@ -2,6 +2,11 @@
 import { msg } from "@lingui/core/macro";
 
 export const messages = [
+  msg({ id: "subscription.providerAutoRenew", message: "服务商自动续费" }),
+  msg({ id: "subscription.providerAutoRenewHelp", message: "仅记录服务商是否自动扣款。实际付款后仍需确认付款，才会入账并推进下次日期；不会自动生成账单。" }),
+  msg({ id: "subscription.reminderOptions", message: "提醒设置（可选）" }),
+  msg({ id: "subscription.optionalDetails", message: "更多信息：分类、支付方式、图标等（可选）" }),
+
   msg({ id: "subscription.add", message: "添加订阅" }),
   msg({ id: "subscription.addToCalendar", message: "添加到日历" }),
   msg({ id: "subscription.addToCalendarTitle", message: "添加到日历" }),
@@ -60,7 +65,7 @@ export const messages = [
   msg({ id: "subscription.addToCalendar.description.notes", message: "备注：{notes}" }),
   msg({ id: "subscription.dialogCreateTitle", message: "添加新订阅" }),
   msg({ id: "subscription.dialogEditTitle", message: "编辑订阅" }),
-  msg({ id: "subscription.dialogCreateDescription", message: "填写订阅名称、价格、扣费周期、日期、Logo 和标签等信息后创建订阅。" }),
+  msg({ id: "subscription.dialogCreateDescription", message: "先填写名称、价格、扣费周期和日期；提醒、分类及其他信息可稍后补充。" }),
   msg({ id: "subscription.dialogEditDescription", message: "修改订阅名称、价格、扣费周期、日期、Logo 和标签等信息。" }),
   msg({ id: "subscription.dialogCreateSubmit", message: "添加订阅" }),
   msg({ id: "subscription.dialogEditSubmit", message: "保存修改" }),

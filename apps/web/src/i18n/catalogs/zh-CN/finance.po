@@ -1140,3 +1140,79 @@ msgstr "未关联原消费的历史退款"
 #. js-lingui-explicit-id
 msgid "finance.refundLimitHint"
 msgstr "支持部分退款；累计退款不能超过原消费金额。"
+
+#. js-lingui-explicit-id
+msgid "finance.confirmAndRecord"
+msgstr "确认付款并记账"
+
+#. js-lingui-explicit-id
+msgid "finance.linkAndComplete"
+msgstr "关联并完成本期付款"
+
+#. js-lingui-explicit-id
+msgid "finance.entrySaved"
+msgstr "已记入 {date} 的账单"
+
+#. js-lingui-explicit-id
+msgid "finance.savedOutsideMonth"
+msgstr "这笔账属于其他月份，不会出现在本月列表中。可直接查看这笔账单。"
+
+#. js-lingui-explicit-id
+msgid "finance.viewEntry"
+msgstr "查看这笔"
+
+#. js-lingui-explicit-id
+msgid "finance.paymentCompleted"
+msgstr "{name} · {date} 本期付款已完成"
+
+#. js-lingui-explicit-id
+msgid "finance.periodSkipped"
+msgstr "{name} · 已跳过 {date} 本期付款"
+
+#. js-lingui-explicit-id
+msgid "finance.nextPaymentOn"
+msgstr "下次待付款：{date}"
+
+#. js-lingui-explicit-id
+msgid "finance.planCompleted"
+msgstr "计划已完成，没有下一期待付款。"
+
+#. js-lingui-explicit-id
+msgid "finance.paymentRecorded"
+msgstr "处理结果已保存，可在付款计划中查看。"
+
+#. js-lingui-explicit-id
+msgid "finance.viewHistory"
+msgstr "查看相关账单"
+
+#. js-lingui-explicit-id
+msgid "finance.allDates"
+msgstr "全部日期"
+
+#. js-lingui-explicit-id
+msgid "finance.filters"
+msgstr "筛选"
+
+#. js-lingui-explicit-id
+msgid "finance.clearFilters"
+msgstr "清除筛选"
+
+#. js-lingui-explicit-id
+msgid "finance.selectedEntry"
+msgstr "正在查看这笔账单"
+
+#. js-lingui-explicit-id
+msgid "finance.entryActions"
+msgstr "账单操作"
+
+#. js-lingui-explicit-id
+msgid "finance.welcomeTitle"
+msgstr "先记一笔，开始看清支出"
+
+#. js-lingui-explicit-id
+msgid "finance.welcomeHelp"
+msgstr "日常消费直接记账；订阅和房租等周期费用先建计划，实际付款后再确认入账。首页会汇总已记支出和待付款。"
+
+#. js-lingui-explicit-id
+msgid "finance.firstEntry"
+msgstr "记第一笔"

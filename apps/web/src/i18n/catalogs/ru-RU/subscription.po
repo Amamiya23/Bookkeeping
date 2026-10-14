@@ -1141,7 +1141,7 @@ msgstr "Основные сведения и оплата"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/subscription.ts:63
 msgid "subscription.dialogCreateDescription"
-msgstr "Укажите название, цену, период, даты, логотип и теги, чтобы создать подписку."
+msgstr "Сначала укажите название, цену, период оплаты и дату. Напоминания, категорию и другие сведения можно добавить позже."
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/subscription.ts:106
@@ -3522,3 +3522,19 @@ msgstr "Напоминание по умолчанию: за {days, plural, one 
 #: src/i18n/descriptors/subscription.ts:287
 msgid "subscriptions.sort.default"
 msgstr "По умолчанию"
+
+#. js-lingui-explicit-id
+msgid "subscription.providerAutoRenew"
+msgstr "Автопродление у поставщика"
+
+#. js-lingui-explicit-id
+msgid "subscription.providerAutoRenewHelp"
+msgstr "Указывает, списывает ли поставщик оплату автоматически. Подтверждайте фактические платежи, чтобы записать расход и обновить следующую дату. Записи не создаются автоматически."
+
+#. js-lingui-explicit-id
+msgid "subscription.reminderOptions"
+msgstr "Напоминания (необязательно)"
+
+#. js-lingui-explicit-id
+msgid "subscription.optionalDetails"
+msgstr "Подробнее: категория, способ оплаты, значок (необязательно)"

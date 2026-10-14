@@ -381,7 +381,7 @@ msgstr "Authenticator code"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/auth.ts:39
 msgid "auth.heroTitle"
-msgstr "Manage all your subscriptions with ease"
+msgstr "Understand spending. Plan each renewal."
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/auth.ts:70
@@ -391,7 +391,7 @@ msgstr "Enter your login email and we will send a one-time reset link."
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/auth.ts:40
 msgid "auth.heroTrackCosts"
-msgstr "Track costs across every subscription service"
+msgstr "Keep costs and subscriptions in one place"
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/auth.ts:61

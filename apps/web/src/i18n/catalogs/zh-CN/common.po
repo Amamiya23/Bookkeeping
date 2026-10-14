@@ -566,7 +566,7 @@ msgstr "订阅列表"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/common.ts:5
 msgid "app.tagline"
-msgstr "订阅管理助手"
+msgstr "支出与订阅管理"
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/common.ts:55

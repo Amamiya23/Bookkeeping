@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, lazy, Suspense, type ReactNode } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router";
 import { Plus } from "lucide-react";
 import { useFinanceCapabilities, ledgerToday } from "@/hooks/use-finance";
 import { financeService } from "@/services/finance-service";
@@ -19,7 +20,8 @@ export function emptyTransaction(today: string): FinanceTransactionInput {
   return { kind: "expense", amount: "", currency: "CNY", cnyAmount: "", account: "", counterAccount: "", occurredOn: today, category: "", merchant: "", tags: [], notes: "", refundOf: "", externalSource: "", externalId: "", version: 0 };
 }
 export function CashflowProvider({ children }: { children: ReactNode }) {
-  const { t } = useI18n();
+  const { t, formatDateOnly } = useI18n();
+  const navigate = useNavigate();
   const capabilities = useFinanceCapabilities();
   const enabled = capabilities.data?.ledger === true;
   const user = getProductCurrentUserId();
@@ -32,9 +34,17 @@ export function CashflowProvider({ children }: { children: ReactNode }) {
   const refresh = useCallback(async () => {
     await Promise.all([client.invalidateQueries({ queryKey: ["finance", user] }), client.invalidateQueries({ queryKey: ["subscriptions"] })]);
   }, [client, user]);
-  const run = async (action: () => Promise<unknown>, keepOpen = false) => {
+  const run = async (action: () => Promise<() => void>, keepOpen = false) => {
     if (busy) return false; setBusy(true); setError("");
-    try { await action(); if (!keepOpen) setAdding(false); setPlan(null); await refresh(); toast.success(t("finance.saved")); return true; }
+    try {
+      const notify = await action();
+      if (!keepOpen) setAdding(false);
+      setPlan(null);
+      notify();
+      // A refresh failure must not turn a committed payment into a retryable save error.
+      await refresh().catch(() => undefined);
+      return true;
+    }
     catch (cause) { setError(financeErrorMessage(cause, t)); return false; }
     finally { setBusy(false); }
   };
@@ -55,8 +65,14 @@ export function CashflowProvider({ children }: { children: ReactNode }) {
     {children}
     {enabled && <Button className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] left-1/2 z-40 -translate-x-1/2 gap-2 shadow-lg lg:hidden" onClick={() => { setError(""); setAdding(true); }} aria-label={t("finance.add")}><Plus className="size-4" />{t("finance.add")}</Button>}
     <Suspense fallback={<p role="status" className="fixed right-4 bottom-20 z-50 rounded-lg border bg-background p-3 text-sm">{t("common.loading")}</p>}>
-      {adding && ledger.data && <FinanceTransactionDialog allowContinue initial={emptyTransaction(today)} categories={ledger.data.categories} onAddCategory={addCategory} busy={busy} error={error} onClose={() => setAdding(false)} onSave={(input, keepOpen) => run(() => financeService.saveTransaction(input), keepOpen)} />}
-      {plan && ledger.data && <PlanPaymentDialog key={`${plan.id}:${plan.nextDue}:${plan.version}`} plan={plan} today={today} categories={ledger.data.categories} onAddCategory={addCategory} busy={busy} error={error} onClose={() => setPlan(null)} onSettle={(input) => run(() => financeService.settlePlan(plan.id, input))} />}
+      {adding && ledger.data && <FinanceTransactionDialog allowContinue initial={emptyTransaction(today)} categories={ledger.data.categories} onAddCategory={addCategory} busy={busy} error={error} onClose={() => setAdding(false)} onSave={(input, keepOpen) => run(async () => {
+        const { saveEntry } = await import("@/lib/finance-completion-feedback");
+        return saveEntry(input, today, { t, formatDateOnly }, (url) => { setAdding(false); void navigate(url); });
+      }, keepOpen)} />}
+      {plan && ledger.data && <PlanPaymentDialog key={`${plan.id}:${plan.nextDue}:${plan.version}`} plan={plan} today={today} categories={ledger.data.categories} onAddCategory={addCategory} busy={busy} error={error} onClose={() => setPlan(null)} onSettle={(input) => run(async () => {
+        const { completePayment } = await import("@/lib/finance-completion-feedback");
+        return completePayment(plan, input, { t, formatDateOnly }, (url) => { void navigate(url); });
+      })} />}
     </Suspense>
   </CashflowContext.Provider>;
 }

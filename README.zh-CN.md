@@ -20,7 +20,7 @@ Renewlet 是一个兼顾订阅管理的自托管记账平台。日常收支、�
 
 可以用 Docker 单容器运行，也可以部署到 Cloudflare Workers。
 
-本仓库为二开版本，当前版本 **V1.0**（项目版本号 `1.0.0`），后续按本仓库的版本进度发布。部署与版本管理见 [自动构建和 GHCR 部署](docs/docker-ghcr-deploy.zh-CN.md)。
+本仓库为二开版本，当前版本 **V1.1**（项目版本号 `1.1.0`），后续按本仓库的版本进度发布。部署与版本管理见 [自动构建和 GHCR 部署](docs/docker-ghcr-deploy.zh-CN.md)。
 
 ## 在线演示
 
@@ -136,7 +136,7 @@ http://localhost:3000/setup
 正式使用时建议固定版本：
 
 ```bash
-sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="ghcr.io/amamiya23/bookkeeping:1.0.0"#' .env
+sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="ghcr.io/amamiya23/bookkeeping:1.1.0"#' .env
 docker compose pull
 docker compose up -d
 ```
@@ -166,7 +166,7 @@ tar -czf renewlet-backup-$(date +%F).tgz .env docker-compose.yml data
 更新 Docker 镜像：
 
 ```bash
-sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="ghcr.io/amamiya23/bookkeeping:1.0.0"#' .env
+sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="ghcr.io/amamiya23/bookkeeping:1.1.0"#' .env
 docker compose pull
 docker compose up -d
 docker compose logs -f

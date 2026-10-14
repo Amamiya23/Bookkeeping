@@ -566,7 +566,7 @@ msgstr "Subscriptions"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/common.ts:5
 msgid "app.tagline"
-msgstr "Subscription manager"
+msgstr "Spending & subscription management"
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/common.ts:55

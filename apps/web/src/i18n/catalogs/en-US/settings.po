@@ -3524,7 +3524,7 @@ msgstr "Admin account"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/settings.ts:4
 msgid "settings.subtitle"
-msgstr "Manage your account, display, and notification settings"
+msgstr "Manage everyday preferences. System features and external services are under Advanced & integrations."
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/settings.ts:34
@@ -3554,7 +3554,7 @@ msgstr "Manage passkeys"
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/settings.ts:3
 msgid "settings.title"
-msgstr "System settings"
+msgstr "Settings"
 
 #. js-lingui-explicit-id
 #: src/i18n/descriptors/settings.ts:594
@@ -4260,3 +4260,19 @@ msgstr "Default equivalent"
 #: src/i18n/descriptors/settings.ts:513
 msgid "settings.subscriptionPriceReferenceDisabledHelp"
 msgstr "Hidden by default. Turn it on to follow the reporting currency or pin a reference currency."
+
+#. js-lingui-explicit-id
+msgid "settings.scopeLabel"
+msgstr "Settings groups"
+
+#. js-lingui-explicit-id
+msgid "settings.personalScope"
+msgstr "Everyday settings"
+
+#. js-lingui-explicit-id
+msgid "settings.systemScope"
+msgstr "Advanced & integrations"
+
+#. js-lingui-explicit-id
+msgid "settings.schedulerDetails"
+msgstr "Advanced: reminder scheduling"

@@ -16,7 +16,8 @@ import { useFinanceCategoryCatalog } from "@/hooks/use-finance-category-catalog"
 import { FormField } from "@/components/ui/form-field";
 import { FinanceEmpty, FinancePageHeader, FinanceSegmented } from "@/components/finance-ui";
 import { cn } from "@/lib/utils";
-import { Ban, ChevronDown, Download, History, Pencil, Plus, Search, Settings2, Undo2 } from "lucide-react";
+import { Ban, MoreHorizontal, ChevronDown, Download, History, Pencil, Plus, Search, Settings2, Undo2 } from "lucide-react";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { downloadFile } from "@/shared/browser/download-file";
 import { useI18n } from "@/i18n/I18nProvider";
@@ -54,7 +55,7 @@ function FinanceScreen() {
   const [customFrom, setFrom] = useState(""); const [customTo, setTo] = useState("");
   const from = customFrom || params.get("from") || (params.get("planId") && view === "transactions" ? "" : today.slice(0, 7) + "-01"); const to = customTo || params.get("to") || today;
   const [category, setCategory] = useState(params.get("category") || "");
-  const [filters, setFilters] = useState({ kind: "", status: "", merchant: params.get("merchant") || "", tag: "", group: params.get("group") || "", planId: params.get("planId") || "" });
+  const [filters, setFilters] = useState({ id: params.get("id") || "", kind: "", status: params.get("status") || "", merchant: params.get("merchant") || "", tag: "", group: params.get("group") || "", planId: params.get("planId") || "" });
   const transactions = useInfiniteQuery({ queryKey: ["finance", user, "transactions", from, to, category, filters], initialPageParam: "", enabled: enabled && Boolean(ledger.data),
     queryFn: ({ pageParam }) => financeService.transactions({ from, to, category, ...filters, cursor: pageParam }), getNextPageParam: (page) => page.nextCursor || undefined });
   const summary = useQuery({ queryKey: ["finance", user, "summary", from, to, filters.group], queryFn: () => financeService.summary(from, to, filters.group), enabled: enabled && Boolean(ledger.data) && view === "reports" });
@@ -63,6 +64,7 @@ function FinanceScreen() {
   const previousTo = spanDays ? new Date(Date.parse(from) - 86400000).toISOString().slice(0, 10) : "";
   const previousFrom = spanDays ? new Date(Date.parse(from) - spanDays * 86400000).toISOString().slice(0, 10) : "";
   const previousSummary = useQuery({ queryKey: ["finance", user, "summary", previousFrom, previousTo, filters.group], queryFn: () => financeService.summary(previousFrom, previousTo, filters.group), enabled: enabled && Boolean(ledger.data) && view === "reports" && spanDays > 0 });
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [showAudit, setShowAudit] = useState(false);
   const audit = useQuery({ queryKey: ["finance", user, "audit"], queryFn: financeService.audit, enabled: enabled && showAudit });
   const [transactionForm, setTransactionForm] = useState<{ input: FinanceTransactionInput; id?: string } | null>(null);
@@ -100,7 +102,7 @@ function FinanceScreen() {
   };
   const rows = transactions.data?.pages.flatMap((page) => page.items) ?? [];
   const queryError = capabilities.error || ledger.error || (view === "transactions" ? transactions.error : summary.error);
-  const kindOptions = [{ value: "", label: t("finance.allSpending") }, { value: "daily", label: t("finance.dailySpending") }, { value: "recurring", label: t("finance.recurringSpend") }] as const;
+  const kindOptions = [...(filters.group === "subscription" ? [{ value: "subscription", label: t("finance.navSubscriptions") }] : []), { value: "", label: t("finance.allSpending") }, { value: "daily", label: t("finance.dailySpending") }, { value: "recurring", label: t("finance.recurringSpend") }] as const;
   const monthStart = today.slice(0, 7) + "-01"; const yearStart = today.slice(0, 4) + "-01-01";
   const rangePreset = from === monthStart && to === today ? "month" : from === yearStart && to === today ? "year" : "";
   // 流水按入账日期分组；日期标题只做导航，不汇总金额，避免分页未加载完时显示不完整的日合计。
@@ -112,7 +114,7 @@ function FinanceScreen() {
   const tabClass = (active: boolean) => cn("inline-flex h-8 items-center rounded-lg px-3.5 text-sm font-medium transition-colors", active ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground");
   return <div className="app-page bg-background"><Header />
     <main className="app-main mx-auto max-w-7xl space-y-6 pb-24">
-      <FinancePageHeader title={t(view === "reports" ? "finance.navAnalysis" : "finance.navBills")} actions={enabled && <Button disabled={!ready || busy} onClick={add} className="rounded-xl"><Plus />{t("finance.add")}</Button>} />
+      <FinancePageHeader title={t(view === "reports" ? "finance.navAnalysis" : "finance.navBills")} actions={enabled && <Button disabled={!ready || busy} onClick={add} className="hidden rounded-xl lg:inline-flex"><Plus />{t("finance.add")}</Button>} />
       {capabilities.isPending && <p role="status" className="text-sm text-muted-foreground">{t("common.loading")}</p>}
       {capabilities.data && !enabled && <FinanceEmpty>{t("finance.unsupported")}</FinanceEmpty>}
       {queryError && <div role="alert" className="space-y-3 rounded-2xl border border-destructive/30 bg-destructive/5 p-5"><p>{failure(queryError)}</p><Button variant="outline" onClick={() => void queryClient.invalidateQueries({ queryKey: ["finance", user] })}>{t("finance.retry")}</Button></div>}
@@ -121,6 +123,15 @@ function FinanceScreen() {
         <Link href="/transactions?view=plans" className={tabClass(view === "plans")} aria-current={view === "plans" ? "page" : undefined}>{t("finance.plans")}</Link>
       </nav>}
       {enabled && ready && view !== "plans" && <div className="space-y-4 rounded-2xl border border-border/80 bg-card p-4 shadow-card sm:p-5">
+        {view === "transactions" && <div className="flex items-center justify-between gap-3 lg:hidden">
+          <span className="text-sm tabular-nums">{from ? formatDateOnly(from) : t("finance.allDates")} – {formatDateOnly(to)}</span>
+          <Button variant="outline" size="sm" aria-expanded={filtersOpen} aria-controls="finance-filters" onClick={() => setFiltersOpen(!filtersOpen)}><Settings2 />{t("finance.filters")}</Button>
+        </div>}
+        {(filters.id || filters.group === "subscription" || filters.status || filters.planId || category || filters.kind || filters.merchant) && <div className="flex flex-wrap items-center gap-2 text-sm">
+          <span>{[filters.id && t("finance.selectedEntry"), filters.group === "subscription" && t("finance.navSubscriptions"), filters.status === "posted" && t("finance.posted"), filters.planId && t("finance.plans"), category && categoryDetails(category, "expense").label, filters.kind && t(financeKindLabels[filters.kind as keyof typeof financeKindLabels]), filters.merchant].filter(Boolean).join(" · ")}</span>
+          <Button variant="ghost" size="sm" onClick={() => { setFrom(monthStart); setTo(today); setCategory(""); setFilters({ id: "", kind: "", status: "", merchant: "", tag: "", group: "", planId: "" }); }}>{t("finance.clearFilters")}</Button>
+        </div>}
+        <div id="finance-filters" className={cn("space-y-4", view === "transactions" && !filtersOpen && "hidden lg:block")}>
         <div className={cn("grid gap-x-2.5 gap-y-3 sm:gap-3", view === "transactions" ? "grid-cols-2 lg:grid-cols-5" : "grid-cols-2 lg:grid-cols-[repeat(2,minmax(0,14rem))_1fr]")}>
           <FinanceInput id="finance-from" label={t("finance.from")} value={from} type="date" onChange={setFrom} />
           <FinanceInput id="finance-to" label={t("finance.to")} value={to} type="date" onChange={setTo} />
@@ -137,6 +148,7 @@ function FinanceScreen() {
           {view === "reports" && <div className="col-span-2 flex items-end lg:col-span-1"><FinanceSegmented label={t("finance.month")} value={rangePreset} onChange={(preset) => { setFrom(preset === "year" ? yearStart : monthStart); setTo(today); }} options={[{ value: "month", label: t("finance.month") }, { value: "year", label: t("finance.unitYear") }]} /></div>}
         </div>
         <FinanceSegmented label={t("finance.kind")} value={filters.group} onChange={(group) => setFilters({ ...filters, group })} options={kindOptions} />
+        </div>
       </div>}
       {enabled && ready && view === "transactions" && <section className="space-y-5" aria-label={t("finance.transactions")}>
         {transactions.isPending && <div role="status" className="space-y-2"><span className="sr-only">{t("common.loading")}</span>{[0, 1, 2].map((item) => <div key={item} className="h-16 animate-pulse rounded-2xl bg-muted" />)}</div>}
@@ -152,7 +164,7 @@ function FinanceScreen() {
               return <article key={record.id} className={cn("group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-secondary/40 sm:gap-4 sm:px-5", voided && "opacity-60")}>
                 <span className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl", incoming ? "bg-success/10 text-success" : "bg-secondary text-muted-foreground")}><FinanceCategoryIcon name={detail.icon} className="size-4.5" /></span>
                 <div className="min-w-0 flex-1">
-                  <h3 className="truncate font-medium">{record.merchant || (record.category ? detail.label : t(financeKindLabels[record.kind]))}</h3>
+                  <h3 className="wrap-break-word font-medium">{record.merchant || (record.category ? detail.label : t(financeKindLabels[record.kind]))}</h3>
                   {(meta.length > 0 || voided) && <p className="mt-0.5 truncate text-xs text-muted-foreground">{voided && <span className="mr-1.5 rounded bg-destructive/10 px-1.5 py-0.5 font-medium text-destructive">{t("finance.voided")}{record.voidReason && ` · ${record.voidReason}`}</span>}{meta.join(" · ")}</p>}
                   {record.notes && <p className="mt-1 line-clamp-2 text-xs whitespace-pre-wrap text-muted-foreground">{record.notes}</p>}
                 </div>
@@ -161,11 +173,19 @@ function FinanceScreen() {
                   {record.currency !== "CNY" && <p className="mt-0.5 text-xs text-muted-foreground tabular-nums">{formatCurrency(record.amount, record.currency)}{!record.cnyAmount && ` · ${t("finance.cnyRequired")}`}</p>}
                   {record.planId && <Link className="text-xs text-muted-foreground underline-offset-4 hover:text-primary hover:underline" href="/transactions?view=plans">{t("finance.plans")}</Link>}
                 </div>
-                {record.status === "posted" && <div className="flex shrink-0 gap-0.5 transition-opacity sm:opacity-0 sm:group-focus-within:opacity-100 sm:group-hover:opacity-100">
+                {record.status === "posted" && <div className="hidden shrink-0 sm:flex gap-0.5 transition-opacity sm:opacity-0 sm:group-focus-within:opacity-100 sm:group-hover:opacity-100">
                   <Button size="icon" variant="ghost" className="size-8 rounded-lg text-muted-foreground" aria-label={t("common.edit")} title={t("common.edit")} disabled={busy} onClick={() => { setError(""); setTransactionForm({ id: record.id, input: transactionInput(record) }); }}><Pencil /></Button>
                   {record.kind === "expense" && <Button size="icon" variant="ghost" className="size-8 rounded-lg text-muted-foreground" aria-label={t("finance.refund")} title={t("finance.refund")} disabled={busy} onClick={() => { setError(""); setTransactionForm({ input: { ...transactionInput(record), kind: "refund", amount: "", cnyAmount: "", account: "", refundOf: record.id, occurredOn: today, notes: "", externalSource: "", externalId: "", version: 0 } }); }}><Undo2 /></Button>}
                   <Button size="icon" variant="ghost" className="size-8 rounded-lg text-muted-foreground hover:text-destructive" aria-label={t("finance.void")} title={t("finance.void")} disabled={busy} onClick={() => { setError(""); setVoidReason(""); setVoiding(record); }}><Ban /></Button>
                 </div>}
+                {record.status === "posted" && <DropdownMenu>
+                  <DropdownMenuTrigger asChild><Button size="icon" variant="ghost" className="size-8 shrink-0 sm:hidden" aria-label={t("finance.entryActions")}><MoreHorizontal /></Button></DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem disabled={busy} onClick={() => { setError(""); setTransactionForm({ id: record.id, input: transactionInput(record) }); }}><Pencil />{t("common.edit")}</DropdownMenuItem>
+                    {record.kind === "expense" && <DropdownMenuItem disabled={busy} onClick={() => { setError(""); setTransactionForm({ input: { ...transactionInput(record), kind: "refund", amount: "", cnyAmount: "", account: "", refundOf: record.id, occurredOn: today, notes: "", externalSource: "", externalId: "", version: 0 } }); }}><Undo2 />{t("finance.refund")}</DropdownMenuItem>}
+                    <DropdownMenuItem disabled={busy} onClick={() => { setError(""); setVoidReason(""); setVoiding(record); }}><Ban />{t("finance.void")}</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>}
               </article>;
             })}
           </div>

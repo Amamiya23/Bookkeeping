@@ -20,7 +20,7 @@ Renewlet is a self-hosted accounting platform with subscription management. Dail
 
 Run it in a single Docker container or deploy it to Cloudflare Workers.
 
-This fork follows its own release schedule, starting at **V1.0** (`1.0.0`). See [automatic builds and GHCR deployment (Chinese)](docs/docker-ghcr-deploy.zh-CN.md) for deployment and version management.
+This fork follows its own release schedule, currently at **V1.1** (`1.1.0`). See [automatic builds and GHCR deployment (Chinese)](docs/docker-ghcr-deploy.zh-CN.md) for deployment and version management.
 
 ## Demo
 
@@ -136,7 +136,7 @@ Create the first administrator. The deploy script creates `docker-compose.yml`, 
 For production, pin a stable image tag:
 
 ```bash
-sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="ghcr.io/amamiya23/bookkeeping:1.0.0"#' .env
+sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="ghcr.io/amamiya23/bookkeeping:1.1.0"#' .env
 docker compose pull
 docker compose up -d
 ```
@@ -166,7 +166,7 @@ tar -czf renewlet-backup-$(date +%F).tgz .env docker-compose.yml data
 Update the Docker image:
 
 ```bash
-sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="ghcr.io/amamiya23/bookkeeping:1.0.0"#' .env
+sed -i.bak 's#RENEWLET_IMAGE=.*#RENEWLET_IMAGE="ghcr.io/amamiya23/bookkeeping:1.1.0"#' .env
 docker compose pull
 docker compose up -d
 docker compose logs -f

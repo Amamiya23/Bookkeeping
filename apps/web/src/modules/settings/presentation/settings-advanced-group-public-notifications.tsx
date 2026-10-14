@@ -153,16 +153,11 @@ export function SettingsAdvancedPublicNotificationsGroup({
                 {({ id: fieldId, describedBy }) => <NumericInput id={fieldId} name="notificationReminderDays" allowNegative={false} decimalScale={0} inputMode="numeric" enterKeyHint="done" value={notificationReminderDaysInput} onRawValueChange={handleNotificationReminderDaysInputChange} className="border-border bg-secondary" aria-describedby={describedBy} />}
               </FormField>
             </FormFieldRow>
-            <div className="grid content-start gap-2"><Label>{t("settings.tip")}</Label><p className="text-xs text-muted-foreground">{t("settings.cronTip")}</p></div>
+            <details className="text-xs text-muted-foreground"><summary className="cursor-pointer">{t("settings.schedulerDetails")}</summary><p className="mt-2">{t("settings.cronTip")}</p></details>
           </div>
           <div className="grid gap-6 lg:grid-cols-[minmax(0,280px)_1fr]">
             <NotificationChannelList settings={settings} activeChannel={activeNotificationChannel} onSelect={setSelectedNotificationChannel} onToggle={handleNotificationChannelToggle} disabled={externalIntegrationsDisabled} />
             <NotificationChannelConfigPanel channel={activeNotificationChannel} settings={settings} enabled={settings.enabledChannels.includes(activeNotificationChannel)} updateSetting={updateSetting} testingChannel={testingChannel} onTest={handleTestConnection} disabled={externalIntegrationsDisabled} telegramBotCommands={telegramBotCommands} secretStatus={secretStatus} onClearSecret={clearSecret} />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="testPhone">{t("settings.testPhone")}</Label>
-            <Input id="testPhone" name="testPhone" type="tel" inputMode="tel" enterKeyHint="done" autoComplete="tel" placeholder={t("settings.testPhonePlaceholder")} value={settings.testPhone} disabled={externalIntegrationsDisabled} onChange={(event) => updateSetting("testPhone", event.target.value)} className="border-border bg-secondary" />
-            <p className="text-xs text-muted-foreground">{t("settings.testPhoneHelp")}</p>
           </div>
           <NotificationHistoryPanel controller={notificationHistory} />
         </div>

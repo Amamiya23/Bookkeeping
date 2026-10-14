@@ -171,7 +171,8 @@ func handleFinanceTransactionsList(app core.App, e *core.RequestEvent, a finance
 	}
 	params := dbx.Params{"user": a.User, "ledger": l.Id}
 	params["plan"] = q.Get("planId")
-	for _, key := range []string{"account", "kind", "status", "category", "merchant", "refundOf"} {
+
+	for _, key := range []string{"id", "account", "kind", "status", "category", "merchant", "refundOf"} {
 		if value := q.Get(key); value != "" {
 			if key == "category" && value == "subscription:" {
 				filter += " && (category ~ {:subscriptionPrefix} || category = 'builtin:subscriptions')"
@@ -220,7 +221,7 @@ func handleFinanceTransactionsList(app core.App, e *core.RequestEvent, a finance
 		filter += " && (occurredOn < {:date} || (occurredOn = {:date} && id < {:id}))"
 		params["date"], params["id"] = cursor.Date, cursor.ID
 	}
-	rows, err := app.FindRecordsByFilter("transactions", filter, "-occurredOn,-id", limit+1, 0, params)
+	rows, err := findFinanceTransactions(app, filter, params, limit+1, q.Get("group") == "subscription")
 	if err != nil {
 		return nil, err
 	}

@@ -8,6 +8,7 @@ import type { SubscriptionFormErrorField, SubscriptionFormErrors } from "@/lib/s
 export interface SubscriptionFormFieldsProps {
   /** 同一页面可能同时渲染新增/编辑弹窗，id 前缀用于保持 label 与错误提示的 a11y 关联唯一。 */
   idPrefix: string;
+  compact?: boolean;
   config: CustomConfig;
   formData: SubscriptionFormState;
   setFormData: Dispatch<SetStateAction<SubscriptionFormState>>;
